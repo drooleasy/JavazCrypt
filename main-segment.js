@@ -51,11 +51,19 @@ function draw(){
 	
 	if(segment.isSeenByBob(player)){
 		var seenSeg = segment.seenSegment(player);
-		if(seenSeg) paper.path(seenSeg.path()).attr({
-			"fill":"#8FF",
-			"stroke":"#8FF",
-			"stroke-width":3
-		});
+		if(seenSeg){
+			paper.path(seenSeg.path()).attr({
+				"fill":"#8FF",
+				"stroke":"#8FF",
+				"stroke-width":3
+			});
+			
+			var ray_1 = castRay(player.x, player.y, seenSeg.a.x, seenSeg.a.y, player.sightLength);
+			var ray_2 = castRay(player.x, player.y, seenSeg.b.x, seenSeg.b.y, player.sightLength);
+			
+			paper.path(ray_1.path()).attr({"stroke":"#3F3", "stroke-width":3});
+			paper.path(ray_2.path()).attr({"stroke":"#3F3", "stroke-width":3});
+		}
 	}
 	
 	

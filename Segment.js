@@ -38,15 +38,16 @@ Segment.prototype.path = function(){
 
 Segment.prototype.isSeenByBob = function(bob){
 	
-	if(
+	if(	
 		bob.sees({x:this.a.x, y:this.a.y, width:1})
 		||
 		bob.sees({x:this.b.x, y:this.b.y, width:1})
 	) return true;
 	var fov = bob.fovSegments(),
 		intersect_1 = this.intersect(fov.left),	
-		intersect_2 = this.intersect(fov.right);
-	return intersect_1 != null || intersect_2 != null;	
+		intersect_2 = this.intersect(fov.right),
+		intersect_cone = this.intersectWithCone(bob.x, bob.y, bob.sightLength, bob.angle, bob.sightWidth);
+	return intersect_1 != null || intersect_2 != null || intersect_cone.length > 0;
 }
 
 
@@ -60,11 +61,20 @@ Segment.prototype.seenSegment = function(bob){
 	
 	var fov = bob.fovSegments(),
 		intersect_1 = this.intersect(fov.left),	
-		intersect_2 = this.intersect(fov.right);
+		intersect_2 = this.intersect(fov.right),
+		intersect_cone = this.intersectWithCone(bob.x, bob.y, bob.sightLength, bob.angle, bob.sightWidth);
+
+	var intersects = [];
+	if(intersect_1) intersects.push(intersect_1);
+	if(intersect_2) intersects.push(intersect_2);
+	for(i=0;i<intersect_cone.length;i++){
+		intersects.push(intersect_cone[i]);
+	}
 	
-	if(intersect_1 && intersect_2) return new Segment(intersect_1.x, intersect_1.y, intersect_2.x, intersect_2.y);
+	if(intersects.length > 1) return new Segment(intersects[0].x, intersects[0].y, intersects[1].x, intersects[1].y);
 	
-	var inter = intersect_1 || intersect_2;
+	var inter = null;
+	if(intersects.length>0) inter = intersects[0];
 	if(sees_a && inter){
 		return new Segment(this.a.x, this.a.y, inter.x, inter.y);
 	}

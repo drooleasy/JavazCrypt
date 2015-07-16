@@ -35,3 +35,48 @@ function solveP2(a, b, c){ // ax2 + bx + c = 0, a!=0 !!!!
 		]; 
 	} else return [];
 }
+
+
+
+function castRay(ox, oy, tx, ty, limit){
+	var vx = tx-ox,
+		vy = ty-oy;
+		
+		
+	/*	
+		tx,
+		ty,
+		tx + k * vx ,
+		ty + k * vy
+		
+		dx = tx + k * vx - ox
+		dy = ty + k * vy - oy
+		
+		dx*dx + dy*dy == limit*limit
+		
+		
+		(tx + k * vx - ox)*(tx + k * vx - ox)
+		(tx - ox + k * vx)*(tx - ox + k * vx)
+		
+		(tx-ox)² + 2*(tx-ox)*(k*vx) + k² * vx²
+		
+		k² * vx² + k² * vy²
+		2*(tx-ox)*(k*vx) + 2*(ty-oy)*(k*vy)
+		(tx-ox)² + (ty-oy)² - limit²
+
+		2*(tx-ox)*(k*vx) + 2*(ty-oy)*(k*vy)
+		2*tx*k*vx - 2*ox*k*vx + 2*ty*k*vy - 2*oy*k*vy
+		k*(2*tx*vx -2*ox*vx + 2*ty*vy - 2*oy*vy)
+	*/
+		var sol = solveP2(
+			(vx*vx + vy*vy),
+			(2*tx*vx -2*ox*vx + 2*ty*vy - 2*oy*vy),
+			((tx-ox)*(tx-ox) + (ty-oy)*(ty-oy) - limit*limit)
+		);
+		
+		if(sol.length>0){
+			return new Segment(tx, ty, tx + sol[0] * vx, ty + sol[0] * vy);
+		}
+		return null 
+	
+}
