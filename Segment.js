@@ -4,6 +4,12 @@ function Segment(x1, y1, x2, y2){
 }
 
 
+
+Segment.prototype.inversed = function(){
+	return new Segment(this.b.x, this.b.y, this.a.x, this.a.y);
+};
+
+
 Segment.prototype.closestPointFrom = function(x,y){
 	
 	function closest_point_on_seg(seg, circ_pos){
@@ -56,8 +62,30 @@ Segment.prototype.seenSegment = function(bob){
 		sees_b = false;
 	if(bob.sees({x:this.a.x, y:this.a.y, width:1})) sees_a = true; 
 	if(bob.sees({x:this.b.x, y:this.b.y, width:1})) sees_b = true;
+
+
+
+	var angle_a, angle_b, angle_inter, angle_inter_1, angle_inter_2, left, rigth;
+
 	
-	if(sees_a && sees_b) return new Segment(this.a.x, this.a.y, this.b.x, this.b.y);
+	if(sees_a && sees_b){
+		angle_a = distanceAndAngle(bob.x,bob.y, this.a.x, this.a.y).angle - bob.angle;
+		angle_b = distanceAndAngle(bob.x,bob.y, this.b.x, this.b.y).angle - bob.angle;
+		
+		angle_a=clipAngle(angle_a);
+		angle_b=clipAngle(angle_b);
+		
+		
+		left = this.a;
+		right = this.b;
+		if(angle_a > angle_b){
+			left = this.b;
+			right = this.a;
+		}
+		
+		return new Segment(left.x, left.y, right.x, right.y);
+	}
+
 	
 	var fov = bob.fovSegments(),
 		intersect_1 = this.intersect(fov.left),	
@@ -71,15 +99,64 @@ Segment.prototype.seenSegment = function(bob){
 		intersects.push(intersect_cone[i]);
 	}
 	
-	if(intersects.length > 1) return new Segment(intersects[0].x, intersects[0].y, intersects[1].x, intersects[1].y);
+	if(intersects.length > 1){
+		angle_inter_1 = distanceAndAngle(bob.x,bob.y, intersects[0].x, intersects[0].y).angle - bob.angle;
+		angle_inter_2 = distanceAndAngle(bob.x,bob.y, intersects[1].x, intersects[1].y).angle - bob.angle;
+
+		angle_inter_1=clipAngle(angle_inter_1);
+		angle_inter_2=clipAngle(angle_inter_2);
+	
+		
+		left = intersects[0];
+		right = intersects[1];
+		if(angle_a > angle_b){
+			left = intersects[1];
+			right = intersects[0];
+		}
+		
+		return new Segment(left.x, left.y, right.x, right.y);
+	}
+	
 	
 	var inter = null;
 	if(intersects.length>0) inter = intersects[0];
+
 	if(sees_a && inter){
-		return new Segment(this.a.x, this.a.y, inter.x, inter.y);
+		
+		angle_a = distanceAndAngle(bob.x,bob.y, this.a.x, this.a.y).angle - bob.angle;
+		angle_inter = distanceAndAngle(bob.x,bob.y, inter.x, inter.y).angle - bob.angle;
+
+		angle_a=clipAngle(angle_a);
+		angle_inter=clipAngle(angle_inter);
+
+
+		left = this.a;
+		right = inter;
+		if(angle_a > angle_inter){
+			left = inter;
+			right = this.a;
+		}
+		
+		return new Segment(left.x, left.y, right.x, right.y);
+
 	}
 	if(sees_b && inter){
-		return new Segment(this.b.x, this.b.y, inter.x, inter.y);
+		angle_b = distanceAndAngle(bob.x,bob.y, this.b.x, this.b.y).angle - bob.angle;
+		angle_inter = distanceAndAngle(bob.x,bob.y, inter.x, inter.y).angle - bob.angle;
+
+		angle_inter=clipAngle(angle_inter);
+		angle_b=clipAngle(angle_b);
+
+
+		left = this.b;
+		right = inter;
+		if(angle_b > angle_inter){
+			left = inter;
+			right = this.b;
+		}
+		
+		return new Segment(left.x, left.y, right.x, right.y);
+;
 	}
 	return null;
 }

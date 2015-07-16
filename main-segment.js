@@ -63,6 +63,35 @@ function draw(){
 			
 			paper.path(ray_1.path()).attr({"stroke":"#3F3", "stroke-width":3});
 			paper.path(ray_2.path()).attr({"stroke":"#3F3", "stroke-width":3});
+			
+			
+			/*var */angle_1 = distanceAndAngle(player.x, player.y, ray_1.a.x, ray_1.a.y).angle - player.angle,
+				angle_2 = distanceAndAngle(player.x, player.y, ray_2.a.x, ray_2.a.y).angle - player.angle;
+			
+			
+			startAngle =  Math.min(angle_1, angle_2);
+			endAngle = Math.max(angle_1, angle_2);
+			
+			startAngle = angle_1;
+			endAngle = angle_2;
+			
+			var seg  = new Segment(ray_2.a.x, ray_2.a.y, ray_1.a.x, ray_1.a.y)
+			
+			var path = "M" + ray_1.a.x + " " + ray_1.a.y
+				+ "L" + ray_1.b.x + " " + ray_1.b.y
+				+ paper.circularArc(player.x, player.y, player.sightLength, player.angle+startAngle, player.angle+endAngle) 
+				+ "L" + ray_2.a.x + " " + ray_2.a.y
+				+ "L" + ray_1.a.x + " " + ray_1.a.y;
+			//console.log(path);
+			paper.path(
+				path
+			).attr({"fill":"#444","stroke":"#FFF", "stroke-width":5});
+			
+			paper.path(
+				"M" + ray_1.a.x + " " + ray_1.a.y
+				+ "L" + ray_1.b.x + " " + ray_1.b.y
+			).attr({"fill":"#444","stroke":"#888", "stroke-width":5});
+			
 		}
 	}
 	

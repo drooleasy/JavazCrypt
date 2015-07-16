@@ -7,9 +7,23 @@ function rad2deg(rad){
 	return rad*180/Math.PI;
 }
 
-function clipAngle(angle){
-	if(angle < -Math.PI) angle = Math.PI*2 + angle;
+function clipAngle(angle){  
+	var turns = angle / (2*Math.PI);
+	turns = (turns<0 ? Math.ceil(turns) : Math.floor(turns)); 
+	angle -= turns * 2*Math.PI;
+	if(angle < -Math.PI) angle = 2*Math.PI + angle;
 	if(angle > Math.PI) angle =  angle - 2*Math.PI;
+	return angle;
+	// angle > 0 == to the right
+	// angle < 0 == to the left
+}
+
+
+function clipAnglePositive(angle){
+	var turns = angle / (2*Math.PI);
+	turns = (turns<0 ? Math.ceil(turns) : Math.floor(turns)); 
+	angle -= turns * 2*Math.PI;
+	if(angle < 0) angle = 2*Math.PI + angle ;
 	return angle;
 }
 
