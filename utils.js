@@ -24,3 +24,14 @@ function distanceAndAngle(from_x,from_y, to_x,to_y){
 		angle : angle
 	};
 }
+
+
+function solveP2(a, b, c){ // ax2 + bx + c = 0, a!=0 !!!!
+	var det = b*b - 4*a*c;
+	if(det>=0){
+		return [
+			(-b + Math.sqrt(det))/(2*a),
+			(-b - Math.sqrt(det))/(2*a)
+		]; 
+	} else return [];
+}

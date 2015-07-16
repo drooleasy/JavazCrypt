@@ -1,11 +1,11 @@
-function Bob(x,y, width, angle, drawSight){
+function Bob(x,y, width, angle, drawSight, fov_angle, fov_distance){
 	this.x = x;
 	this.y = y;
-	this.width = width;
+	this.width = width; // radius !!!
 	this.angle = clipAngle(deg2rad(angle));
 	this.drawSight = !!drawSight;
-	this.sightLength = 200;
-	this.sightWidth = deg2rad(120);
+	this.sightLength = fov_distance || 200;
+	this.sightWidth = fov_angle && deg2rad(fov_angle) || deg2rad(120);
 	this.sightColor= "#FFFFFF";
 	this.speedForward = 2;
 	this.speedBackward = 1;
@@ -36,8 +36,13 @@ Bob.prototype.sees =  function inSight(other){
 	var metrics = distanceAndAngle(this.x, this.y, other.x, other.y),
 		distance = metrics.distance,
 		angle = metrics.angle,	
-		relativeAngle =  clipAngle(angle - this.angle);
-	return relativeAngle >= (-this.sightWidth/2) && relativeAngle <= this.sightWidth/2  && distance <= this.sightLength
+		relativeAngle =  clipAngle(angle - this.angle),
+		width = other.width,
+		deltaAngle = Math.asin(width / distance)
+	
+	return relativeAngle + deltaAngle >= (-this.sightWidth/2) 
+		&& relativeAngle - deltaAngle <= this.sightWidth/2  
+		&& distance - width <= this.sightLength
 }
 
 
@@ -63,3 +68,23 @@ Bob.prototype.draw = function(paper){
 		"stroke-width":2 // the size of the border
 	});
 };
+
+Bob.prototype.fovSegments = function(){
+	
+		return {
+			
+				left: new Segment(
+					this.x,
+					this.y,
+					this.x + Math.cos(this.angle - this.sightWidth/2) * this.sightLength,
+					this.y + Math.sin(this.angle - this.sightWidth/2) * this.sightLength
+				),
+				right:new Segment(
+					this.x,
+					this.y,
+					this.x + Math.cos(this.angle + this.sightWidth/2) * this.sightLength,
+					this.y + Math.sin(this.angle + this.sightWidth/2) * this.sightLength
+				), 
+					
+		}
+}
