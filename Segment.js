@@ -109,6 +109,7 @@ Segment.prototype.seenSegment = function(bob){
 		
 		left = intersects[0];
 		right = intersects[1];
+
 		if(angle_a > angle_b){
 			left = intersects[1];
 			right = intersects[0];
@@ -118,46 +119,37 @@ Segment.prototype.seenSegment = function(bob){
 	}
 	
 	
+	function addInter(p, inter, bob){
+		angle = distanceAndAngle(bob.x,bob.y, p.x, p.y).angle - bob.angle;
+		angle_inter = distanceAndAngle(bob.x,bob.y, inter.x, inter.y).angle - bob.angle;
+
+		angle_a=clipAngle(angle);
+		angle_inter=clipAngle(angle_inter);
+
+
+		left = p;
+		right = inter;
+		if(angle > angle_inter){
+			left = inter;
+			right = p;
+		}
+		
+		return new Segment(left.x, left.y, right.x, right.y);
+		
+	}
+
 	var inter = null;
+
 	if(intersects.length>0) inter = intersects[0];
 
 	if(sees_a && inter){
-		
-		angle_a = distanceAndAngle(bob.x,bob.y, this.a.x, this.a.y).angle - bob.angle;
-		angle_inter = distanceAndAngle(bob.x,bob.y, inter.x, inter.y).angle - bob.angle;
-
-		angle_a=clipAngle(angle_a);
-		angle_inter=clipAngle(angle_inter);
-
-
-		left = this.a;
-		right = inter;
-		if(angle_a > angle_inter){
-			left = inter;
-			right = this.a;
-		}
-		
-		return new Segment(left.x, left.y, right.x, right.y);
-
+		return addInter(this.a, inter, bob);
 	}
+	
 	if(sees_b && inter){
-		angle_b = distanceAndAngle(bob.x,bob.y, this.b.x, this.b.y).angle - bob.angle;
-		angle_inter = distanceAndAngle(bob.x,bob.y, inter.x, inter.y).angle - bob.angle;
-
-		angle_inter=clipAngle(angle_inter);
-		angle_b=clipAngle(angle_b);
-
-
-		left = this.b;
-		right = inter;
-		if(angle_b > angle_inter){
-			left = inter;
-			right = this.b;
-		}
-		
-		return new Segment(left.x, left.y, right.x, right.y);
-;
+		return addInter(this.b, inter, bob);
 	}
+	
 	return null;
 }
 
@@ -271,3 +263,49 @@ Segment.prototype.intersectWithCone = function(cx,cy,cr, angle, fov_angle){
 	}
 	return intersects;
 }
+
+Segment.prototype.drawShadow = function drawSegmentShadow(player){
+		var seenSeg = this.seenSegment(player);
+		if(seenSeg){
+			paper.path(seenSeg.path()).attr({
+				"fill":"#8FF",
+				"stroke":"#8FF",
+				"stroke-width":3
+			});
+			
+			var ray_1 = castRay(player.x, player.y, seenSeg.a.x, seenSeg.a.y, player.sightLength);
+			var ray_2 = castRay(player.x, player.y, seenSeg.b.x, seenSeg.b.y, player.sightLength);
+			
+			paper.path(ray_1.path()).attr({"stroke":"#3F3", "stroke-width":3});
+			paper.path(ray_2.path()).attr({"stroke":"#3F3", "stroke-width":3});
+			
+			
+			/*var */angle_1 = distanceAndAngle(player.x, player.y, ray_1.a.x, ray_1.a.y).angle - player.angle,
+				angle_2 = distanceAndAngle(player.x, player.y, ray_2.a.x, ray_2.a.y).angle - player.angle;
+			
+			
+			startAngle =  Math.min(angle_1, angle_2);
+			endAngle = Math.max(angle_1, angle_2);
+			
+			startAngle = angle_1;
+			endAngle = angle_2;
+			
+			var seg  = new Segment(ray_2.a.x, ray_2.a.y, ray_1.a.x, ray_1.a.y)
+			
+			var path = "M" + ray_1.a.x + " " + ray_1.a.y
+				+ "L" + ray_1.b.x + " " + ray_1.b.y
+				+ paper.circularArc(player.x, player.y, player.sightLength, player.angle+startAngle, player.angle+endAngle) 
+				+ "L" + ray_2.a.x + " " + ray_2.a.y
+				+ "L" + ray_1.a.x + " " + ray_1.a.y;
+			//console.log(path);
+			paper.path(
+				path
+			).attr({"fill":"#444","stroke":"#FFF", "stroke-width":5});
+			
+			paper.path(
+				"M" + ray_1.a.x + " " + ray_1.a.y
+				+ "L" + ray_1.b.x + " " + ray_1.b.y
+			).attr({"fill":"#444","stroke":"#888", "stroke-width":5});
+			
+		}
+	}

@@ -88,3 +88,151 @@ Bob.prototype.fovSegments = function(){
 					
 		}
 }
+
+Bob.prototype.drawShadow = function draw_bob_shadow(player){	
+	var fov = player.fovSegments(),
+		intersect_1 = fov.left.intersectWithCircle(other.x, other.y, other.width),	
+		intersect_2 = fov.right.intersectWithCircle(other.x, other.y, other.width);
+	// var intersect_cone = this.intersectWithCone(bob.x, bob.y, bob.sightLength, bob.angle, bob.sightWidth);
+	
+	
+	var secants 	= [];
+		
+	function addIntersect(intersect, player, secants){
+		var farthest = intersect[0];
+		if(intersect.length > 1){
+			 dist_1 = distanceAndAngle(player.x, player.y, intersect[0].x, intersect[0].y).distance;
+			 dist_2 = distanceAndAngle(player.x, player.y, intersect[1].x, intersect[1].y).distance;
+			 if(dist_2 > dist_1) farthest = intersect[1]
+		}
+		
+		var ray = castRay(player.x, player.y, farthest.x, farthest.y, player.sightLength);
+		var angle = distanceAndAngle(player.x, player.y, farthest.x, farthest.y).angle - player.angle;
+		var angle= clipAngle(angle);
+
+
+		secants.push({angle:angle, ray:ray});
+
+		ray.draw(paper);
+	}
+	
+	
+	if(intersect_1){
+		addIntersect(intersect_1, player, secants)
+	}
+	
+	if(intersect_2){
+		addIntersect(intersect_2, player, secants)
+	}
+			
+	
+	var v = minus(other, player);
+	var v_perp = {x:(-v.y), y:(v.y == 0 ? (-v.x) : v.x)}
+	
+	
+	/*
+		(v_perp.x*k)²+(v_perp.y*k)² = other.width²
+		
+		k² * (v_perp.x² + v_perp.y²)
+		O
+		-other.width² 
+	*/
+	var sol = solveP2(
+		(v_perp.x*v_perp.x + v_perp.y*v_perp.y),
+		(0),
+		(-other.width*other.width) 
+	
+	);
+	
+	
+	
+	function addInner(k, v_perp, player, secants){
+		var side = {	
+			x: (other.x + v_perp.x * k),
+			y: (other.y + v_perp.y * k)
+		}
+		var ray = castRay(player.x, player.y, side.x, side.y, player.sightLength);
+		ray.draw(paper);
+		
+		var angle = distanceAndAngle(player.x, player.y, side.x, side.y).angle - player.angle;
+		angle = clipAngle(angle);
+		
+		secants.push({angle:angle, ray:ray});
+	}
+	
+	if(sol.length != 0){
+		addInner(sol[0], v_perp, player, secants)
+		addInner(sol[1], v_perp, player, secants)
+	}
+	
+	
+	//console.log(secants.length);
+	
+	secants = secants.sort(function(a,b){return a.angle - b.angle});
+	//console.log(secants);
+	
+	if(secants.length){
+		
+		var left = secants[0];
+		var right = secants[secants.length-1];
+		var i = 1;
+		
+		if(secants.length==3){
+			if(intersect_1){
+				left = secants[1];
+			}
+			
+			if(intersect_2){
+				right = secants[1];
+			}
+		}
+	
+		var left_2_angle = distanceAndAngle(other.x, other.y, left.ray.a.x, left.ray.a.y).angle - player.angle;
+		left_2_angle = clipAngle(left_2_angle);
+	
+		var right_2_angle = distanceAndAngle(other.x, other.y, right.ray.a.x, right.ray.a.y).angle  - player.angle;    
+		right_2_angle = clipAngle(right_2_angle);
+		
+		if(left_2_angle > right_2_angle) {
+			
+			var tmp = left_2_angle;
+			left_2_angle = right_2_angle;
+			right_2_angle = tmp;
+			
+		} 
+
+					
+		var path = "M" + left.ray.a.x + " " + left.ray.a.y
+			+ "L" + left.ray.b.x + " " + left.ray.b.y
+			+ paper.circularArc(
+				player.x, 
+				player.y, 
+				player.sightLength, 
+				player.angle + left.angle,
+				player.angle + right.angle
+				
+			) 
+		
+			+ "L" + right.ray.a.x + " " + right.ray.a.y
+			
+			+ describeArc(
+				other.x, 
+				other.y, 
+				other.width, 
+				player.angle + left_2_angle,
+				player.angle + right_2_angle
+			
+			) + "Z";
+
+		paper.path(
+			path
+		).attr({"fill":"#444","stroke":"#FFF", "stroke-width":5});
+		
+		paper.path(
+			"M" + left.ray.a.x + " " + left.ray.a.y
+			+ "L" + left.ray.b.x + " " + left.ray.b.y
+		).attr({"fill":"#444","stroke":"#888", "stroke-width":5});
+		
+	}
+
+}
