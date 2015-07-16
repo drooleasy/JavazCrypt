@@ -37,3 +37,28 @@ function circle (x, y, r, a){
 		+ "L" + x + " " + y;
 };
 		
+
+
+
+// http://stackoverflow.com/questions/5736398/how-to-calculate-the-svg-path-for-an-arc-of-a-circle
+function polarToCartesian(centerX, centerY, radius, angle) {
+  
+  return {
+    x: centerX + (radius * Math.cos(angle)),
+    y: centerY + (radius * Math.sin(angle))
+  };
+}
+
+function describeArc(x, y, radius, startAngle, endAngle){
+
+    var start = polarToCartesian(x, y, radius, endAngle);
+    var end = polarToCartesian(x, y, radius, startAngle);
+
+    var arcSweep = clipAnglePositive(endAngle - startAngle) <= Math.PI ? "0" : "1";
+
+    var d = [
+        " A", radius, radius, 0, arcSweep, 0, end.x, end.y
+    ].join(" ");
+
+    return d;       
+}
