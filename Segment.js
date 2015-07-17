@@ -2,6 +2,12 @@ function Segment(x1, y1, x2, y2){
 	this.a = {x:x1, y:y1};
 	this.b = {x:x2, y:y2};
 	this.shadow = null;
+	this.style = {
+		"fill":"#000",
+		"stroke":"#000000",
+		"stroke-width":2,
+		"stroke-linecap":"round"
+	};
 }
 
 
@@ -61,6 +67,7 @@ Segment.prototype.isSeenByBob = function(bob){
 Segment.prototype.seenSegment = function(bob){
 	var sees_a = false,
 		sees_b = false;
+
 	if(bob.sees({x:this.a.x, y:this.a.y, width:1})) sees_a = true; 
 	if(bob.sees({x:this.b.x, y:this.b.y, width:1})) sees_b = true;
 
@@ -115,7 +122,7 @@ Segment.prototype.seenSegment = function(bob){
 			left = intersects[1];
 			right = intersects[0];
 		}
-		display("intesrect.length>1");
+		//display("intesrect.length>1");
 		return new Segment(left.x, left.y, right.x, right.y);
 	}
 	
@@ -129,8 +136,8 @@ Segment.prototype.seenSegment = function(bob){
 
 
 
-		display("angle " + angle, true);
-		display("angle inter " + angle_inter, true);
+		//display("angle " + angle, true);
+		//display("angle inter " + angle_inter, true);
 		
 		left = p;
 		right = inter;
@@ -149,13 +156,13 @@ Segment.prototype.seenSegment = function(bob){
 
 	if(sees_a && inter){
 		
-		display("sees_a inter");
+		//display("sees_a inter");
 		return addInter(this.a, inter, bob);
 	}
 	
 	if(sees_b && inter){
 		
-		display("sees_b inter");
+		//display("sees_b inter");
 		return addInter(this.b, inter, bob);
 	}
 	
@@ -163,11 +170,7 @@ Segment.prototype.seenSegment = function(bob){
 }
 
 Segment.prototype.draw = function(paper){
-	paper.path(this.path()).attr({
-		"fill":"#000",
-		"stroke":"#000000",
-		"stroke-width":2
-	});
+	paper.path(this.path()).attr(this.style);
 }
 
 
@@ -273,15 +276,7 @@ Segment.prototype.intersectWithCone = function(cx,cy,cr, angle, fov_angle){
 	return intersects;
 }
 
-Segment.prototype.drawShadow = function draw_segment_shadow(paper, player){
-		
-		var shadow = this.castShadow(player);
-		this.shadow = shadow;
-		if(this.shadow) this.shadow.draw(paper);
-
-}	
-
-Segment.prototype.castShadow = function castSegmentShadow(pae){
+Segment.prototype.castShadow = function castSegmentShadow(player){
 		var seenSeg = this.seenSegment(player);
 		if(seenSeg){
 			/*paper.path(seenSeg.path()).attr({
@@ -327,6 +322,6 @@ Segment.prototype.castShadow = function castSegmentShadow(pae){
 			).attr({"fill":"#F33","stroke":"#F33", "stroke-width":3});
 			*/
 			
-			return new Shadow(path);
+			player.shadow.paths.push(path);
 		}
 	}

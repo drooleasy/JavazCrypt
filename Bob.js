@@ -11,6 +11,20 @@ function Bob(x,y, width, angle, fov_angle, fov_distance){
 	this.speedTurn = deg2rad(1); 
 	this.saying = false;
 	this.shadow = null;
+	this.bodyStyle = {
+		"fill":"#17A9C6",
+		"stroke":"#000000",
+		"stroke-width":2
+	};
+	this.bubbleStyle = {
+		"fill":"#FFF",
+		"stroke":"#FFF",
+		"stroke-width":3
+	};
+	this.textStyle = {
+		stroke: "#000"
+	};
+	this.shadow = new Shadow();
 }
 
 Bob.prototype.moveForward = function moveForward(){
@@ -56,22 +70,25 @@ Bob.prototype.sightPath = function(){
 };
 
 Bob.prototype.drawSight = function(paper){
+	
+	var px = this.x / paper.width;
+	var py = this.y / paper.height;
+	
+	var grad = "#877";
+	//console.log(grad)	
+	
 	paper.path(this.sightPath()).attr({
-		"fill": this.sightColor, // filling the background color
-		"fill-opacity":".5", // filling the background color
+		"fill": grad, //this.sightColor, // filling the background color
+		//"fill-opacity":".3", // filling the background color
 		"stroke":"#FF0000", // the color of the border
-		"stroke-opacity":".5", // the color of the border
+		//"stroke-opacity":".5", // the color of the border
 		"stroke-width":1 // the size of the border
 	});
 }
 
 
 Bob.prototype.draw = function(paper){
-	paper.path(this.bodyPath()).attr({
-		"fill":"#17A9C6",
-		"stroke":"#000000",
-		"stroke-width":2
-	});
+	paper.path(this.bodyPath()).attr(this.bodyStyle);
 	
 	if(this.saying){
 		var msg = this.saying;
@@ -87,27 +104,20 @@ Bob.prototype.draw = function(paper){
 			this.x+this.width +2,
 			this.y -2
 		);
-		var l = paper.path(anchor.path()).attr({
-			"stroke": "#fff", 
-			"stroke-width":2
-		});	
+		var l = paper.path(anchor.path()).attr(this.bubbleStyle);	
 		
 		var ec = paper.ellipse(
 			bubble_x, 
 			bubble_y, 
 			bubble_width, 
 			bubble_height
-		).attr({
-			"fill":"#FFF",
-			"stroke": "#fff", 
-		});
+		).attr(this.bubbleStyle);
+		
 		paper.text(
 			bubble_x, 
 			bubble_y, 	
 			msg
-		).attr({
-			stroke: "#000"
-		});
+		).attr(this.textStyle);
 
 	}
 };
@@ -161,13 +171,10 @@ Bob.prototype.fovSegments = function(){
 }
 
 Bob.prototype.drawShadow = function draw_bob_shadow(paper, player){
-		
-		var shadow = this.castShadow(player);
-		this.shadow = shadow;
-		if(this.shadow) this.shadow.draw(paper);
-	
+		if(this.shadow.paths.length>0) this.shadow.draw(paper);
 }	
-Bob.prototype.castShadow = function draw_bob_shadow(player){	
+
+Bob.prototype.castShadow = function cast_bob_shadow(player){	
 	var fov = player.fovSegments(),
 		intersect_1 = fov.left.intersectWithCircle(other.x, other.y, other.width),	
 		intersect_2 = fov.right.intersectWithCircle(other.x, other.y, other.width);
@@ -285,7 +292,7 @@ Bob.prototype.castShadow = function draw_bob_shadow(player){
 			+ paper.circularArc(
 				player.x, 
 				player.y, 
-				player.sightLength, 
+				player.sightLength , 
 				player.angle + left.angle,
 				player.angle + right.angle
 				
@@ -308,7 +315,7 @@ Bob.prototype.castShadow = function draw_bob_shadow(player){
 			+ "L" + left.ray.b.x + " " + left.ray.b.y
 		).attr({"fill":"#FFF","stroke":"#FFF", "stroke-width":1});
 		
-		return new Shadow(path);
+		player.shadow.paths.push(path);
 	}
 
 }
