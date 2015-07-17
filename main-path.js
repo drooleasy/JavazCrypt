@@ -21,6 +21,10 @@ $("#paper").on("click", function(evt){
 function draw(){
 
 	paper.clear();
+
+	for(var i=0; i<path.segments.length;i++) player.collidesWithSegment(path.segments[i]);
+
+
 	
 	var color = "#FFFFFF";
 	if(true || path.isSeenByBob(player)) color = "#FF0000";

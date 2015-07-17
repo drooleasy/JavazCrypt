@@ -17,6 +17,9 @@ function draw(){
 
 	paper.clear();
 	
+	
+	player.collidesWithBob(other);
+	
 	var color = "#FFFFFF";
 	if(player.sees(other)) color = "#FF0000";
 	player.sightColor = color;
@@ -36,6 +39,8 @@ function draw(){
 	}
 	
 	*/
+	
+	
 	
 	if(player.sees(other)){
 		other.drawShadow(player);

@@ -23,6 +23,10 @@ function draw(){
 
 	paper.clear();
 	
+	player.collidesWithBob(other);
+	player.collidesWithSegment(segment);
+
+	
 	var color = "#FFFFFF";
 	if(player.sees(other) || segment.isSeenByBob(player)) color = "#FF0000";
 	player.sightColor = color;

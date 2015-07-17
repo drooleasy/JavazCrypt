@@ -69,6 +69,34 @@ Bob.prototype.draw = function(paper){
 	});
 };
 
+
+
+
+Bob.prototype.collidesWithBob = function(bob){
+
+	var metrics = distanceAndAngle(this.x, this.y, bob.x, bob.y),
+		distance = this.width + bob.width;
+	if(metrics.distance < distance ){ // collides
+			this.x = bob.x - Math.cos(metrics.angle) * distance; 
+			this.y = bob.y - Math.sin(metrics.angle) * distance; 
+	}
+	
+}
+
+
+Bob.prototype.collidesWithSegment = function(segment){
+
+	var closest = segment.closestPointFrom(this.x, this.y);
+	var metrics = distanceAndAngle(this.x, this.y, closest.x, closest.y),
+		distance = this.width;
+	if(metrics.distance < distance ){ // collides
+			this.x = closest.x - Math.cos(metrics.angle) * distance; 
+			this.y = closest.y - Math.sin(metrics.angle) * distance; 
+	}
+	
+}
+
+
 Bob.prototype.fovSegments = function(){
 	
 		return {

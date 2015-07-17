@@ -17,6 +17,9 @@ function draw(){
 
 	paper.clear();
 	
+	
+	player.collidesWithSegment(segment);
+	
 	var color = "#FFFFFF";
 	if(segment.isSeenByBob(player)) color = "#FF0000";
 	player.sightColor = color;
