@@ -9,8 +9,8 @@ function rad2deg(rad){
 
 
 function display(msg, dontClear){
-	var dbg = document.getElementById("dbg-info");
-	if(dbg) dbg.innerHTML = (!!dontClear ?  dbg.innerHTML + "<br/>" : "") + msg;
+	//var dbg = document.getElementById("dbg-info");
+	//if(dbg) dbg.innerHTML = (!!dontClear ?  dbg.innerHTML + "<br/>" : "") + msg;
 }
 
 function clipAngle(angle){  
