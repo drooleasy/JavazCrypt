@@ -64,13 +64,19 @@ Segment.prototype.isSeenByBob = function(bob){
 }
 
 
-Segment.prototype.seenSegment = function(bob){
+Segment.prototype.seenSegment = function(bob, dbg){
 	var sees_a = false,
 		sees_b = false;
 
-	if(bob.sees({x:this.a.x, y:this.a.y, width:1})) sees_a = true; 
-	if(bob.sees({x:this.b.x, y:this.b.y, width:1})) sees_b = true;
+	if(bob.sees({x:this.a.x, y:this.a.y, width:2})) sees_a = true; 
+	
+	if(bob.sees({x:this.b.x, y:this.b.y, width:2})) sees_b = true;
 
+
+	if(dbg){
+		console.log("sees_a " + sees_a);
+		console.log("sees_b " + sees_b);
+	}
 
 
 	var angle_a, angle_b, angle_inter, angle_inter_1, angle_inter_2, left, rigth;
@@ -107,21 +113,27 @@ Segment.prototype.seenSegment = function(bob){
 		intersects.push(intersect_cone[i]);
 	}
 	
-	if(intersects.length > 1){
-		angle_inter_1 = distanceAndAngle(bob.x,bob.y, intersects[0].x, intersects[0].y).angle - bob.angle;
-		angle_inter_2 = distanceAndAngle(bob.x,bob.y, intersects[1].x, intersects[1].y).angle - bob.angle;
-
-		angle_inter_1=clipAngle(angle_inter_1);
-		angle_inter_2=clipAngle(angle_inter_2);
 	
-		
+	
+	if(dbg) console.log("intersects.length " + intersects.length );
+	if(intersects.length > 1){
+		angle_inter_min = clipAngle(distanceAndAngle(bob.x,bob.y, intersects[0].x, intersects[0].y).angle - bob.angle);
+		angle_inter_max = clipAngle(distanceAndAngle(bob.x,bob.y, intersects[0].x, intersects[0].y).angle - bob.angle);
 		left = intersects[0];
-		right = intersects[1];
+		right = intersects[0];
 
-		if(angle_a > angle_b){
-			left = intersects[1];
-			right = intersects[0];
+		for(i=1;i<intersects.length;i++){
+			var angle_inter = clipAngle(distanceAndAngle(bob.x,bob.y, intersects[i].x, intersects[i].y).angle - bob.angle);
+			if(angle_inter < angle_inter_min){
+				angle_inter_min = angle_inter;
+				right = intersects[i];
+			}
+			if(angle_inter > angle_inter_max){
+				angle_inter_max = angle_inter;
+				left = intersects[i];
+			}	
 		}
+			
 		//display("intesrect.length>1");
 		return new Segment(left.x, left.y, right.x, right.y);
 	}
@@ -152,7 +164,7 @@ Segment.prototype.seenSegment = function(bob){
 
 	var inter = null;
 
-	if(intersects.length>0) inter = intersects[0];
+	if(intersects.length==1) inter = intersects[0];
 
 	if(sees_a && inter){
 		
@@ -164,6 +176,15 @@ Segment.prototype.seenSegment = function(bob){
 		
 		//display("sees_b inter");
 		return addInter(this.b, inter, bob);
+	}
+	
+	if(inter){
+		return addInter(inter, this.b,  bob);
+		
+	}
+	
+	if(sees_a){
+		
 	}
 	
 	return null;
@@ -267,7 +288,8 @@ Segment.prototype.intersectWithCone = function(cx,cy,cr, angle, fov_angle){
 		var angle_points = distanceAndAngle(cx, cy, possibles[i].x, possibles[i].y).angle;
 		// console.log("absolu: " + rad2deg(angle_points))
 		
-		var angle_relative = angle_points - angle;
+		var angle_relative = clipAngle(angle_points - angle);
+		
 		// console.log("relatif: " + rad2deg(angle_relative))
 		if((-fov_angle/2) <= angle_relative && angle_relative <= fov_angle/2){
 			intersects.push(possibles[i]);

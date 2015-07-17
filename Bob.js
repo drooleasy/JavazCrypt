@@ -8,7 +8,7 @@ function Bob(x,y, width, angle, fov_angle, fov_distance){
 	this.sightColor= "#FFFFFF";
 	this.speedForward = 2;
 	this.speedBackward = 1;
-	this.speedTurn = deg2rad(1); 
+	this.speedTurn = deg2rad(3); 
 	this.saying = false;
 	this.shadow = null;
 	this.bodyStyle = {
@@ -175,13 +175,16 @@ Bob.prototype.drawShadow = function draw_bob_shadow(paper, player){
 }	
 
 Bob.prototype.castShadow = function cast_bob_shadow(player){	
+
+	var secants = [];
+	
+	/*
 	var fov = player.fovSegments(),
 		intersect_1 = fov.left.intersectWithCircle(other.x, other.y, other.width),	
 		intersect_2 = fov.right.intersectWithCircle(other.x, other.y, other.width);
 	// var intersect_cone = this.intersectWithCone(bob.x, bob.y, bob.sightLength, bob.angle, bob.sightWidth);
 	
 	
-	var secants 	= [];
 		
 	function addIntersect(intersect, player, secants){
 		var farthest = intersect[0];
@@ -209,7 +212,7 @@ Bob.prototype.castShadow = function cast_bob_shadow(player){
 	if(intersect_2){
 		addIntersect(intersect_2, player, secants)
 	}
-			
+	*/
 	
 	var v = minus(other, player);
 	var v_perp = {x:(-v.y), y:(v.y == 0 ? (-v.x) : v.x)}
