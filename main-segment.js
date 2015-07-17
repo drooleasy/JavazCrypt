@@ -1,11 +1,11 @@
 
 var paper = Raphael("paper", 650, 400);
 			
-var player = new Bob(325, 200, 10, -45, true);
+var player = new Bob(325, 200, 10, -45);
 var segment = new Segment(300, 120, 390, 260);
 
 var drawables = [];
-drawables.push(player);
+//drawables.push(player);
 drawables.push(segment);
 
 $("#paper").on("click", function(evt){
@@ -37,9 +37,11 @@ function draw(){
 		"stroke-width":1
 	});
 	
+	player.drawSight(paper);
+	
 	
 	if(segment.isSeenByBob(player)){
-		segment.drawShadow(player);
+		segment.drawShadow(paper, player);
 	}
 	
 	
@@ -53,6 +55,8 @@ function draw(){
 			});
 		}
 	}
+	
+	player.draw(paper);
 }
 
 setInterval(draw, 1000/25);

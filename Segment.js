@@ -1,6 +1,7 @@
 function Segment(x1, y1, x2, y2){
 	this.a = {x:x1, y:y1};
 	this.b = {x:x2, y:y2};
+	this.shadow = null;
 }
 
 
@@ -272,22 +273,30 @@ Segment.prototype.intersectWithCone = function(cx,cy,cr, angle, fov_angle){
 	return intersects;
 }
 
-Segment.prototype.drawShadow = function drawSegmentShadow(player){
+Segment.prototype.drawShadow = function draw_segment_shadow(paper, player){
+		
+		var shadow = this.castShadow(player);
+		this.shadow = shadow;
+		if(this.shadow) this.shadow.draw(paper);
+
+}	
+
+Segment.prototype.castShadow = function castSegmentShadow(pae){
 		var seenSeg = this.seenSegment(player);
 		if(seenSeg){
-			paper.path(seenSeg.path()).attr({
-				"fill":"#8FF",
-				"stroke":"#8FF",
-				"stroke-width":3
-			});
+			/*paper.path(seenSeg.path()).attr({
+				"fill":"#000",
+				"stroke":"#000",
+				"stroke-width":1
+			});*/
 			
-			paper.path(circle(seenSeg.a.x, seenSeg.a.y, 6, 0)).attr("fill", "#F00")
+			// paper.path(circle(seenSeg.a.x, seenSeg.a.y, 6, 0)).attr("fill", "#F00")
 			
 			var ray_1 = castRay(player.x, player.y, seenSeg.a.x, seenSeg.a.y, player.sightLength);
 			var ray_2 = castRay(player.x, player.y, seenSeg.b.x, seenSeg.b.y, player.sightLength);
 			
-			paper.path(ray_1.path()).attr({"stroke":"#3F3", "stroke-width":3});
-			paper.path(ray_2.path()).attr({"stroke":"#3F3", "stroke-width":3});
+			//paper.path(ray_1.path()).attr({"stroke":"#3F3", "stroke-width":3});
+			//paper.path(ray_2.path()).attr({"stroke":"#3F3", "stroke-width":3});
 			
 			
 			var angle_1 = distanceAndAngle(player.x, player.y, ray_1.a.x, ray_1.a.y).angle - player.angle,
@@ -310,14 +319,14 @@ Segment.prototype.drawShadow = function drawSegmentShadow(player){
 				+ "L" + ray_2.a.x + " " + ray_2.a.y
 				+ "L" + ray_1.a.x + " " + ray_1.a.y;
 			//console.log(path);
-			paper.path(
-				path
-			).attr({"fill":"#FFF","stroke":"#FFF", "stroke-width":1});
 			
+			/*
 			paper.path(
 				"M" + ray_1.a.x + " " + ray_1.a.y
 				+ "L" + ray_1.b.x + " " + ray_1.b.y
 			).attr({"fill":"#F33","stroke":"#F33", "stroke-width":3});
+			*/
 			
+			return new Shadow(path);
 		}
 	}

@@ -1,11 +1,11 @@
 
 var paper = Raphael("paper", 650, 400);
 			
-var player = new Bob(325, 200, 10, -45, true);
-var other = new Bob(375, 220, 10, -90, false);
+var player = new Bob(325, 200, 10, -45);
+var other = new Bob(375, 220, 10, -90);
 
 var drawables = [];
-drawables.push(player);
+//drawables.push(player);
 drawables.push(other);
 
 $("#paper").on("click", function(evt){
@@ -41,11 +41,13 @@ function draw(){
 	*/
 	
 	
+	player.drawSight(paper);
 	
 	if(player.sees(other)){
-		other.drawShadow(player);
+		other.drawShadow(paper, player);
 	}
 	
+	player.draw(paper);
 	
 }
 

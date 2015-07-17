@@ -19,21 +19,39 @@ function Path (/*x,y,...*/){
 			this.points[i+1].x, this.points[i+1].y
 		));
 	}
+	this.closed = false;
 }
+
+Path.prototype.close = function(){
+	if(!this.closed){
+		this.closed = true;
+		this.segments.push(new Segment(
+			this.points[this.points.length-1].x,
+			this.points[this.points.length-1].y,
+			this.points[0].x,
+			this.points[0].y
+		));
+	}
+}
+
+
 
 Path.prototype.path = function(paper){
 	var res = "M" + this.points[0].x + " " + this.points[0].y,
-		i = 1,
-		l = this.points.length;
+		i = 0,
+		l = this.segments.length;
 	for(;i<l;i++){
-		res += "L" +  this.points[i].x + " " + this.points[i].y;
+		res += "L" +  this.segments[i].b.x + " " + this.segments[i].b.y;
 	}
+	if(this.closed) res + " Z";
 	return res;
 }
 Path.prototype.draw = function(paper){
 	
 	paper.path(this.path()).attr({
-		"stroke-width" : "3"
+		"fill":"#000",
+		"stroke":"#000",
+		"stroke-width" : "1"
 	});
 } 
 

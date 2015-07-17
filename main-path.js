@@ -1,33 +1,47 @@
 
 var paper = Raphael("paper", 650, 400);
 			
-var player = new Bob(325, 200, 10, -45, true);
+var player = new Bob(325, 200, 10, -45);
+
+var other = new Bob(375, 220, 10, -90);
+
+
 var path = new Path(
-	300, 120, 
-	390, 260, 
-	180, 132,
-	200, 200 
+	500, 100, 
+	500, 300, 
+	100, 300,
+	100, 100, 
+	250, 200 
 );
 
+path.close();
+
 var drawables = [];
-drawables.push(player);
-drawables.push(path);
+drawables.push(path); // order matters !
+//drawables.push(player);
+//drawables.push(other);
+
 
 $("#paper").on("click", function(evt){
 	console.log(Raphael.isPointInsidePath(player.sightPath(), evt.clientX, evt.clientY));
 })
 
 
+var old_sees_other = false;
+
 function draw(){
 
 	paper.clear();
+
+
+
+	player.collidesWithBob(other);
 
 	for(var i=0; i<path.segments.length;i++) player.collidesWithSegment(path.segments[i]);
 
 
 	
-	var color = "#FFFFFF";
-	if(true || path.isSeenByBob(player)) color = "#FF0000";
+	var color = "#FF0000";
 	player.sightColor = color;
 
 	for(var i =0; i<drawables.length;i++){
@@ -37,41 +51,34 @@ function draw(){
 	var seenSegments = path.seenSegments(player);
 	for(i=0;i<seenSegments.length;i++){
 		paper.path(seenSegments[i].path()).attr({
-			"stroke": "#F88",
-			"stroke-width": 10
+			"stroke": "#888",
+			"stroke-width": 3
+		})
+	}
+	
+	player.drawSight(paper);
+
+	for(i=0;i<seenSegments.length;i++){
+		paper.path(seenSegments[i].path()).attr({
+			"stroke": "#888",
+			"stroke-width": 3
 		})
 		
-		seenSegments[i].drawShadow(player);
+		seenSegments[i].drawShadow(paper, player);
 	}
-	
-	
-	/*
-	var closest = segment.closestPointFrom(player.x, player.y);
-	
-	var point = circle(closest.x, closest.y, 2, 0);
-	paper.path(point).attr({
-		"fill":"#C1002A",
-		"stroke":"#C1002A",
-		"stroke-width":1
-	});
-	
-	
-	if(segment.isSeenByBob(player)){
-		segment.drawShadow(player);
+
+	 
+	if(player.sees(other)){
+		other.drawShadow(paper, player);
+		if(!old_sees_other) other.say(paper, "Hello world");
+		other.draw(paper);
+		old_sees_other = true;
+	}else{
+		old_sees_other = false;
 	}
-	
-	
-	var sol = segment.intersectWithCone(player.x, player.y, player.sightLength, player.angle, player.sightWidth); 
-	if(sol.length>0){
-		for(i=0;i<sol.length;i++){
-			paper.path(circle(sol[i].x,sol[i].y,3,0)).attr({
-				"fil":"#00F",
-				"stroke":"#00F",
-				"stroke-width":1
-			});
-		}
-	}
-	*/ 
+
+	player.draw(paper);
+
 }
 
 setInterval(draw, 1000/25);

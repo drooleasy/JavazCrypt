@@ -1,11 +1,11 @@
 
 var paper = Raphael("paper", 650, 400);
 			
-var player = new Bob(325, 200, 10, -45, true);
-var other = new Bob(335, 220, 10, -90, false);
+var player = new Bob(325, 200, 10, -45);
+var other = new Bob(335, 220, 10, -90);
 
 var drawables = [];
-drawables.push(player);
+//drawables.push(player);
 drawables.push(other);
 
 var segment = new Segment(300, 120, 390, 260);
@@ -47,13 +47,17 @@ function draw(){
 	
 	*/
 	
+	player.drawSight(paper);
+	
 	if(player.sees(other)){
-		other.drawShadow(player);
+		other.drawShadow(paper, player);
 	}
 	
 	if(segment.isSeenByBob(player)){
-		segment.drawShadow(player);
+		segment.drawShadow(paper, player);
 	}
+
+	player.draw(paper);
 
 }
 

@@ -1,15 +1,16 @@
-function Bob(x,y, width, angle, drawSight, fov_angle, fov_distance){
+function Bob(x,y, width, angle, fov_angle, fov_distance){
 	this.x = x;
 	this.y = y;
 	this.width = width; // radius !!!
 	this.angle = clipAngle(deg2rad(angle));
-	this.drawSight = !!drawSight;
 	this.sightLength = fov_distance || 200;
 	this.sightWidth = fov_angle && deg2rad(fov_angle) || deg2rad(120);
 	this.sightColor= "#FFFFFF";
 	this.speedForward = 2;
 	this.speedBackward = 1;
 	this.speedTurn = deg2rad(1); 
+	this.saying = false;
+	this.shadow = null;
 }
 
 Bob.prototype.moveForward = function moveForward(){
@@ -54,19 +55,61 @@ Bob.prototype.sightPath = function(){
 	return cone(this.x, this.y, this.sightLength, this.angle, this.sightWidth);
 };
 
+Bob.prototype.drawSight = function(paper){
+	paper.path(this.sightPath()).attr({
+		"fill": this.sightColor, // filling the background color
+		"fill-opacity":".5", // filling the background color
+		"stroke":"#FF0000", // the color of the border
+		"stroke-opacity":".5", // the color of the border
+		"stroke-width":1 // the size of the border
+	});
+}
+
+
 Bob.prototype.draw = function(paper){
 	paper.path(this.bodyPath()).attr({
 		"fill":"#17A9C6",
 		"stroke":"#000000",
 		"stroke-width":2
 	});
-	if(this.drawSight) paper.path(this.sightPath()).attr({
-		"fill": this.sightColor, // filling the background color
-		"fill-opacity":".5", // filling the background color
-		"stroke":"#FF0000", // the color of the border
-		"stroke-opacity":".5", // the color of the border
-		"stroke-width":2 // the size of the border
-	});
+	
+	if(this.saying){
+		var msg = this.saying;
+		var bubble_width = 30;
+		var bubble_height = 10;
+		var bubble_x = this.x+this.width+3 + bubble_width;
+		var bubble_y = this.y-this.width-3 ;
+		
+		
+		var anchor = new Segment(
+			bubble_x,
+			bubble_y,
+			this.x+this.width +2,
+			this.y -2
+		);
+		var l = paper.path(anchor.path()).attr({
+			"stroke": "#fff", 
+			"stroke-width":2
+		});	
+		
+		var ec = paper.ellipse(
+			bubble_x, 
+			bubble_y, 
+			bubble_width, 
+			bubble_height
+		).attr({
+			"fill":"#FFF",
+			"stroke": "#fff", 
+		});
+		paper.text(
+			bubble_x, 
+			bubble_y, 	
+			msg
+		).attr({
+			stroke: "#000"
+		});
+
+	}
 };
 
 
@@ -117,7 +160,14 @@ Bob.prototype.fovSegments = function(){
 		}
 }
 
-Bob.prototype.drawShadow = function draw_bob_shadow(player){	
+Bob.prototype.drawShadow = function draw_bob_shadow(paper, player){
+		
+		var shadow = this.castShadow(player);
+		this.shadow = shadow;
+		if(this.shadow) this.shadow.draw(paper);
+	
+}	
+Bob.prototype.castShadow = function draw_bob_shadow(player){	
 	var fov = player.fovSegments(),
 		intersect_1 = fov.left.intersectWithCircle(other.x, other.y, other.width),	
 		intersect_2 = fov.right.intersectWithCircle(other.x, other.y, other.width);
@@ -141,7 +191,7 @@ Bob.prototype.drawShadow = function draw_bob_shadow(player){
 
 		secants.push({angle:angle, ray:ray});
 
-		ray.draw(paper);
+		//ray.draw(paper);
 	}
 	
 	
@@ -180,7 +230,7 @@ Bob.prototype.drawShadow = function draw_bob_shadow(player){
 			y: (other.y + v_perp.y * k)
 		}
 		var ray = castRay(player.x, player.y, side.x, side.y, player.sightLength);
-		ray.draw(paper);
+		//ray.draw(paper);
 		
 		var angle = distanceAndAngle(player.x, player.y, side.x, side.y).angle - player.angle;
 		angle = clipAngle(angle);
@@ -252,15 +302,20 @@ Bob.prototype.drawShadow = function draw_bob_shadow(player){
 			
 			) + "Z";
 
-		paper.path(
-			path
-		).attr({"fill":"#FFF","stroke":"#FFF", "stroke-width":1});
 		
-		paper.path(
+		if(false)paper.path(
 			"M" + left.ray.a.x + " " + left.ray.a.y
 			+ "L" + left.ray.b.x + " " + left.ray.b.y
 		).attr({"fill":"#FFF","stroke":"#FFF", "stroke-width":1});
 		
+		return new Shadow(path);
 	}
 
+}
+
+
+Bob.prototype.say = function (paper, msg){	
+	this.saying = msg;
+	var that = this;
+	setTimeout(function shutUp(){ that.saying=false}, 3*1000)
 }
