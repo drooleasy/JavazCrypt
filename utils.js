@@ -7,6 +7,12 @@ function rad2deg(rad){
 	return rad*180/Math.PI;
 }
 
+
+function display(msg, dontClear){
+	var dbg = document.getElementById("dbg-info");
+	if(dbg) dbg.innerHTML = (!!dontClear ?  dbg.innerHTML + "<br/>" : "") + msg;
+}
+
 function clipAngle(angle){  
 	var turns = angle / (2*Math.PI);
 	turns = (turns<0 ? Math.ceil(turns) : Math.floor(turns)); 

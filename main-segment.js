@@ -25,19 +25,6 @@ function draw(){
 		drawables[i].draw(paper);
 	}
 	
-	/*
-	if(Raphael.isBBoxIntersect(Raphael.pathBBox(player.sightPath()), Raphael.pathBBox(other.bodyPath())) 
-		&& Raphael.pathIntersection(player.sightPath(), other.bodyPath()).length >0){
-		console.log("touch!!!");	
-	}
-	
-	if(Raphael.isPointInsidePath(player.sightPath(), other.x, other.y)){
-		console.log("in!!!");	
-	}
-	
-	*/
-	
-	
 	var closest = segment.closestPointFrom(player.x, player.y);
 	
 	var point = circle(closest.x, closest.y, 2, 0);
@@ -47,23 +34,14 @@ function draw(){
 		"stroke-width":1
 	});
 	
-	//player.fovSegments().left.draw(paper);
-
-
 	
 	if(segment.isSeenByBob(player)){
 		segment.drawShadow(player);
 	}
 	
 	
-	if(segment.intersectWithCircle(player.x, player.y, player.sightLength)){
-		//console.log("yo")
-	}
-	
-	
 	var sol = segment.intersectWithCone(player.x, player.y, player.sightLength, player.angle, player.sightWidth); 
 	if(sol.length>0){
-		//console.log("yaradilliou")
 		for(i=0;i<sol.length;i++){
 			paper.path(circle(sol[i].x,sol[i].y,3,0)).attr({
 				"fil":"#00F",

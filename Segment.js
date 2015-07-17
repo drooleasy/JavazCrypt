@@ -114,7 +114,7 @@ Segment.prototype.seenSegment = function(bob){
 			left = intersects[1];
 			right = intersects[0];
 		}
-		
+		display("intesrect.length>1");
 		return new Segment(left.x, left.y, right.x, right.y);
 	}
 	
@@ -123,10 +123,14 @@ Segment.prototype.seenSegment = function(bob){
 		angle = distanceAndAngle(bob.x,bob.y, p.x, p.y).angle - bob.angle;
 		angle_inter = distanceAndAngle(bob.x,bob.y, inter.x, inter.y).angle - bob.angle;
 
-		angle_a=clipAngle(angle);
+		angle=clipAngle(angle);
 		angle_inter=clipAngle(angle_inter);
 
 
+
+		display("angle " + angle, true);
+		display("angle inter " + angle_inter, true);
+		
 		left = p;
 		right = inter;
 		if(angle > angle_inter){
@@ -143,10 +147,14 @@ Segment.prototype.seenSegment = function(bob){
 	if(intersects.length>0) inter = intersects[0];
 
 	if(sees_a && inter){
+		
+		display("sees_a inter");
 		return addInter(this.a, inter, bob);
 	}
 	
 	if(sees_b && inter){
+		
+		display("sees_b inter");
 		return addInter(this.b, inter, bob);
 	}
 	
@@ -273,6 +281,8 @@ Segment.prototype.drawShadow = function drawSegmentShadow(player){
 				"stroke-width":3
 			});
 			
+			paper.path(circle(seenSeg.a.x, seenSeg.a.y, 6, 0)).attr("fill", "#F00")
+			
 			var ray_1 = castRay(player.x, player.y, seenSeg.a.x, seenSeg.a.y, player.sightLength);
 			var ray_2 = castRay(player.x, player.y, seenSeg.b.x, seenSeg.b.y, player.sightLength);
 			
@@ -280,9 +290,11 @@ Segment.prototype.drawShadow = function drawSegmentShadow(player){
 			paper.path(ray_2.path()).attr({"stroke":"#3F3", "stroke-width":3});
 			
 			
-			/*var */angle_1 = distanceAndAngle(player.x, player.y, ray_1.a.x, ray_1.a.y).angle - player.angle,
+			var angle_1 = distanceAndAngle(player.x, player.y, ray_1.a.x, ray_1.a.y).angle - player.angle,
 				angle_2 = distanceAndAngle(player.x, player.y, ray_2.a.x, ray_2.a.y).angle - player.angle;
 			
+			angle_1 = clipAngle(angle_1);
+			angle_2 = clipAngle(angle_2);
 			
 			startAngle =  Math.min(angle_1, angle_2);
 			endAngle = Math.max(angle_1, angle_2);
@@ -300,12 +312,12 @@ Segment.prototype.drawShadow = function drawSegmentShadow(player){
 			//console.log(path);
 			paper.path(
 				path
-			).attr({"fill":"#444","stroke":"#FFF", "stroke-width":5});
+			).attr({"fill":"#FFF","stroke":"#FFF", "stroke-width":1});
 			
 			paper.path(
 				"M" + ray_1.a.x + " " + ray_1.a.y
 				+ "L" + ray_1.b.x + " " + ray_1.b.y
-			).attr({"fill":"#444","stroke":"#888", "stroke-width":5});
+			).attr({"fill":"#F33","stroke":"#F33", "stroke-width":3});
 			
 		}
 	}

@@ -226,12 +226,12 @@ Bob.prototype.drawShadow = function draw_bob_shadow(player){
 
 		paper.path(
 			path
-		).attr({"fill":"#444","stroke":"#FFF", "stroke-width":5});
+		).attr({"fill":"#FFF","stroke":"#FFF", "stroke-width":1});
 		
 		paper.path(
 			"M" + left.ray.a.x + " " + left.ray.a.y
 			+ "L" + left.ray.b.x + " " + left.ray.b.y
-		).attr({"fill":"#444","stroke":"#888", "stroke-width":5});
+		).attr({"fill":"#FFF","stroke":"#FFF", "stroke-width":1});
 		
 	}
 
