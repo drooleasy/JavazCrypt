@@ -5,7 +5,7 @@ var paper = Raphael("paper", paper_width, paper_height);
 paper.width = paper_width;			
 paper.height = paper_height;
 			
-var player = new Bob(325, 200, 10, -45);
+var player = new Bob(325, 200, 10, -85);
 player.sightWidth=deg2rad(120);
 
 var other = new Bob(375, 220, 10, -90);
@@ -159,10 +159,10 @@ function draw(){
 	var fps = 1.0/timer;
 	
 	var color = "green";
-	if(fps<60) color = "red"
+	if(fps<25) color = "red"
 	display("<span style='color:"+color+";weight:bold;'>fps : " + fps.toFixed(3) + "</span>");
 
 }
 
-setInterval(draw, 1000/25);
+setInterval(draw, 1000/13);
 keyboardControl(player);

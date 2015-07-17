@@ -64,20 +64,13 @@ Segment.prototype.isSeenByBob = function(bob){
 }
 
 
-Segment.prototype.seenSegment = function(bob, dbg){
+Segment.prototype.seenSegment = function(bob){
 	var sees_a = false,
 		sees_b = false;
 
 	if(bob.sees({x:this.a.x, y:this.a.y, width:2})) sees_a = true; 
 	
 	if(bob.sees({x:this.b.x, y:this.b.y, width:2})) sees_b = true;
-
-
-	if(dbg){
-		console.log("sees_a " + sees_a);
-		console.log("sees_b " + sees_b);
-	}
-
 
 	var angle_a, angle_b, angle_inter, angle_inter_1, angle_inter_2, left, rigth;
 
@@ -112,10 +105,7 @@ Segment.prototype.seenSegment = function(bob, dbg){
 	for(i=0;i<intersect_cone.length;i++){
 		intersects.push(intersect_cone[i]);
 	}
-	
-	
-	
-	if(dbg) console.log("intersects.length " + intersects.length );
+		
 	if(intersects.length > 1){
 		angle_inter_min = clipAngle(distanceAndAngle(bob.x,bob.y, intersects[0].x, intersects[0].y).angle - bob.angle);
 		angle_inter_max = clipAngle(distanceAndAngle(bob.x,bob.y, intersects[0].x, intersects[0].y).angle - bob.angle);
