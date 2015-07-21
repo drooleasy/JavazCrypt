@@ -9,36 +9,42 @@ function Candle(x,y,r){
 	this.angle = 0;
 	
 	var that = this;
-	setInterval(function(){
+	if(false)setInterval(function(){
 		that.x = that._x + Math.random()*4 -2;
 		that.y = that._y + Math.random()*4 -2;
 	}, 1000/8)
 }
 
-Candle.prototype.sees = function(bob){
-	var metrics = distanceAndAngle(this.x, this.y, bob.x, bob.y);
-	if(metrics.distance < this.sightLength) return true;
-	else return false;
-}
 
-
-
-
-Candle.prototype.draw = function(paper){
-	paper.path(circle(this.x, this.y, 3, 0)).attr({fill:"#fff"}); 
-}
-
-
-Candle.prototype.fovSegments = function(){
-
-		return {
-			left:new Segment(this.x, this.y, this.x-this.sightLength, this.y),
-			right:new Segment(this.x, this.y, this.x+this.sightLength, this.y),
-		}
+Candle.prototype.drawHalo = function(offcanvas, w, h) {
 	
-}
+	function randHex(minimum, variable){
+		var res = (minimum + Math.floor(Math.random()*variable)).toString(16);
+		if(res.length<2) rrs = "0" + res;
+		return res; 
+	}
+
+	var offctx = offcanvas.getContext('2d');
+
+	var color = "#"
+		+ randHex(239, 16)
+		+ randHex(239, 16)
+		+ randHex(144, 32)
+		
+	var x = this.x + Math.random()*4-2,
+		y = this.y  + Math.random()*4-2,
+		r = 10 + Math.random()*6-3,
+		r2 = this.sightLength + Math.random()*20-10,
+		grd=offctx.createRadialGradient(x, y, r, x, y, r2);
+	grd.addColorStop(0,color);
+	grd.addColorStop(.99,"#010101");
+	grd.addColorStop(1,"#000");
+
+	// Fill with gradient
+	offctx.fillStyle=grd;
+	offctx.fillRect(0, 0, w, h);	
+
+}			
 
 
-Candle.prototype.drawShadow = function(paper){
-	this.shadow.draw(paper);
-}
+

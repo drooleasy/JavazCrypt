@@ -79,7 +79,7 @@ Bob.prototype.drawSight = function(paper){
 	var oldCompositeOpration = ctx.globalCompositeOperation;
 	ctx.globalCompositeOperation = "destination-atop";
 	//ctx.globalCompositeOperation = "source-over";
-	ctx.fillStyle = "rgb(255,255,255,0)";
+	ctx.fillStyle = "rgba(255,255,255,1)";
 	ctx.strokeStyle = "#FF0000";
 	ctx.lineWidth = 5;
 	
@@ -95,12 +95,40 @@ Bob.prototype.drawSight = function(paper){
 	ctx.arc(this.x, this.y, this.sightLength, this.angle-this.sightWidth/2, this.angle+this.sightWidth/2);
 	ctx.lineTo(this.x,this.y);
 	ctx.closePath();
-	ctx.stroke();
+	//ctx.stroke();
 	ctx.fill();
 	
 	
 	
 	ctx.globalCompositeOperation = oldCompositeOpration;
+
+
+	
+	var grd=ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.sightLength);
+	grd.addColorStop(0,"rgba(0,0,0,0)");
+	grd.addColorStop(0.333 + Math.random()*0.1-0.05,"rgba(0,0,0,0)");
+	grd.addColorStop(1,"rgba(0,0,0,1)");
+
+	ctx.fillStyle = grd;
+	ctx.strokeStyle = "#FF0000";
+	ctx.lineWidth = 5;
+	
+	
+			
+	var x1 = this.x + Math.cos(this.angle - this.sightWidth/2) * this.sightLength,
+		y1 = this.y + Math.sin(this.angle - this.sightWidth/2) * this.sightLength;
+				
+	
+	ctx.beginPath();
+	ctx.moveTo(this.x,this.y);
+	ctx.lineTo(x1, y1);
+	ctx.arc(this.x, this.y, this.sightLength, this.angle-this.sightWidth/2, this.angle+this.sightWidth/2);
+	ctx.lineTo(this.x,this.y);
+	ctx.closePath();
+	//ctx.stroke();
+	ctx.fill();
+
+
 	
 }
 

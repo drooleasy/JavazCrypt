@@ -5,17 +5,34 @@ var paper = document.getElementById("paper");
 paper.width = paper_width;			
 paper.height = paper_height;
 			
+			
+
+var ctx = document.getElementById("paper").getContext("2d");
+
+var offcanvas = document.createElement("canvas");
+
+offcanvas.style.width = paper_width + "px";
+offcanvas.width = paper_width;
+offcanvas.style.height = paper_height + "px";
+offcanvas.height = paper_height;
+offcanvas.style.backgroundColor = "#000";
+
+
+
+			
+			
 var player = new Bob(325, 200, 10, -85);
 player.sightWidth=deg2rad(120);
 
 var other = new Bob(375, 220, 10, -90);
 
+var candles = [
+	//new Candle(420,120,300),
+	//new Candle(370,270,130),
+	//new Candle(210,180,300),
+	//new Candle(100,170,130)
+];
 
-var candle = new Candle(330, 210, 1000);
-var candle2 = new Candle(210, 220, 1000);
-var candles = [];
-//candles.push(candle);
-//candles.push(candle2);
 
 
 var path = new Path(
@@ -74,6 +91,39 @@ function draw(){
 		drawables[i].draw(paper);
 	}
 
+	if(candles.length){
+		var offctx = offcanvas.getContext('2d');
+		
+		offctx.globalCompositeOperation = "source-over";
+		offctx.fillStyle = 'black';
+		offctx.fillRect(0,0,paper_width,paper_height);
+
+		offctx.globalCompositeOperation = "lighter";
+		for(p=0;p<1;p++) for(var i=0; i<candles.length;i++){
+			var candle = candles[i];
+			candle.drawHalo(offcanvas, paper_width, paper_height);
+		}
+
+
+
+
+		var render = ctx.createImageData(paper_width, paper_height),
+			map = ctx.getImageData(0,0,paper_width, paper_height),
+			lights = offctx.getImageData(0,0,paper_width, paper_height);
+		for(var x=0; x<paper_width;x++){
+			for(var y=0; y<paper_height;y++){
+				var index = (x +y*paper_width)*4;
+				//console.log(lights[index_light]);
+				render.data[index+0] = map.data[index+0] * lights.data[index+0]/255;
+				render.data[index+1] = map.data[index+1] * lights.data[index+1]/255;
+				render.data[index+2] = map.data[index+2] * lights.data[index+2]/255;
+				render.data[index+3] = map.data[index+3] * 1;
+			}
+		}
+		
+		ctx.putImageData(render, 0, 0);
+	}
+	
 
 	player.drawSight(paper);
 
@@ -114,18 +164,10 @@ function draw(){
 	
 	for(i=0;i<seenSegments.length;i++){
 		seenSegments[i].castShadow(player);
-		
-		for(var j=0;j<candles.length;j++){
-			seenSegments[i].castShadow(candles[j]);
-		}
-
 	}
 
 	for(i=0;i<seenSegments2.length;i++){
 		seenSegments2[i].castShadow(player);
-		for(j=0;j<candles.length;j++){
-			seenSegments2[i].castShadow(candles[j]);
-		}
 	}
 
 
@@ -146,9 +188,6 @@ function draw(){
 	
 	player.shadow.draw(paper);
 	
-	for(i=0;i<candles.length;i++){
-		candles[i].shadow.draw(paper);
-	}
 
 
 
@@ -161,11 +200,6 @@ function draw(){
 	}
 	
 
-
-
-	for(i=0;i<candles.length;i++){
-		candles[i].draw(paper);
-	}
 	player.draw(paper);
 	
 	timer = (new Date()).getTime() - timer;
