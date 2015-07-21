@@ -18,10 +18,11 @@ offcanvas.height = paper_height;
 offcanvas.style.backgroundColor = "#000";
 
 
-
+var min_fps = Number.POSITIVE_INFINITY;
+var max_fps = 0;
 			
 			
-var player = new Bob(325, 200, 10, -85);
+var player = new Bob(225, 200, 10, -85);
 player.sightWidth=deg2rad(120);
 
 var other = new Bob(375, 220, 10, -90);
@@ -53,44 +54,46 @@ var boulder = new Path(
 
 boulder.close();
 
-var drawables = [];
-drawables.push(path); // order matters !
-drawables.push(boulder); // order matters !
-//drawables.push(player);
-//drawables.push(other);
+var old_sees_player = false;
+var old_sees_bob = false;
 
 
-var old_sees_other = false;
+var lights_on = true;
 
 function draw(){
 
 	var timer = (new Date()).getTime();
-	 // clear();
+
+
+
+
+	// CLEARING
 	var ctx = paper.getContext("2d");
 	ctx.fillStyle = "#000";
 	ctx.fillRect(0, 0, paper_width, paper_height);
-
-
-	player.shadow.clear();
-	
+	player.shadow.clear();	
 	for(i=0;i<candles.length;i++){
 		candles[i].shadow.clear();
 	}
 
-	player.collidesWithBob(other);
 
+	// COLLISIONS
+	player.collidesWithBob(other);
 	for(var i=0; i<path.segments.length;i++) player.collidesWithSegment(path.segments[i]);
 	for(var i=0; i<boulder.segments.length;i++) player.collidesWithSegment(boulder.segments[i]);
 
 
+	// DRAWS SCENE
+	ctx.fillStyle = "#FFF";
+	ctx.strokeStyle = "#000";
+	ctx.lineWidth = 1;
+	path.draw(paper);
 	
-	var color = "#FF0000";
-	player.sightColor = color;
+	ctx.fillStyle = "#000";
+	boulder.draw(paper);
+	
 
-	for(var i =0; i<drawables.length;i++){
-		drawables[i].draw(paper);
-	}
-
+	// RENDERS CANDLES
 	if(candles.length){
 		var offctx = offcanvas.getContext('2d');
 		
@@ -103,10 +106,6 @@ function draw(){
 			var candle = candles[i];
 			candle.drawHalo(offcanvas, paper_width, paper_height);
 		}
-
-
-
-
 		var render = ctx.createImageData(paper_width, paper_height),
 			map = ctx.getImageData(0,0,paper_width, paper_height),
 			lights = offctx.getImageData(0,0,paper_width, paper_height);
@@ -125,93 +124,110 @@ function draw(){
 	}
 	
 
-	player.drawSight(paper);
 
-
-
-	var seenSegments = path.seenSegments(player);
-
-	var seenSegments2 = boulder.seenSegments(player);
-
-
-
-	var ctx = paper.getContext('2d');
-	ctx.strokeStyle = "#6C6";
-	ctx.lineWidth = 6;
-	
-	
-	
-
-	ctx.beginPath();
+	if(!lights_on){
+		// DRAWS FOV
+		player.drawSight(paper);
 		
-	for(i=0;i<seenSegments.length;i++){
-		ctx.moveTo(seenSegments[i].a.x, seenSegments[i].a.y);
-		ctx.lineTo(seenSegments[i].b.x, seenSegments[i].b.y);
-	}
-
-	for(i=0;i<seenSegments2.length;i++){
-		
-		ctx.moveTo(seenSegments2[i].a.x, seenSegments2[i].a.y);
-		ctx.lineTo(seenSegments2[i].b.x, seenSegments2[i].b.y);
-	}
-	ctx.stroke();
-
-
-
-
-	
-
-	
-	for(i=0;i<seenSegments.length;i++){
-		seenSegments[i].castShadow(player);
-	}
-
-	for(i=0;i<seenSegments2.length;i++){
-		seenSegments2[i].castShadow(player);
-	}
-
-
-
-
-
-	var sees_bob = player.sees(other);
-
-	if(sees_bob){
-		other.castShadow(player);
-		for(i=0;i<candles.length;i++){
-			other.castShadow(candles[i]);
-		
+		// DRAWS SEEN WALLS
+		var seenSegments = path.seenSegments(player);
+		var seenSegments2 = boulder.seenSegments(player);
+		var ctx = paper.getContext('2d');
+		ctx.strokeStyle = "#6C6";
+		ctx.lineWidth = 6;
+		ctx.beginPath();
+		for(i=0;i<seenSegments.length;i++){
+			ctx.moveTo(seenSegments[i].a.x, seenSegments[i].a.y);
+			ctx.lineTo(seenSegments[i].b.x, seenSegments[i].b.y);
 		}
+		for(i=0;i<seenSegments2.length;i++){	
+			ctx.moveTo(seenSegments2[i].a.x, seenSegments2[i].a.y);
+			ctx.lineTo(seenSegments2[i].b.x, seenSegments2[i].b.y);
+		}
+		ctx.stroke();
+		
+		
+		
+		// WORLD SHADOWS
+		for(i=0;i<seenSegments.length;i++){
+			seenSegments[i].castShadow(player);
+		}
+		for(i=0;i<seenSegments2.length;i++){
+			seenSegments2[i].castShadow(player);
+		}
+
+
+
+
+		// OTHERS SHADOWS
+		var sees_bob = player.sees(other);
+		if(sees_bob){
+			other.castShadow(player);
+			for(i=0;i<candles.length;i++){
+				other.castShadow(candles[i]);
+			
+			}
+		}
+
 	}
-	
-
-	
-	player.shadow.draw(paper);
-	
 
 
 
-	if(sees_bob){
-		if(!old_sees_other) other.say(paper, "Hello world");
-		old_sees_other = true;
+
+	// DRAWS OTHERS IF SEEN
+	if(lights_on || sees_bob){
 		other.draw(paper);
-	}else{
-		old_sees_other = false;
 	}
-	
 
+	
+	// DRAWS PLAYER SHADOWS
+	if(!lights_on) player.shadow.draw(paper);
+
+
+	// PLAYERS REACTION
+	var sees_bob = player.sees(other);
+	if(sees_bob){
+		if(!old_sees_bob) player.say(paper, "Hello Bob...");
+		
+		
+		var a = clipAngle(clipAnglePositive(distanceAndAngle(other.x, other.y, player.x, player.y).angle) - clipAnglePositive(other.angle));
+		if(Math.abs(a) > deg2rad(2)) other.angle += deg2rad(2) * Math.abs(a)/a;
+	}else{
+		old_sees_bob = false;
+	}
+	player.speak(paper);
+
+
+
+	
+	// OTHERS REACTION
+	var sees_player = other.sees(player);
+	if(sees_player){
+		if(!old_sees_player) other.say(paper, "Hello Bob !");
+	}else{
+		old_sees_player = false;
+	}
+	other.speak(paper);
+	
+	// DRAWS PLAYER
 	player.draw(paper);
 	
-	timer = (new Date()).getTime() - timer;
 	
+	// FPS CALCULATION
+	timer = (new Date()).getTime() - timer;
 	timer/=1000;
 	var fps = 1.0/timer;
-	
+	min_fps = Math.min(min_fps, fps);
+	max_fps = Math.max(max_fps, fps);
 	var color = "green";
 	if(fps<25) color = "red"
-	display("<span style='color:"+color+";weight:bold;'>fps : " + fps.toFixed(3) + "</span>");
+	display("<span style='color:red;weight:bold;'>min : " +	min_fps.toFixed(3) + "</span>");
+	display("<span style='color:black;weight:bold;'>fps : " + fps.toFixed(3) + "</span>", true);
+	display("<span style='color:green;weight:bold;'>max : " + max_fps.toFixed(3) + "</span>", true);
 
+	// REQUEST NEXT FRAME
+	window.requestAnimationFrame(draw);
 }
 
-setInterval(draw, 1000/13);
+window.requestAnimationFrame(draw);
 keyboardControl(player);

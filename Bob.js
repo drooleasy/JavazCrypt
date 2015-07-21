@@ -69,7 +69,7 @@ Bob.prototype.sightPath = function(){
 	return cone(this.x, this.y, this.sightLength, this.angle, this.sightWidth);
 };
 
-Bob.prototype.drawSight = function(paper){
+Bob.prototype.drawSight = function(paper, lights_on){
 		
 		
 		
@@ -78,7 +78,8 @@ Bob.prototype.drawSight = function(paper){
 	
 	var oldCompositeOpration = ctx.globalCompositeOperation;
 	ctx.globalCompositeOperation = "destination-atop";
-	//ctx.globalCompositeOperation = "source-over";
+	
+	if(lights_on) ctx.globalCompositeOperation = "source-over";
 	ctx.fillStyle = "rgba(255,255,255,1)";
 	ctx.strokeStyle = "#FF0000";
 	ctx.lineWidth = 5;
@@ -103,32 +104,32 @@ Bob.prototype.drawSight = function(paper){
 	ctx.globalCompositeOperation = oldCompositeOpration;
 
 
-	
-	var grd=ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.sightLength);
-	grd.addColorStop(0,"rgba(0,0,0,0)");
-	grd.addColorStop(0.333 + Math.random()*0.1-0.05,"rgba(0,0,0,0)");
-	grd.addColorStop(1,"rgba(0,0,0,1)");
+	if(!lights_on){
+		var grd=ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.sightLength);
+		grd.addColorStop(0,"rgba(255,255,128,0)");
+		grd.addColorStop(0.333 + Math.random()*0.1-0.05,"rgba(0,0,0,0)");
+		grd.addColorStop(1,"rgba(0,0,0,1)");
 
-	ctx.fillStyle = grd;
-	ctx.strokeStyle = "#FF0000";
-	ctx.lineWidth = 5;
-	
-	
-			
-	var x1 = this.x + Math.cos(this.angle - this.sightWidth/2) * this.sightLength,
-		y1 = this.y + Math.sin(this.angle - this.sightWidth/2) * this.sightLength;
+		ctx.fillStyle = grd;
+		ctx.strokeStyle = "#FF0000";
+		ctx.lineWidth = 5;
+		
+		
 				
-	
-	ctx.beginPath();
-	ctx.moveTo(this.x,this.y);
-	ctx.lineTo(x1, y1);
-	ctx.arc(this.x, this.y, this.sightLength, this.angle-this.sightWidth/2, this.angle+this.sightWidth/2);
-	ctx.lineTo(this.x,this.y);
-	ctx.closePath();
-	//ctx.stroke();
-	ctx.fill();
+		var x1 = this.x + Math.cos(this.angle - this.sightWidth/2) * this.sightLength,
+			y1 = this.y + Math.sin(this.angle - this.sightWidth/2) * this.sightLength;
+					
+		
+		ctx.beginPath();
+		ctx.moveTo(this.x,this.y);
+		ctx.lineTo(x1, y1);
+		ctx.arc(this.x, this.y, this.sightLength, this.angle-this.sightWidth/2, this.angle+this.sightWidth/2);
+		ctx.lineTo(this.x,this.y);
+		ctx.closePath();
+		//ctx.stroke();
+		ctx.fill();
 
-
+	}
 	
 }
 
@@ -150,6 +151,26 @@ Bob.prototype.draw = function(paper){
 	
 	ctx.beginPath();
 	ctx.arc(this.x, this.y, this.width, 0, 2*Math.PI);
+	//ctx.stroke();
+	ctx.fill();
+	
+	
+	
+	ctx.fillStyle="#C33"
+	
+	var nose_offset = 0;
+	
+	var nose = {
+		x:this.x +Math.cos(this.angle) * (this.width+nose_offset),
+		y:this.y +Math.sin(this.angle) * (this.width+nose_offset),
+		r: 3
+	}
+	
+	
+	var eye_offset = 0;
+	
+	ctx.beginPath();
+	ctx.arc(nose.x, nose.y, nose.r, 0, 2*Math.PI);
 	ctx.stroke();
 	ctx.fill();
 	
@@ -157,8 +178,8 @@ Bob.prototype.draw = function(paper){
 	ctx.fillStyle="#fff"
 	
 	var eye_left = {
-		x:this.x +Math.cos(this.angle-this.sightWidth/2) * this.width,
-		y:this.y +Math.sin(this.angle-this.sightWidth/2) * this.width,
+		x:this.x +Math.cos(this.angle-this.sightWidth/2) * (this.width+eye_offset),
+		y:this.y +Math.sin(this.angle-this.sightWidth/2) * (this.width+eye_offset),
 		r: 2
 	}
 	
@@ -168,8 +189,8 @@ Bob.prototype.draw = function(paper){
 	ctx.fill();
 	
 	var eye_right = {
-		x:this.x +Math.cos(this.angle+this.sightWidth/2) * this.width,
-		y:this.y +Math.sin(this.angle+this.sightWidth/2) * this.width,
+		x:this.x +Math.cos(this.angle+this.sightWidth/2) * (this.width+eye_offset),
+		y:this.y +Math.sin(this.angle+this.sightWidth/2) * (this.width+eye_offset),
 		r: 2
 	}
 	
@@ -183,6 +204,12 @@ Bob.prototype.draw = function(paper){
 	
 	
 	
+	
+};
+
+
+
+Bob.prototype.speak = function(paper){
 	if(this.saying){
 		var margin = 5,
 			height = 14,
@@ -249,10 +276,7 @@ Bob.prototype.draw = function(paper){
 			text_y
 		);
 	}
-};
-
-
-
+}
 
 Bob.prototype.collidesWithBob = function(bob){
 
@@ -307,57 +331,15 @@ Bob.prototype.castShadow = function cast_bob_shadow(player){
 
 	var secants = [];
 	
-	/*
-	var fov = player.fovSegments(),
-		intersect_1 = fov.left.intersectWithCircle(other.x, other.y, other.width),	
-		intersect_2 = fov.right.intersectWithCircle(other.x, other.y, other.width);
-	// var intersect_cone = this.intersectWithCone(bob.x, bob.y, bob.sightLength, bob.angle, bob.sightWidth);
+	var factor = 120/100;
 	
-	
-		
-	function addIntersect(intersect, player, secants){
-		var farthest = intersect[0];
-		if(intersect.length > 1){
-			 dist_1 = distanceAndAngle(player.x, player.y, intersect[0].x, intersect[0].y).distance;
-			 dist_2 = distanceAndAngle(player.x, player.y, intersect[1].x, intersect[1].y).distance;
-			 if(dist_2 > dist_1) farthest = intersect[1]
-		}
-		
-		var ray = castRay(player.x, player.y, farthest.x, farthest.y, player.sightLength);
-		var angle = distanceAndAngle(player.x, player.y, farthest.x, farthest.y).angle - player.angle;
-		var angle= clipAngle(angle);
-
-
-		secants.push({angle:angle, ray:ray});
-
-		//ray.draw(paper);
-	}
-	
-	
-	if(intersect_1){
-		addIntersect(intersect_1, player, secants)
-	}
-	
-	if(intersect_2){
-		addIntersect(intersect_2, player, secants)
-	}
-	*/
-	
-	var v = minus(other, player);
+	var v = minus(this, player);
 	var v_perp = {x:(-v.y), y:(v.y == 0 ? (-v.x) : v.x)}
 	
-	
-	/*
-		(v_perp.x*k)²+(v_perp.y*k)² = other.width²
-		
-		k² * (v_perp.x² + v_perp.y²)
-		O
-		-other.width² 
-	*/
 	var sol = solveP2(
 		(v_perp.x*v_perp.x + v_perp.y*v_perp.y),
 		(0),
-		(-other.width*other.width) 
+		(-(this.width*factor)*(this.width*factor)) 
 	
 	);
 	
@@ -369,7 +351,6 @@ Bob.prototype.castShadow = function cast_bob_shadow(player){
 			y: (other.y + v_perp.y * k)
 		}
 		var ray = castRay(player.x, player.y, side.x, side.y, player.sightLength);
-		//ray.draw(paper);
 		
 		var angle = distanceAndAngle(player.x, player.y, side.x, side.y).angle - player.angle;
 		angle = clipAngle(angle);
@@ -383,10 +364,8 @@ Bob.prototype.castShadow = function cast_bob_shadow(player){
 	}
 	
 	
-	//console.log(secants.length);
 	
 	secants = secants.sort(function(a,b){return a.angle - b.angle});
-	//console.log(secants);
 	
 	if(secants.length){
 		
@@ -418,41 +397,31 @@ Bob.prototype.castShadow = function cast_bob_shadow(player){
 			
 		} 
 
-		/*			
-		var path = "M" + left.ray.a.x + " " + left.ray.a.y
-			+ "L" + left.ray.b.x + " " + left.ray.b.y
-			+ paper.circularArc(
-				player.x, 
-				player.y, 
-				player.sightLength , 
-				player.angle + left.angle,
-				player.angle + right.angle
-				
-			) 
 		
-			+ "L" + right.ray.a.x + " " + right.ray.a.y
-			
-			+ describeArc(
-				other.x, 
-				other.y, 
-				other.width, 
-				player.angle + left_2_angle,
-				player.angle + right_2_angle
-			
-			) + "Z";
+	var bob_angle = distanceAndAngle(player.x, player.y, this.x, this.y).angle;
+		
 
-		*/
+	var coneData = {
+			x:player.x,
+			y:player.y,
+			ray_1 : left.ray,
+			ray_2 : right.ray,
+			angle_1 : player.angle+left.angle,
+			angle_2 : player.angle+right.angle,
+			radius : player.sightLength,
+			
 		
-			var coneData = {
-					x:player.x,
-					y:player.y,
-					ray_1 : left.ray,
-					ray_2 : right.ray,
-					angle_1 : player.angle+left.angle,
-					angle_2 : player.angle+right.angle,
-					radius : player.sightLength
-				}
-		
+			
+			bob:{
+				width:this.width,
+				x1 : this.x + Math.cos(bob_angle) * this.width*2,
+				y1 : this.y + Math.sin(bob_angle) * this.width*2,
+				x2 : left.ray.a.x,
+				y2 : left.ray.a.y,
+				r:this.width
+			}
+		}
+
 		
 		//player.shadow.paths.push(path);
 		player.shadow.paths.push(coneData);

@@ -50,9 +50,6 @@ Path.prototype.draw = function(paper){
 	
 	
 	var ctx = paper.getContext('2d');
-	ctx.fillStyle = "#FFF";
-	ctx.strokeStyle = "#000";
-	ctx.lineWidth = 1;
 	
 	ctx.beginPath();
 	
