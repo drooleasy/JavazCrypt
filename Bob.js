@@ -183,35 +183,71 @@ Bob.prototype.draw = function(paper){
 	
 	
 	
-	if(false && this.saying){
+	if(this.saying){
+		var margin = 5,
+			height = 14,
+			lineHeight = 9;
+			
 		var msg = this.saying;
-		var bubble_width = 30;
-		var bubble_height = 10;
-		var bubble_x = this.x+this.width+3 + bubble_width;
-		var bubble_y = this.y-this.width-3 ;
 		
+		var metrics = ctx.measureText(msg);
+		
+
+		var bubble_width = metrics.width + 2 * margin;
+		var bubble_height = height + 2 * margin;
+
+
+		var bubble_x = this.x + this.width + 10 ;
+		var bubble_y = this.y - this.width - 10 - height - margin;
+
+
+		var text_x = bubble_x + margin;
+		var text_y = bubble_y + margin + lineHeight;
+
+
+
+		this.bubbleStyle = {
+			"fill":"#FFF",
+			"stroke":"#17A9C6",
+			"stroke-width":1
+		};
+
+
+		ctx.fillStyle = this.bubbleStyle["fill"];
+		ctx.strokeStyle = this.bubbleStyle["stroke"];
+		ctx.lineWidth = this.bubbleStyle["stroke-width"];
+		ctx.fontColor = this.bubbleStyle["font-color"];
+				
 		
 		var anchor = new Segment(
 			bubble_x,
-			bubble_y,
+			bubble_y+bubble_height,
 			this.x+this.width +2,
-			this.y -2
+			this.y
 		);
-		var l = paper.path(anchor.path()).attr(this.bubbleStyle);	
 		
-		var ec = paper.ellipse(
+		anchor.draw(paper);
+
+	
+		ctx.fillRect(
 			bubble_x, 
 			bubble_y, 
 			bubble_width, 
 			bubble_height
-		).attr(this.bubbleStyle);
-		
-		paper.text(
+		)
+		ctx.strokeRect(
 			bubble_x, 
-			bubble_y, 	
-			msg
-		).attr(this.textStyle);
-
+			bubble_y, 
+			bubble_width, 
+			bubble_height
+		)		
+		
+		ctx.fillStyle=this.bubbleStyle["stroke"];
+		ctx.fillText(
+			msg,
+			text_x, 
+			text_y
+		);
 	}
 };
 

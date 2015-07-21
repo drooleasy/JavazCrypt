@@ -181,7 +181,11 @@ Segment.prototype.seenSegment = function(bob){
 }
 
 Segment.prototype.draw = function(paper){
-	paper.path(this.path()).attr(this.style);
+	var ctx = paper.getContext("2d");
+	ctx.beginPath();
+	ctx.moveTo(this.a.x, this.a.y);
+	ctx.lineTo(this.b.x, this.b.y);
+	ctx.stroke();
 }
 
 
