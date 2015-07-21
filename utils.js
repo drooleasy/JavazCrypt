@@ -100,3 +100,17 @@ function castRay(ox, oy, tx, ty, limit){
 		return null 
 	
 }
+
+
+
+function crossProduct(a,b){
+	return a.x * b.y - a.y * b.x;
+}
+
+
+function minus(a,b){
+	return {
+		x: (a.x - b.x),
+		y: (a.y - b.y)
+	};
+}

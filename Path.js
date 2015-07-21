@@ -48,11 +48,27 @@ Path.prototype.path = function(paper){
 }
 Path.prototype.draw = function(paper){
 	
-	paper.path(this.path()).attr({
-		"fill":"#000",
-		"stroke":"#000",
-		"stroke-width" : "1"
-	});
+	
+	var ctx = paper.getContext('2d');
+	ctx.fillStyle = "#FFF";
+	ctx.strokeStyle = "#000";
+	ctx.lineWidth = 1;
+	
+	ctx.beginPath();
+	
+	ctx.moveTo( this.points[0].x ,  this.points[0].y);
+	var i = 0,
+		l = this.segments.length;
+	for(;i<l;i++){
+		ctx.lineTo(this.segments[i].b.x, this.segments[i].b.y);
+	}
+	if(this.closed) ctx.closePath();
+	
+	ctx.stroke();
+	ctx.fill();
+	
+	
+	
 } 
 
 Path.prototype.drawShadow = function(player){

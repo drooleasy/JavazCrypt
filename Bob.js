@@ -70,27 +70,92 @@ Bob.prototype.sightPath = function(){
 };
 
 Bob.prototype.drawSight = function(paper){
+		
+		
+		
+		
+	var ctx = paper.getContext('2d');
 	
-	var px = this.x / paper.width;
-	var py = this.y / paper.height;
+	var oldCompositeOpration = ctx.globalCompositeOperation;
+	ctx.globalCompositeOperation = "destination-atop";
+	//ctx.globalCompositeOperation = "source-over";
+	ctx.fillStyle = "rgb(255,255,255,0)";
+	ctx.strokeStyle = "#FF0000";
+	ctx.lineWidth = 5;
 	
-	var grad = "#877";
-	//console.log(grad)	
 	
-	paper.path(this.sightPath()).attr({
-		"fill": grad, //this.sightColor, // filling the background color
-		//"fill-opacity":".3", // filling the background color
-		"stroke":"#FF0000", // the color of the border
-		//"stroke-opacity":".5", // the color of the border
-		"stroke-width":1 // the size of the border
-	});
+			
+	var x1 = this.x + Math.cos(this.angle - this.sightWidth/2) * this.sightLength,
+		y1 = this.y + Math.sin(this.angle - this.sightWidth/2) * this.sightLength;
+				
+	
+	ctx.beginPath();
+	ctx.moveTo(this.x,this.y);
+	ctx.lineTo(x1, y1);
+	ctx.arc(this.x, this.y, this.sightLength, this.angle-this.sightWidth/2, this.angle+this.sightWidth/2);
+	ctx.lineTo(this.x,this.y);
+	ctx.closePath();
+	ctx.stroke();
+	ctx.fill();
+	
+	
+	
+	ctx.globalCompositeOperation = oldCompositeOpration;
+	
 }
 
 
 Bob.prototype.draw = function(paper){
-	paper.path(this.bodyPath()).attr(this.bodyStyle);
 	
-	if(this.saying){
+	
+	
+	
+	
+	
+	// paper.path(this.bodyPath()).attr(this.bodyStyle);
+	
+	
+	var ctx = paper.getContext('2d');
+	ctx.fillStyle = this.bodyStyle["fill"];
+	ctx.strokeStyle = this.bodyStyle["stroke"];
+	ctx.lineWidth = this.bodyStyle["stroke-width"];
+	
+	ctx.beginPath();
+	ctx.arc(this.x, this.y, this.width, 0, 2*Math.PI);
+	ctx.stroke();
+	ctx.fill();
+	
+	
+	ctx.fillStyle="#fff"
+	
+	var eye_left = {
+		x:this.x +Math.cos(this.angle-this.sightWidth/2) * this.width,
+		y:this.y +Math.sin(this.angle-this.sightWidth/2) * this.width,
+		r: 2
+	}
+	
+	ctx.beginPath();
+	ctx.arc(eye_left.x, eye_left.y, eye_left.r, 0, 2*Math.PI);
+	ctx.stroke();
+	ctx.fill();
+	
+	var eye_right = {
+		x:this.x +Math.cos(this.angle+this.sightWidth/2) * this.width,
+		y:this.y +Math.sin(this.angle+this.sightWidth/2) * this.width,
+		r: 2
+	}
+	
+	ctx.beginPath();
+	ctx.arc(eye_right.x, eye_right.y, eye_right.r, 0, 2*Math.PI);
+	ctx.stroke();
+	ctx.fill();
+	
+	
+	
+	
+	
+	
+	if(false && this.saying){
 		var msg = this.saying;
 		var bubble_width = 30;
 		var bubble_height = 10;
@@ -289,7 +354,7 @@ Bob.prototype.castShadow = function cast_bob_shadow(player){
 			
 		} 
 
-					
+		/*			
 		var path = "M" + left.ray.a.x + " " + left.ray.a.y
 			+ "L" + left.ray.b.x + " " + left.ray.b.y
 			+ paper.circularArc(
@@ -312,13 +377,21 @@ Bob.prototype.castShadow = function cast_bob_shadow(player){
 			
 			) + "Z";
 
+		*/
 		
-		if(false)paper.path(
-			"M" + left.ray.a.x + " " + left.ray.a.y
-			+ "L" + left.ray.b.x + " " + left.ray.b.y
-		).attr({"fill":"#FFF","stroke":"#FFF", "stroke-width":1});
+			var coneData = {
+					x:player.x,
+					y:player.y,
+					ray_1 : left.ray,
+					ray_2 : right.ray,
+					angle_1 : player.angle+left.angle,
+					angle_2 : player.angle+right.angle,
+					radius : player.sightLength
+				}
 		
-		player.shadow.paths.push(path);
+		
+		//player.shadow.paths.push(path);
+		player.shadow.paths.push(coneData);
 	}
 
 }

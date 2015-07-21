@@ -1,7 +1,7 @@
 
 var paper_width = 650;
 var paper_height = 400;
-var paper = Raphael("paper", paper_width, paper_height);
+var paper = document.getElementById("paper");
 paper.width = paper_width;			
 paper.height = paper_height;
 			
@@ -43,17 +43,15 @@ drawables.push(boulder); // order matters !
 //drawables.push(other);
 
 
-$("#paper").on("click", function(evt){
-	console.log(Raphael.isPointInsidePath(player.sightPath(), evt.clientX, evt.clientY));
-})
-
-
 var old_sees_other = false;
 
 function draw(){
 
 	var timer = (new Date()).getTime();
-	paper.clear();
+	 // clear();
+	var ctx = paper.getContext("2d");
+	ctx.fillStyle = "#000";
+	ctx.fillRect(0, 0, paper_width, paper_height);
 
 
 	player.shadow.clear();
@@ -80,26 +78,38 @@ function draw(){
 	player.drawSight(paper);
 
 
-	 
-	var seenWallStyle = {
-		"stroke": "#8F8",
-		"stroke-width": 2,
-		"stroke-linecap":"round"
-	};
 
 	var seenSegments = path.seenSegments(player);
 
 	var seenSegments2 = boulder.seenSegments(player);
 
 
+
+	var ctx = paper.getContext('2d');
+	ctx.strokeStyle = "#6C6";
+	ctx.lineWidth = 6;
+	
+	
+	
+
+	ctx.beginPath();
+		
 	for(i=0;i<seenSegments.length;i++){
-		paper.path(seenSegments[i].path()).attr(seenWallStyle)
+		ctx.moveTo(seenSegments[i].a.x, seenSegments[i].a.y);
+		ctx.lineTo(seenSegments[i].b.x, seenSegments[i].b.y);
 	}
 
 	for(i=0;i<seenSegments2.length;i++){
-		paper.path(seenSegments2[i].path()).attr(seenWallStyle)
+		
+		ctx.moveTo(seenSegments2[i].a.x, seenSegments2[i].a.y);
+		ctx.lineTo(seenSegments2[i].b.x, seenSegments2[i].b.y);
 	}
+	ctx.stroke();
 
+
+
+
+	
 
 	
 	for(i=0;i<seenSegments.length;i++){
@@ -119,6 +129,9 @@ function draw(){
 	}
 
 
+
+
+
 	var sees_bob = player.sees(other);
 
 	if(sees_bob){
@@ -136,6 +149,8 @@ function draw(){
 	for(i=0;i<candles.length;i++){
 		candles[i].shadow.draw(paper);
 	}
+
+
 
 	if(sees_bob){
 		if(!old_sees_other) other.say(paper, "Hello world");

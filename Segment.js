@@ -188,18 +188,6 @@ Segment.prototype.draw = function(paper){
 
 
 
-function crossProduct(a,b){
-	return a.x * b.y - a.y * b.x;
-}
-
-
-function minus(a,b){
-	return {
-		x: (a.x - b.x),
-		y: (a.y - b.y)
-	};
-}
-
 Segment.prototype.intersect = function (other){
 
 	var this_v = minus(this.b, this.a);
@@ -317,7 +305,8 @@ Segment.prototype.castShadow = function castSegmentShadow(player){
 			
 			startAngle = angle_1;
 			endAngle = angle_2;
-			
+
+/*			
 			var seg  = new Segment(ray_2.a.x, ray_2.a.y, ray_1.a.x, ray_1.a.y)
 			
 			var path = "M" + ray_1.a.x + " " + ray_1.a.y
@@ -326,6 +315,18 @@ Segment.prototype.castShadow = function castSegmentShadow(player){
 				+ "L" + ray_2.a.x + " " + ray_2.a.y
 				+ "L" + ray_1.a.x + " " + ray_1.a.y;
 			//console.log(path);
+*/		
+		
+			var coneData = {
+					x:player.x,
+					y:player.y,
+					ray_1 : ray_1,
+					ray_2 : ray_2,
+					angle_1 : player.angle+startAngle,
+					angle_2 : player.angle+endAngle,
+					radius : player.sightLength
+				}
+		
 			
 			/*
 			paper.path(
@@ -334,6 +335,7 @@ Segment.prototype.castShadow = function castSegmentShadow(player){
 			).attr({"fill":"#F33","stroke":"#F33", "stroke-width":3});
 			*/
 			
-			player.shadow.paths.push(path);
+			//player.shadow.paths.push(path);
+			player.shadow.paths.push(coneData);
 		}
 	}
