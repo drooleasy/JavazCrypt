@@ -127,83 +127,19 @@ function draw(){
 	}
 	
 
-	var player_light = new Bob(
-		player.x  + Math.random()*2-1,
-		player.y + Math.random()*2-1,
-		player.width,
-		rad2deg(player.angle),
-		rad2deg(player.sightWidth),
-		player.sightLength *1.1
-	);
-
 	// player_light = player;
 
 	if(!lights_on){
 		// DRAWS FOV
-
-		player.drawSight(paper);
-
-
-		// DRAWS SEEN WALLS
-		var ctx = paper.getContext('2d');
-		ctx.strokeStyle = "#6C6";
-		ctx.lineWidth = 6;
-
-		var seenSegments = path.seenSegments(player);		
-		var seenSegments2 = boulder.seenSegments(player);
-		ctx.beginPath();
-		for(i=0;i<seenSegments.length;i++){
-			ctx.moveTo(seenSegments[i].a.x, seenSegments[i].a.y);
-			ctx.lineTo(seenSegments[i].b.x, seenSegments[i].b.y);
-		}
-		for(i=0;i<seenSegments2.length;i++){	
-			ctx.moveTo(seenSegments2[i].a.x, seenSegments2[i].a.y);
-			ctx.lineTo(seenSegments2[i].b.x, seenSegments2[i].b.y);
-		}
+		player.drawSight(paper, path, boulder, other);
 		
-		/*
-			var feltSegments = path.feltSegments(player);		
-			var feltSegments2 = boulder.feltSegments(player_light);
-			ctx.beginPath();
-			for(i=0;i<feltSegments.length;i++){
-				ctx.moveTo(feltSegments[i].a.x, feltSegments[i].a.y);
-				ctx.lineTo(feltSegments[i].b.x, feltSegments[i].b.y);
-			}
-			for(i=0;i<feltSegments2.length;i++){	
-				ctx.moveTo(feltSegments2[i].a.x, feltSegments2[i].a.y);
-				ctx.lineTo(feltSegments2[i].b.x, feltSegments2[i].b.y);
-			}
-
-		*/
-		
-		ctx.stroke();
-		
-		// WORLD SHADOWS
-		for(i=0;i<seenSegments.length;i++){
-			seenSegments[i].castShadow(player_light);
-		}
-		for(i=0;i<seenSegments2.length;i++){
-			seenSegments2[i].castShadow(player_light);
-		}
-
-
-
-
-		// OTHERS SHADOWS
-		var sees_bob = player.sees(other);
-		if(sees_bob){
-			other.castShadow(player_light);
-			for(i=0;i<candles.length;i++){
-				other.castShadow(candles[i]);
-			
-			}
-		}
 
 	}
 
 
 
-	
+	var sees_bob = player.sees(other);
+		
 	// DRAWS OTHERS IF PERCEIVED
 	if(lights_on || sees_bob || player.feels(other)){
 		other.draw(paper);
@@ -211,8 +147,9 @@ function draw(){
 
 	
 	// DRAWS PLAYER SHADOWS
-	if(!lights_on) player_light.shadow.draw(paper);
-
+	if(!lights_on){ 
+		player.shadow.draw(paper);
+	}
 
 	// PLAYERS REACTION
 	if(sees_bob){

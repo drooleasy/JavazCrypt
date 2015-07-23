@@ -89,13 +89,25 @@ Bob.prototype.drawFOV = function(ctx){
 	ctx.closePath();
 }		
 
-Bob.prototype.drawSight = function(paper, lights_on){		
+Bob.prototype.drawSight = function(paper, path, boulder, bob){		
 	var ctx = paper.getContext('2d');
+	
+	
+	var player_light = new Bob(
+		player.x  + Math.random()*2-1,
+		player.y + Math.random()*2-1,
+		player.width,
+		rad2deg(player.angle),
+		rad2deg(player.sightWidth),
+		player.sightLength *1.1
+	);
+
+
 	
 	var oldCompositeOpration = ctx.globalCompositeOperation;
 	ctx.globalCompositeOperation = "destination-atop";
 	
-	if(lights_on) ctx.globalCompositeOperation = "source-over";
+	//ctx.globalCompositeOperation = "source-over";
 	ctx.fillStyle = "rgba(255,255,255,1)";
 	ctx.strokeStyle = "#FF0000";
 			
@@ -111,22 +123,64 @@ Bob.prototype.drawSight = function(paper, lights_on){
 	ctx.globalCompositeOperation = oldCompositeOpration;
 
 	
-	if(!lights_on){
-		var grd=ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.sightLength);
-		grd.addColorStop(0,"rgba(255,255,128,0)");
-		grd.addColorStop(0.333 + Math.random()*0.1-0.05,"rgba(0,0,0,0)");
-		grd.addColorStop(1,"rgba(0,0,0,1)");
+	var grd=ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.sightLength);
+	grd.addColorStop(0,"rgba(255,255,128,0)");
+	grd.addColorStop(0.333 + Math.random()*0.1-0.05,"rgba(0,0,0,0)");
+	grd.addColorStop(1,"rgba(0,0,0,1)");
 
-		ctx.fillStyle = grd;
-		ctx.strokeStyle = "#000000";
-		ctx.lineWidth = 5;
-				
-		this.drawFOV(ctx)
-		//ctx.stroke();
-		ctx.fill();
+	ctx.fillStyle = grd;
+	ctx.strokeStyle = "#000000";
+	ctx.lineWidth = 5;
+			
+	this.drawFOV(ctx)
+	//ctx.stroke();
+	ctx.fill();
 
+
+		
+
+	// DRAWS SEEN WALLS
+	var ctx = paper.getContext('2d');
+	ctx.strokeStyle = "#6C6";
+	ctx.lineWidth = 6;
+
+	var seenSegments = path.seenSegments(this);		
+	var seenSegments2 = boulder.seenSegments(this);
+	ctx.beginPath();
+	for(i=0;i<seenSegments.length;i++){
+		ctx.moveTo(seenSegments[i].a.x, seenSegments[i].a.y);
+		ctx.lineTo(seenSegments[i].b.x, seenSegments[i].b.y);
+	}
+	for(i=0;i<seenSegments2.length;i++){	
+		ctx.moveTo(seenSegments2[i].a.x, seenSegments2[i].a.y);
+		ctx.lineTo(seenSegments2[i].b.x, seenSegments2[i].b.y);
 	}
 	
+	
+	ctx.stroke();
+	
+	// WORLD SHADOWS
+	for(i=0;i<seenSegments.length;i++){
+		seenSegments[i].castShadow(player_light);
+	}
+	for(i=0;i<seenSegments2.length;i++){
+		seenSegments2[i].castShadow(player_light);
+	}
+
+
+
+
+	// OTHERS SHADOWS
+	var sees_bob = this.sees(bob);
+	if(sees_bob){
+		other.castShadow(player_light);
+		for(i=0;i<candles.length;i++){
+			other.castShadow(candles[i]);
+		
+		}
+	}
+	
+	this.shadow = player_light.shadow;
 }
 
 
