@@ -41,11 +41,13 @@ var path = new Path(
 	500, 300, 
 	100, 300,
 	100, 100, 
-	248, 200, 
-	252, 200 
+	250, 200
+	
 );
 
 path.close();
+
+//path.inversed();
 
 var boulder = new Path(
 	250, 250,
@@ -55,11 +57,13 @@ var boulder = new Path(
 
 boulder.close();
 
+//boulder.inversed();
+
 var old_sees_player = false;
 var old_sees_bob = false;
 
 
-var lights_on = false;
+var lights_on = true;
 
 function draw(){
 
@@ -85,16 +89,21 @@ function draw(){
 
 
 	// DRAWS SCENE
-	ctx.fillStyle = "#cfc";
-	ctx.strokeStyle = "#6C6";
-	ctx.lineWidth = 6;
-	ctx.lineJoint = "round";
-	ctx.lineCap = "round";
-	path.draw(paper, false);
-	
-	ctx.fillStyle = "#000";
-	boulder.draw(paper, true);
-	
+	if(lights_on){
+		ctx.fillStyle = "#393";
+		ctx.strokeStyle = "#cfc";
+		ctx.lineWidth = 2;
+		ctx.beginPath();
+		path.draw(paper, false);
+		ctx.fill();
+		ctx.stroke();
+		
+		ctx.fillStyle = "#000";
+		ctx.beginPath();
+		boulder.draw(paper, true);
+		ctx.fill();
+		ctx.stroke();
+	}
 
 	// RENDERS CANDLES
 	
@@ -131,6 +140,8 @@ function draw(){
 
 	if(!lights_on){
 		// DRAWS FOV
+		
+		other.drawSight(paper, path, boulder, player);
 		player.drawSight(paper, path, boulder, other);
 		
 
@@ -146,17 +157,13 @@ function draw(){
 	}
 
 	
-	// DRAWS PLAYER SHADOWS
-	if(!lights_on){ 
-		player.shadow.draw(paper);
-	}
-
+	
 	// PLAYERS REACTION
-	if(sees_bob){
+	/*if(sees_bob){
 		if(!old_sees_bob) player.say(paper, "Hello Bob...");
 	}else{
 		old_sees_bob = false;
-	}
+	}*/
 	player.speak(paper);
 
 	

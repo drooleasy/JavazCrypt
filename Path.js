@@ -14,6 +14,13 @@ function Path (/*x,y,...*/){
 	this.segments = [];
 	l = this.points.length-1; 
 	for(i=0;i<l;i++){
+		if(i>0){
+			this.segments.push(new Segment(  // dummy welding to compensate line offsets
+				this.points[i-1].x, this.points[i-1].y,
+				this.points[i].x, this.points[i].y
+			));
+		}
+	
 		this.segments.push(new Segment(
 			this.points[i].x, this.points[i].y,
 			this.points[i+1].x, this.points[i+1].y
@@ -28,6 +35,12 @@ Path.prototype.close = function(){
 		this.segments.push(new Segment(
 			this.points[this.points.length-1].x,
 			this.points[this.points.length-1].y,
+			this.points[0].x,
+			this.points[0].y
+		));
+		this.segments.push(new Segment(
+			this.points[0].x,
+			this.points[0].y,
 			this.points[0].x,
 			this.points[0].y
 		));
@@ -57,9 +70,8 @@ Path.prototype.draw = function(paper, isBoulder){
 		
 	
 	}else{
-		ctx.stroke();
 		ctx.fill();
-		
+		ctx.stroke();
 	}
 	
 	
@@ -84,3 +96,13 @@ Path.prototype.seenSegments = function(bob){
 	}
 	return res;
 } 
+
+Path.prototype.inversed = function(){
+	var tmp = this.segments;
+	this.points = this.points.reverse();
+	
+	this.segments = [];
+	for(var i=tmp.length-1; i>=0; i--){
+		this.segments.push(tmp[i].inversed())
+	}
+}

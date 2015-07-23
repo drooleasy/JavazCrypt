@@ -74,18 +74,28 @@ Bob.prototype.sees =  function inSight(other){
 
 
 Bob.prototype.drawFOV = function(ctx){
-	var x1 = this.x + Math.cos(clipAnglePositive(this.angle - this.sightWidth/2)) * this.sightLength,
-		y1 = this.y + Math.sin(clipAnglePositive(this.angle - this.sightWidth/2)) * this.sightLength;
+	
+	var angle_1 = clipAnglePositive(this.angle - this.sightWidth/2),
+		angle_2 = clipAnglePositive(this.angle + this.sightWidth/2);
+	
+	
+	var ox = this.x+Math.random()*2-1;
+	var oy = this.y+Math.random()*2-1;
+	
+	var x = ox + Math.cos(angle_2) * this.width*this.consciousness,
+		y = oy + Math.sin(angle_2) * this.width*this.consciousness;
+	var x0 = ox + Math.cos(angle_1) * this.width*this.consciousness,
+		y0 = oy + Math.sin(angle_1) * this.width*this.consciousness;
+	var x1 = ox + Math.cos(angle_1) * this.sightLength,
+		y1 = oy + Math.sin(angle_1) * this.sightLength;
 
 	ctx.beginPath();			
-	ctx.moveTo(this.x,this.y);
+	ctx.moveTo(x,y);
 	
-	ctx.arc(this.x+Math.random()*2-1, this.y+Math.random()*2-1, this.width*this.consciousness, 0, 2*Math.PI);
-	
-	ctx.moveTo(this.x,this.y);
+	ctx.arc(ox, oy, this.width*this.consciousness, angle_2,  angle_1);
 	ctx.lineTo(x1, y1);
-	ctx.arc(this.x, this.y, this.sightLength, clipAnglePositive(this.angle-this.sightWidth/2), clipAnglePositive(this.angle+this.sightWidth/2));
-	ctx.lineTo(this.x,this.y);
+	ctx.arc(ox, oy, this.sightLength, angle_1, angle_2);
+	ctx.lineTo(x,y);
 	ctx.closePath();
 }		
 
@@ -107,57 +117,15 @@ Bob.prototype.drawSight = function(paper, path, boulder, bob){
 	var oldCompositeOpration = ctx.globalCompositeOperation;
 	ctx.globalCompositeOperation = "destination-atop";
 	
-	//ctx.globalCompositeOperation = "source-over";
-	ctx.fillStyle = "rgba(255,255,255,1)";
-	ctx.strokeStyle = "#FF0000";
-			
-
+//	ctx.globalCompositeOperation = "source-over";
 
 	
-	ctx.lineWidth = 3;
-
-	this.drawFOV(ctx);
-//	ctx.stroke();
-	ctx.fill();
 	
-	ctx.globalCompositeOperation = oldCompositeOpration;
-
-	
-	var grd=ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.sightLength);
-	grd.addColorStop(0,"rgba(255,255,128,0)");
-	grd.addColorStop(0.333 + Math.random()*0.1-0.05,"rgba(0,0,0,0)");
-	grd.addColorStop(1,"rgba(0,0,0,1)");
-
-	ctx.fillStyle = grd;
-	ctx.strokeStyle = "#000000";
-	ctx.lineWidth = 5;
-			
-	this.drawFOV(ctx)
-	//ctx.stroke();
-	ctx.fill();
-
-
-		
-
-	// DRAWS SEEN WALLS
-	var ctx = paper.getContext('2d');
-	ctx.strokeStyle = "#6C6";
-	ctx.lineWidth = 6;
 
 	var seenSegments = path.seenSegments(this);		
 	var seenSegments2 = boulder.seenSegments(this);
-	ctx.beginPath();
-	for(i=0;i<seenSegments.length;i++){
-		ctx.moveTo(seenSegments[i].a.x, seenSegments[i].a.y);
-		ctx.lineTo(seenSegments[i].b.x, seenSegments[i].b.y);
-	}
-	for(i=0;i<seenSegments2.length;i++){	
-		ctx.moveTo(seenSegments2[i].a.x, seenSegments2[i].a.y);
-		ctx.lineTo(seenSegments2[i].b.x, seenSegments2[i].b.y);
-	}
-	
-	
-	ctx.stroke();
+
+
 	
 	// WORLD SHADOWS
 	for(i=0;i<seenSegments.length;i++){
@@ -167,20 +135,74 @@ Bob.prototype.drawSight = function(paper, path, boulder, bob){
 		seenSegments2[i].castShadow(player_light);
 	}
 
-
-
-
 	// OTHERS SHADOWS
-	var sees_bob = this.sees(bob);
+	var sees_bob = bob && this.sees(bob);
 	if(sees_bob){
-		other.castShadow(player_light);
-		for(i=0;i<candles.length;i++){
-			other.castShadow(candles[i]);
-		
-		}
+		bob.castShadow(player_light);
 	}
 	
-	this.shadow = player_light.shadow;
+
+
+
+	ctx.fillStyle = "rgba(48,144,48,1)";
+			
+	ctx.lineWidth = 1;
+
+	ctx.beginPath();
+
+	this.drawFOV(ctx);
+
+	ctx.closePath();
+	ctx.stroke();
+	ctx.fill();
+
+	ctx.globalCompositeOperation = "source-over";
+
+
+
+	// DRAWS SEEN WALLS
+	ctx.strokeStyle = "#FFF";
+	ctx.lineWidth = 2;
+	ctx.lineCap = "round";
+	ctx.beginPath();
+	for(i=0;i<seenSegments.length;i++){
+		ctx.moveTo(seenSegments[i].a.x, seenSegments[i].a.y);
+		ctx.lineTo(seenSegments[i].b.x, seenSegments[i].b.y);
+	}
+	ctx.closePath();
+	ctx.stroke();
+
+	ctx.beginPath();
+	for(i=0;i<seenSegments2.length;i++){	
+		ctx.moveTo(seenSegments2[i].a.x, seenSegments2[i].a.y);
+		ctx.lineTo(seenSegments2[i].b.x, seenSegments2[i].b.y);
+	}
+	ctx.closePath();
+	ctx.stroke();
+	
+
+	this.shadow = player_light.shadow;	
+	this.shadow.draw(paper);
+
+
+	// DRAW FOG
+	var grd=ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.sightLength);
+	grd.addColorStop(0,"rgba(0,0,0,0)");
+	grd.addColorStop(0.333 + Math.random()*0.1-0.05,"rgba(0,0,0,0)");
+	grd.addColorStop(1,"rgba(0,0,0,1)");
+
+	ctx.fillStyle = grd;
+	ctx.strokeStyle = "#000000";
+	ctx.lineWidth = 6;
+	ctx.beginPath();		
+	this.drawFOV(ctx)
+	ctx.closePath();
+	ctx.fill();
+	ctx.stroke();
+
+
+
+	
 }
 
 
@@ -260,7 +282,7 @@ Bob.prototype.speak = function(paper){
 
 		this.bubbleStyle = {
 			"fill":"#FFF",
-			"stroke":"#17A9C6",
+			"stroke":"#FFF",
 			"stroke-width":1
 		};
 
@@ -270,26 +292,95 @@ Bob.prototype.speak = function(paper){
 		ctx.fontColor = this.bubbleStyle["font-color"];
 		
 		var anchor = new Segment(
-			bubble_x,
-			bubble_y+bubble_height,
-			this.x+this.width +2,
-			this.y
+			bubble_x+bubble_width/2,
+			bubble_y+bubble_height/2,
+			this.x + this.width + 2,
+			this.y - this.width - 2
 		);
 		
 		anchor.draw(paper);
 			
-		ctx.fillRect(
+		
+		var rec = {
+			x:bubble_x, 
+			y:bubble_y, 
+			w:bubble_width, 
+			h:bubble_height
+		};
+		
+		
+		var top_left = {
+			x:rec.x, 
+			y:rec.y, 
+			w:rec.w/2, 
+			h:rec.h/2
+		}
+		
+		
+		var top_right = {
+			x:rec.x + rec.w/2, 
+			y:rec.y, 
+			w:rec.w/2, 
+			h:rec.h/2
+		}
+		
+		
+		var bottom_right = {
+			x:rec.x + rec.w/2, 
+			y:rec.y + rec.h/2, 
+			w:rec.w/2, 
+			h:rec.h/2
+		}
+		
+		var bottom_left = {
+			x:rec.x, 
+			y:rec.y + rec.h/2, 
+			w:rec.w/2, 
+			h:rec.h/2
+		}
+		
+		var radius = Math.min(rec.w,rec.h)/2
+		
+		ctx.moveTo(bottom_left.x, bottom_left.y);
+		ctx.arcTo(
+			top_left.x, top_left.y, 
+			top_right.x, top_right.y, 
+			radius
+		);
+		ctx.arcTo( 
+			top_right.x + top_right.w, top_right.y,
+			top_right.x + top_right.w, top_right.y + top_right.h,    
+			radius
+		);
+		ctx.arcTo(
+			bottom_right.x + bottom_right.w, bottom_right.y + bottom_right.h,  
+			bottom_right.x, bottom_right.y + bottom_right.h, 
+			radius
+		);
+		ctx.arcTo(
+			bottom_left.x, bottom_left.y + bottom_left.h,  
+			bottom_left.x, bottom_left.y, 
+			radius
+		);
+		
+		ctx.fill();
+		ctx.stroke();
+
+		if(false) ctx.fillRect(
 			bubble_x, 
 			bubble_y, 
 			bubble_width, 
 			bubble_height
 		)
-		ctx.strokeRect(
+		
+		if(false) ctx.strokeRect(
 			bubble_x, 
 			bubble_y, 
 			bubble_width, 
 			bubble_height
 		)		
+		
+		
 		
 		ctx.fillStyle= "#000"; //this.bubbleStyle["stroke"];
 		ctx.fillText(

@@ -114,3 +114,29 @@ function minus(a,b){
 		y: (a.y - b.y)
 	};
 }
+
+
+
+function intersection(a1,a2,b1,b2){ // a1<a2 && b1<b2
+	
+	if(b1>a2 || a1 >b2) return []
+	
+	var mn = Math.min(a1,b1);
+	var mx = Math.max(a2,b2);
+	
+	if(a1>b1 && a2<b2) return [[b1,b2]];
+	if(b1>a1 && b2<a2) return [[a1,a2]];
+	
+	return [[Math.max(mn, a1, b1), Math.min(mx, a2, b2)]];
+	
+}
+
+
+function union(a1,a2,b1,b2){ // a1<a2 && b1<b2
+	
+	if(b1>a2 || a1 >b2) return [[a1,a2], [b1,b2]];
+	var mn = Math.min(a1,b1);
+	var mx = Math.max(a2,b2);
+	return [[mn,mx]]
+	
+}

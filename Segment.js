@@ -21,7 +21,7 @@ Segment.prototype.closestPointFrom = function(x,y){
 		var seg_v = {x:(seg.b.x - seg.a.x), y:(seg.b.y - seg.a.y)},
 			pt_v = {x:(circ_pos.x - seg.a.x), y:(circ_pos.y - seg.a.y)},
 			seg_v_len = Math.sqrt(seg_v.x*seg_v.x + seg_v.y*seg_v.y);
-		if(seg_v_len <= 0){
+		if(seg_v_len < 0){
 			throw new Error("Invalid segment length");
 		}
 		var seg_v_unit = {x:(seg_v.x / seg_v_len), y:(seg_v.y / seg_v_len)},
