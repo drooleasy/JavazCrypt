@@ -85,15 +85,15 @@ function draw(){
 
 
 	// DRAWS SCENE
-	ctx.fillStyle = "#FFF";
-	ctx.strokeStyle = "#000";
-	ctx.lineWidth = 1;
+	ctx.fillStyle = "#cfc";
+	ctx.strokeStyle = "#6C6";
+	ctx.lineWidth = 6;
 	ctx.lineJoint = "round";
 	ctx.lineCap = "round";
-	path.draw(paper);
+	path.draw(paper, false);
 	
 	ctx.fillStyle = "#000";
-	boulder.draw(paper);
+	boulder.draw(paper, true);
 	
 
 	// RENDERS CANDLES
@@ -128,11 +128,11 @@ function draw(){
 	
 
 	var player_light = new Bob(
-		player.x + Math.random()*2-1,
+		player.x  + Math.random()*2-1,
 		player.y + Math.random()*2-1,
 		player.width,
 		rad2deg(player.angle),
-		rad2deg(player.sightWidth) + 4,
+		rad2deg(player.sightWidth),
 		player.sightLength *1.1
 	);
 

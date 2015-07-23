@@ -75,7 +75,7 @@ Segment.prototype.seenSegment = function(bob){
 		res =  [new Segment(this.a.x, this.a.y, this.b.x, this.b.y)];
 	}else{
 
-	
+		
 		var fov = bob.fovSegments(),
 			intersect_1 = this.intersect(fov.left),	
 			intersect_2 = this.intersect(fov.right),

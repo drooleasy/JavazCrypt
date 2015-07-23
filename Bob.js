@@ -71,6 +71,24 @@ Bob.prototype.sees =  function inSight(other){
 
 
 
+
+
+Bob.prototype.drawFOV = function(ctx){
+	var x1 = this.x + Math.cos(clipAnglePositive(this.angle - this.sightWidth/2)) * this.sightLength,
+		y1 = this.y + Math.sin(clipAnglePositive(this.angle - this.sightWidth/2)) * this.sightLength;
+
+	ctx.beginPath();			
+	ctx.moveTo(this.x,this.y);
+	
+	ctx.arc(this.x+Math.random()*2-1, this.y+Math.random()*2-1, this.width*this.consciousness, 0, 2*Math.PI);
+	
+	ctx.moveTo(this.x,this.y);
+	ctx.lineTo(x1, y1);
+	ctx.arc(this.x, this.y, this.sightLength, clipAnglePositive(this.angle-this.sightWidth/2), clipAnglePositive(this.angle+this.sightWidth/2));
+	ctx.lineTo(this.x,this.y);
+	ctx.closePath();
+}		
+
 Bob.prototype.drawSight = function(paper, lights_on){		
 	var ctx = paper.getContext('2d');
 	
@@ -81,26 +99,18 @@ Bob.prototype.drawSight = function(paper, lights_on){
 	ctx.fillStyle = "rgba(255,255,255,1)";
 	ctx.strokeStyle = "#FF0000";
 			
-	var x1 = this.x + Math.cos(clipAnglePositive(this.angle - this.sightWidth/2)) * this.sightLength,
-		y1 = this.y + Math.sin(clipAnglePositive(this.angle - this.sightWidth/2)) * this.sightLength;
+
+
 	
-	ctx.lineWidth = 1;
-	ctx.beginPath();
-	
-	ctx.moveTo(this.x,this.y);
-	
-	ctx.arc(this.x, this.y, this.width*this.consciousness, 0, 2*Math.PI);
-	
-	ctx.moveTo(this.x,this.y);
-	ctx.lineTo(x1, y1);
-	ctx.arc(this.x, this.y, this.sightLength, clipAnglePositive(this.angle-this.sightWidth/2), clipAnglePositive(this.angle+this.sightWidth/2));
-	ctx.lineTo(this.x,this.y);
-	ctx.closePath();
-	//ctx.stroke();
+	ctx.lineWidth = 3;
+
+	this.drawFOV(ctx);
+//	ctx.stroke();
 	ctx.fill();
 	
 	ctx.globalCompositeOperation = oldCompositeOpration;
 
+	
 	if(!lights_on){
 		var grd=ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.sightLength);
 		grd.addColorStop(0,"rgba(255,255,128,0)");
@@ -108,18 +118,10 @@ Bob.prototype.drawSight = function(paper, lights_on){
 		grd.addColorStop(1,"rgba(0,0,0,1)");
 
 		ctx.fillStyle = grd;
-		ctx.strokeStyle = "#FF0000";
+		ctx.strokeStyle = "#000000";
 		ctx.lineWidth = 5;
 				
-		var x1 = this.x + Math.cos(this.angle - this.sightWidth/2) * this.sightLength,
-			y1 = this.y + Math.sin(this.angle - this.sightWidth/2) * this.sightLength;
-					
-		ctx.beginPath();
-		ctx.moveTo(this.x,this.y);
-		ctx.lineTo(x1, y1);
-		ctx.arc(this.x, this.y, this.sightLength, this.angle-this.sightWidth/2, this.angle+this.sightWidth/2);
-		ctx.lineTo(this.x,this.y);
-		ctx.closePath();
+		this.drawFOV(ctx)
 		//ctx.stroke();
 		ctx.fill();
 
@@ -136,7 +138,7 @@ Bob.prototype.draw = function(paper){
 	
 	ctx.beginPath();
 	ctx.arc(this.x, this.y, this.width, 0, 2*Math.PI);
-	//ctx.stroke();
+	ctx.stroke();
 	ctx.fill();
 	
 	ctx.fillStyle="#C33"
@@ -266,18 +268,21 @@ Bob.prototype.collidesWithSegment = function(segment){
 
 
 Bob.prototype.fovSegments = function(){
+		
+		var semiSight = this.sightWidth/2;
+		
 		return {
 				left: new Segment(
 					this.x,
 					this.y,
-					this.x + Math.cos(this.angle - this.sightWidth/2) * this.sightLength,
-					this.y + Math.sin(this.angle - this.sightWidth/2) * this.sightLength
+					this.x + Math.cos(this.angle - semiSight) * this.sightLength,
+					this.y + Math.sin(this.angle - semiSight) * this.sightLength
 				),
 				right:new Segment(
 					this.x,
 					this.y,
-					this.x + Math.cos(this.angle + this.sightWidth/2) * this.sightLength,
-					this.y + Math.sin(this.angle + this.sightWidth/2) * this.sightLength
+					this.x + Math.cos(this.angle + semiSight) * this.sightLength,
+					this.y + Math.sin(this.angle + semiSight) * this.sightLength
 				), 	
 		}
 }

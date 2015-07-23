@@ -36,7 +36,7 @@ Path.prototype.close = function(){
 
 
 
-Path.prototype.draw = function(paper){
+Path.prototype.draw = function(paper, isBoulder){
 	
 	
 	var ctx = paper.getContext('2d');
@@ -51,9 +51,16 @@ Path.prototype.draw = function(paper){
 	}
 	if(this.closed) ctx.closePath();
 	
-	ctx.stroke();
-	ctx.fill();
+	if(isBoulder){
+		ctx.stroke();
+		ctx.fill();
+		
 	
+	}else{
+		ctx.stroke();
+		ctx.fill();
+		
+	}
 	
 	
 } 
