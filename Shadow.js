@@ -12,6 +12,8 @@ function Shadow(){
 Shadow.prototype.clear = function (paper){
 	this.paths = [];
 }
+
+
 Shadow.prototype.draw = function (paper){
 	
 

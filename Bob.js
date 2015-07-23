@@ -26,26 +26,31 @@ function Bob(x,y, width, angle, fov_angle, fov_distance){
 		stroke: "#000"
 	};
 	this.shadow = new Shadow();
+	this.light = new Light(this.x, this.y, this.sightLength*1.1)
 }
 
 Bob.prototype.moveForward = function moveForward(){
 	this.x += Math.cos(this.angle)*this.speedForward;
 	this.y += Math.sin(this.angle)*this.speedForward;
+	this.light && this.light.moveTo(this);
 }
 
 Bob.prototype.moveBackward = function moveBackward(){
 	this.x += Math.cos(this.angle)*(-1)*this.speedBackward;
 	this.y += Math.sin(this.angle)*(-1)*this.speedBackward;
+	this.light && this.light.moveTo(this);
 }
 
 Bob.prototype.turnLeft = function turnLeft(){
 	this.angle -= this.speedTurn;
 	this.angle = clipAngle(this.angle);
+	this.light && this.light.moveTo(this);
 }
 
 Bob.prototype.turnRight =  function turnRight(){
 	this.angle += this.speedTurn;
 	this.angle = clipAngle(this.angle);
+	this.light && this.light.moveTo(this);
 }
 
 Bob.prototype.feels =  function inSight(other){ 
@@ -101,69 +106,51 @@ Bob.prototype.drawFOV = function(ctx){
 
 Bob.prototype.drawSight = function(paper, path, boulder, bob){		
 	var ctx = paper.getContext('2d');
-	
-	
-	var player_light = new Bob(
-		player.x  + Math.random()*2-1,
-		player.y + Math.random()*2-1,
-		player.width,
-		rad2deg(player.angle),
-		rad2deg(player.sightWidth),
-		player.sightLength *1.1
-	);
 
-
-	
 	var oldCompositeOpration = ctx.globalCompositeOperation;
-	ctx.globalCompositeOperation = "destination-atop";
-	
-//	ctx.globalCompositeOperation = "source-over";
-
-	
-	
 
 	var seenSegments = path.seenSegments(this);		
 	var seenSegments2 = boulder.seenSegments(this);
 
 
-	
 	// WORLD SHADOWS
 	for(i=0;i<seenSegments.length;i++){
-		seenSegments[i].castShadow(player_light);
+		seenSegments[i].castShadow(this);
 	}
 	for(i=0;i<seenSegments2.length;i++){
-		seenSegments2[i].castShadow(player_light);
+		seenSegments2[i].castShadow(this);
 	}
 
 	// OTHERS SHADOWS
 	var sees_bob = bob && this.sees(bob);
 	if(sees_bob){
-		bob.castShadow(player_light);
+		bob.castShadow(this);
 	}
 	
 
 
+	ctx.globalCompositeOperation = "destination-atop";
+	//ctx.globalCompositeOperation = "source-over";
+
 
 	ctx.fillStyle = "rgba(48,144,48,1)";
 			
-	ctx.lineWidth = 1;
-
 	ctx.beginPath();
-
 	this.drawFOV(ctx);
-
 	ctx.closePath();
-	ctx.stroke();
 	ctx.fill();
 
 	ctx.globalCompositeOperation = "source-over";
 
-
+	
+	
 
 	// DRAWS SEEN WALLS
+
 	ctx.strokeStyle = "#FFF";
 	ctx.lineWidth = 2;
 	ctx.lineCap = "round";
+
 	ctx.beginPath();
 	for(i=0;i<seenSegments.length;i++){
 		ctx.moveTo(seenSegments[i].a.x, seenSegments[i].a.y);
@@ -177,33 +164,21 @@ Bob.prototype.drawSight = function(paper, path, boulder, bob){
 		ctx.moveTo(seenSegments2[i].a.x, seenSegments2[i].a.y);
 		ctx.lineTo(seenSegments2[i].b.x, seenSegments2[i].b.y);
 	}
+
 	ctx.closePath();
 	ctx.stroke();
+
+	this.shadow.draw(paper, function() {	ctx.globalCompositeOperation = oldCompositeOpration;});
+
 	
-
-	this.shadow = player_light.shadow;	
-	this.shadow.draw(paper);
-
-
-	// DRAW FOG
-	var grd=ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.sightLength);
-	grd.addColorStop(0,"rgba(0,0,0,0)");
-	grd.addColorStop(0.333 + Math.random()*0.1-0.05,"rgba(0,0,0,0)");
-	grd.addColorStop(1,"rgba(0,0,0,1)");
-
-	ctx.fillStyle = grd;
-	ctx.strokeStyle = "#000000";
-	ctx.lineWidth = 6;
-	ctx.beginPath();		
-	this.drawFOV(ctx)
-	ctx.closePath();
-	ctx.fill();
-	ctx.stroke();
-
-
-
 	
 }
+
+
+
+
+
+
 
 
 Bob.prototype.draw = function(paper){	
@@ -436,11 +411,11 @@ Bob.prototype.drawShadow = function draw_bob_shadow(paper, player){
 		if(this.shadow.paths.length>0) this.shadow.draw(paper);
 }	
 
-Bob.prototype.castShadow = function cast_bob_shadow(player){	
+Bob.prototype.castShadow = function cast_bob_shadow(light){	
 
 	var secants = [];
 	var factor = 120/100;
-	var v = minus(this, player);
+	var v = minus(this, light);
 	var v_perp = {x:(-v.y), y:(v.y == 0 ? (-v.x) : v.x)}
 	var sol = solveP2(
 		(v_perp.x*v_perp.x + v_perp.y*v_perp.y),
@@ -449,22 +424,22 @@ Bob.prototype.castShadow = function cast_bob_shadow(player){
 	
 	);
 	
-	function addInner(k, v_perp, player, secants){
+	function addInner(k, v_perp, that, light, secants){
 		var side = {	
-			x: (other.x + v_perp.x * k),
-			y: (other.y + v_perp.y * k)
+			x: (that.x + v_perp.x * k),
+			y: (that.y + v_perp.y * k)
 		}
-		var ray = castRay(player.x, player.y, side.x, side.y, player.sightLength);
+		var ray = castRay(light.x, light.y, side.x, side.y, light.sightLength);
 		
-		var angle = distanceAndAngle(player.x, player.y, side.x, side.y).angle - player.angle;
+		var angle = distanceAndAngle(light.x, light.y, side.x, side.y).angle - light.angle;
 		angle = clipAngle(angle);
 		
 		secants.push({angle:angle, ray:ray});
 	}
 	
 	if(sol.length != 0){
-		addInner(sol[0], v_perp, player, secants)
-		addInner(sol[1], v_perp, player, secants)
+		addInner(sol[0], v_perp, this, light, secants)
+		addInner(sol[1], v_perp, this, light, secants)
 	}
 	
 	
@@ -487,10 +462,10 @@ Bob.prototype.castShadow = function cast_bob_shadow(player){
 			}
 		}
 	
-		var left_2_angle = distanceAndAngle(other.x, other.y, left.ray.a.x, left.ray.a.y).angle - player.angle;
+		var left_2_angle = distanceAndAngle(this.x, this.y, left.ray.a.x, left.ray.a.y).angle - light.angle;
 		left_2_angle = clipAngle(left_2_angle);
 	
-		var right_2_angle = distanceAndAngle(other.x, other.y, right.ray.a.x, right.ray.a.y).angle  - player.angle;    
+		var right_2_angle = distanceAndAngle(this.x, this.y, right.ray.a.x, right.ray.a.y).angle  - light.angle;    
 		right_2_angle = clipAngle(right_2_angle);
 		
 		if(left_2_angle > right_2_angle) {
@@ -502,17 +477,17 @@ Bob.prototype.castShadow = function cast_bob_shadow(player){
 		} 
 
 		
-	var bob_angle = distanceAndAngle(player.x, player.y, this.x, this.y).angle;
+	var bob_angle = distanceAndAngle(light.x, light.y, this.x, this.y).angle;
 		
 
 	var coneData = {
-			x:player.x,
-			y:player.y,
+			x:light.x,
+			y:light.y,
 			ray_1 : left.ray,
 			ray_2 : right.ray,
-			angle_1 : player.angle+left.angle,
-			angle_2 : player.angle+right.angle,
-			radius : player.sightLength,
+			angle_1 : light.angle+left.angle,
+			angle_2 : light.angle+right.angle,
+			radius :light.sightLength,
 			
 		
 			
@@ -522,13 +497,13 @@ Bob.prototype.castShadow = function cast_bob_shadow(player){
 				y1 : this.y + Math.sin(bob_angle) * this.width*2.5,
 				x2 : left.ray.a.x,
 				y2 : left.ray.a.y,
-				r:this.width
+				r : this.width
 			}
 		}
 
 		
 		//player.shadow.paths.push(path);
-		player.shadow.paths.push(coneData);
+		light.shadow.paths.push(coneData);
 	}
 
 }

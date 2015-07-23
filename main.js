@@ -1,22 +1,12 @@
 
 var paper_width = 650;
 var paper_height = 400;
+			
+			
 var paper = document.getElementById("paper");
 paper.width = paper_width;			
 paper.height = paper_height;
-			
-			
-
-var ctx = document.getElementById("paper").getContext("2d");
-
-var offcanvas = document.createElement("canvas");
-
-offcanvas.style.width = paper_width + "px";
-offcanvas.width = paper_width;
-offcanvas.style.height = paper_height + "px";
-offcanvas.height = paper_height;
-offcanvas.style.backgroundColor = "#000";
-
+var ctx = paper.getContext("2d");
 
 var min_fps = Number.POSITIVE_INFINITY;
 var max_fps = 0;
@@ -45,6 +35,7 @@ var path = new Path(
 	
 );
 
+
 path.close();
 
 //path.inversed();
@@ -63,7 +54,77 @@ var old_sees_player = false;
 var old_sees_bob = false;
 
 
-var lights_on = true;
+var lights_on = false;
+
+
+
+
+
+
+
+slowBuffer = document.createElement("canvas");
+slowBuffer.width = paper.width;
+slowBuffer.height = paper.height;
+
+slowTempoDelay = 1000/12;
+
+defaultSlowFunction = function(){ console.log("default slow")}
+
+lastValidBuffer=null;
+
+slowTempo = function(){
+
+	
+	//slowTempo.working = 2;
+	var ctx = slowBuffer.getContext("2d");
+	
+	ctx.fillStyle="#000"
+	ctx.fillRect(0,0,slowBuffer.width,slowBuffer.height);
+
+
+	var origin = new Date();
+	origin = origin.getTime();
+
+	function mark(msg){
+		var now = new Date();
+		now = now.getTime();
+		var diff = now - origin
+		console.log(diff, " " + msg)
+		origin = now;
+		
+	}
+	
+	setTimeout(function(){
+		
+		other.light && other.light.draw(slowBuffer, path, boulder, player);
+		//slowTempo.working--;
+		
+		//mark("other drawLight")
+		
+		setTimeout(function(){
+			player.light && player.light.draw(slowBuffer, path, boulder, other);
+			//slowTempo.working--;
+			//mark("player drawLight")
+
+			setTimeout(function(){
+		
+				lastValidBuffer = slowBuffer.getContext('2d').getImageData(0, 0, slowBuffer.width, slowBuffer.height);
+		
+				//mark("update buffer")
+		
+		
+				setTimeout(slowTempo, slowTempoDelay);
+			}, 0)
+		}, 0)
+
+	}, 0);
+	
+}
+
+
+
+
+
 
 function draw(){
 
@@ -105,45 +166,17 @@ function draw(){
 		ctx.stroke();
 	}
 
-	// RENDERS CANDLES
-	
-	if(candles.length){
-		var offctx = offcanvas.getContext('2d');
-		
-		offctx.globalCompositeOperation = "source-over";
-		offctx.fillStyle = 'black';
-		offctx.fillRect(0,0,paper_width,paper_height);
-
-		offctx.globalCompositeOperation = "lighter";
-		for(p=0;p<1;p++) for(var i=0; i<candles.length;i++){
-			var candle = candles[i];
-			candle.drawHalo(offcanvas, paper_width, paper_height);
-		}
-		var render = ctx.createImageData(paper_width, paper_height),
-			map = ctx.getImageData(0,0,paper_width, paper_height),
-			lights = offctx.getImageData(0,0,paper_width, paper_height);
-		for(var x=0; x<paper_width;x++){
-			for(var y=0; y<paper_height;y++){
-				var index = (x +y*paper_width)*4;
-				render.data[index+0] = map.data[index+0] * lights.data[index+0]/255;
-				render.data[index+1] = map.data[index+1] * lights.data[index+1]/255;
-				render.data[index+2] = map.data[index+2] * lights.data[index+2]/255;
-				render.data[index+3] = map.data[index+3] * 1;
-			}
-		}
-		
-		ctx.putImageData(render, 0, 0);
-	}
 	
 
-	// player_light = player;
 
 	if(!lights_on){
 		// DRAWS FOV
-		
-		other.drawSight(paper, path, boulder, player);
-		player.drawSight(paper, path, boulder, other);
-		
+			
+		 	
+		if(lastValidBuffer){ 
+			paper.getContext("2d").putImageData(lastValidBuffer,0,0);
+			player.drawSight(paper, path, boulder, other);
+		}
 
 	}
 
@@ -203,6 +236,11 @@ function draw(){
 	// REQUEST NEXT FRAME
 	window.requestAnimationFrame(draw);
 }
+
+
+
+setTimeout(slowTempo, slowTempoDelay);
+
 
 window.requestAnimationFrame(draw);
 keyboardControl(player);

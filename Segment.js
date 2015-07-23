@@ -232,9 +232,9 @@ Segment.prototype.intersectWithCone = function(cx,cy,cr, angle, fov_angle){
 	return intersects;
 }
 
-Segment.prototype.castShadow = function castSegmentShadow(player){
-	var angle_a = distanceAndAngle(player.x, player.y, this.a.x, this.a.y).angle - player.angle,
-		angle_b = distanceAndAngle(player.x, player.y, this.b.x, this.b.y).angle - player.angle;
+Segment.prototype.castShadow = function castSegmentShadow(bob_or_light){
+	var angle_a = distanceAndAngle(bob_or_light.x, bob_or_light.y, this.a.x, this.a.y).angle - bob_or_light.angle,
+		angle_b = distanceAndAngle(bob_or_light.x, bob_or_light.y, this.b.x, this.b.y).angle - bob_or_light.angle;
 
 	angle_a = clipAnglePositive(angle_a);
 	angle_b = clipAnglePositive(angle_b);
@@ -265,24 +265,24 @@ Segment.prototype.castShadow = function castSegmentShadow(player){
 	}
 
 	
-	var ray_1 = castRay(player.x, player.y, left.x, left.y, player.sightLength);
-	var ray_2 = castRay(player.x, player.y, right.x, right.y, player.sightLength);
+	var ray_1 = castRay(bob_or_light.x, bob_or_light.y, left.x, left.y, bob_or_light.sightLength);
+	var ray_2 = castRay(bob_or_light.x, bob_or_light.y, right.x, right.y, bob_or_light.sightLength);
 	
-	var angle_1 = distanceAndAngle(player.x, player.y, ray_1.a.x, ray_1.a.y).angle,
-		angle_2 = distanceAndAngle(player.x, player.y, ray_2.a.x, ray_2.a.y).angle;
+	var angle_1 = distanceAndAngle(bob_or_light.x, bob_or_light.y, ray_1.a.x, ray_1.a.y).angle,
+		angle_2 = distanceAndAngle(bob_or_light.x, bob_or_light.y, ray_2.a.x, ray_2.a.y).angle;
 	
 	
 	var coneData = {
-			x:player.x,
-			y:player.y,
+			x:bob_or_light.x,
+			y:bob_or_light.y,
 			ray_1 : ray_1,
 			ray_2 : ray_2,
 			angle_1 : angle_1,
 			angle_2 : angle_2,
-			radius : player.sightLength
+			radius : bob_or_light.sightLength
 		}
 
 	
-	player.shadow.paths.push(coneData);
+	bob_or_light.shadow.paths.push(coneData);
 
 }
