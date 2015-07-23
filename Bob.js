@@ -11,7 +11,7 @@ function Bob(x,y, width, angle, fov_angle, fov_distance){
 	this.speedTurn = deg2rad(3); 
 	this.saying = false;
 	this.shadow = null;
-	this.consciousness = 2;
+	this.consciousness = 2.5;
 	this.bodyStyle = {
 		"fill":"#17A9C6",
 		"stroke":"#000000",
@@ -96,7 +96,7 @@ Bob.prototype.drawSight = function(paper, lights_on){
 	ctx.arc(this.x, this.y, this.sightLength, clipAnglePositive(this.angle-this.sightWidth/2), clipAnglePositive(this.angle+this.sightWidth/2));
 	ctx.lineTo(this.x,this.y);
 	ctx.closePath();
-	ctx.stroke();
+	//ctx.stroke();
 	ctx.fill();
 	
 	ctx.globalCompositeOperation = oldCompositeOpration;

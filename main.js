@@ -88,6 +88,8 @@ function draw(){
 	ctx.fillStyle = "#FFF";
 	ctx.strokeStyle = "#000";
 	ctx.lineWidth = 1;
+	ctx.lineJoint = "round";
+	ctx.lineCap = "round";
 	path.draw(paper);
 	
 	ctx.fillStyle = "#000";
@@ -147,8 +149,8 @@ function draw(){
 		ctx.strokeStyle = "#6C6";
 		ctx.lineWidth = 6;
 
-		var seenSegments = path.seenSegments(player_light);		
-		var seenSegments2 = boulder.seenSegments(player_light);
+		var seenSegments = path.seenSegments(player);		
+		var seenSegments2 = boulder.seenSegments(player);
 		ctx.beginPath();
 		for(i=0;i<seenSegments.length;i++){
 			ctx.moveTo(seenSegments[i].a.x, seenSegments[i].a.y);

@@ -36,16 +36,6 @@ Path.prototype.close = function(){
 
 
 
-Path.prototype.path = function(paper){
-	var res = "M" + this.points[0].x + " " + this.points[0].y,
-		i = 0,
-		l = this.segments.length;
-	for(;i<l;i++){
-		res += "L" +  this.segments[i].b.x + " " + this.segments[i].b.y;
-	}
-	if(this.closed) res + " Z";
-	return res;
-}
 Path.prototype.draw = function(paper){
 	
 	
