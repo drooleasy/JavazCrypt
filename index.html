@@ -7,21 +7,19 @@
 	<body>
 
 		<canvas id="paper" style="background-color:#000;width:650px;float:left;height:400px;padding:0px;margin:0px"></canvas>
-		<br><a href="javascript:lights_on=true;void(0)">lights on</a>
-		<br><a href="javascript:lights_on=false;void(0)">lights off</a>
-	
+		<br><a href="javascript:lights_on=!lights_on;document.getElementById('lights').innerHTML=(lights_on? 'ON' : 'OFF');void(0)">lights : <span id="lights">OFF</span></a>
+		
 		<div id="dbg-info" style="width:200px;float:right"></div>
 		
 		<script src="lib/jquery-2.1.4.min.js" ></script>
 		<script src="utils.js" ></script>
-		<!--script src="raphael-utils.js" ></script-->
 		<script src="Shadow.js" ></script>
 		<script src="Bob.js" ></script>
 		<script src="Segment.js" ></script>
 		<script src="Candle.js" ></script>
 		<script src="Path.js" ></script>
 		<script src="keyboard-control.js" ></script>
-		<script src="main-path.js" ></script>
+		<script src="main.js" ></script>
 	
 	</body>
 </html>

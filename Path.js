@@ -83,9 +83,7 @@ Path.prototype.seenSegments = function(bob){
 		res =[];
 	for(;i<l;i++){
 		seenSegment = this.segments[i].seenSegment(bob);
-		if(seenSegment) res.push(seenSegment);
+		if(seenSegment.length>0) res = res.concat(seenSegment);
 	}
 	return res;
 } 
-
-

@@ -10,8 +10,6 @@ function Segment(x1, y1, x2, y2){
 	};
 }
 
-
-
 Segment.prototype.inversed = function(){
 	return new Segment(this.b.x, this.b.y, this.a.x, this.a.y);
 };
@@ -43,11 +41,6 @@ Segment.prototype.closestPointFrom = function(x,y){
 
 }
 
-Segment.prototype.path = function(){
-	return "M" + this.a.x+" "+this.a.y + "L" + this.b.x+" "+this.b.y;
-}
-
-
 
 Segment.prototype.isSeenByBob = function(bob){
 	
@@ -66,118 +59,86 @@ Segment.prototype.isSeenByBob = function(bob){
 
 Segment.prototype.seenSegment = function(bob){
 	var sees_a = false,
-		sees_b = false;
+		sees_b = false,
+		res = [];
 
-	if(bob.sees({x:this.a.x, y:this.a.y, width:2})) sees_a = true; 
+	var a = {x:this.a.x, y:this.a.y, width:2};
+	if(bob.sees(a) || bob.feels(a)) sees_a = true; 
 	
-	if(bob.sees({x:this.b.x, y:this.b.y, width:2})) sees_b = true;
+	var b = {x:this.b.x, y:this.b.y, width:2}
+	if(bob.sees(b) || bob.feels(b)) sees_b = true;
 
 	var angle_a, angle_b, angle_inter, angle_inter_1, angle_inter_2, left, rigth;
 
 	
 	if(sees_a && sees_b){
-		angle_a = distanceAndAngle(bob.x,bob.y, this.a.x, this.a.y).angle - bob.angle;
-		angle_b = distanceAndAngle(bob.x,bob.y, this.b.x, this.b.y).angle - bob.angle;
-		
-		angle_a=clipAngle(angle_a);
-		angle_b=clipAngle(angle_b);
-		
-		
-		left = this.a;
-		right = this.b;
-		if(angle_a > angle_b){
-			left = this.b;
-			right = this.a;
-		}
-		
-		return new Segment(left.x, left.y, right.x, right.y);
-	}
+		res =  [new Segment(this.a.x, this.a.y, this.b.x, this.b.y)];
+	}else{
 
 	
-	var fov = bob.fovSegments(),
-		intersect_1 = this.intersect(fov.left),	
-		intersect_2 = this.intersect(fov.right),
-		intersect_cone = this.intersectWithCone(bob.x, bob.y, bob.sightLength, bob.angle, bob.sightWidth);
+		var fov = bob.fovSegments(),
+			intersect_1 = this.intersect(fov.left),	
+			intersect_2 = this.intersect(fov.right),
+			intersect_cone = this.intersectWithCone(bob.x, bob.y, bob.sightLength, bob.angle, bob.sightWidth);
 
-	var intersects = [];
-	if(intersect_1) intersects.push(intersect_1);
-	if(intersect_2) intersects.push(intersect_2);
-	for(i=0;i<intersect_cone.length;i++){
-		intersects.push(intersect_cone[i]);
-	}
-		
-	if(intersects.length > 1){
-		angle_inter_min = clipAngle(distanceAndAngle(bob.x,bob.y, intersects[0].x, intersects[0].y).angle - bob.angle);
-		angle_inter_max = clipAngle(distanceAndAngle(bob.x,bob.y, intersects[0].x, intersects[0].y).angle - bob.angle);
-		left = intersects[0];
-		right = intersects[0];
-
-		for(i=1;i<intersects.length;i++){
-			var angle_inter = clipAngle(distanceAndAngle(bob.x,bob.y, intersects[i].x, intersects[i].y).angle - bob.angle);
-			if(angle_inter < angle_inter_min){
-				angle_inter_min = angle_inter;
-				right = intersects[i];
-			}
-			if(angle_inter > angle_inter_max){
-				angle_inter_max = angle_inter;
-				left = intersects[i];
-			}	
+		var intersects = [];
+		if(intersect_1) intersects.push(intersect_1);
+		if(intersect_2) intersects.push(intersect_2);
+		for(i=0;i<intersect_cone.length;i++){
+			intersects.push(intersect_cone[i]);
 		}
+		
 			
-		//display("intesrect.length>1");
-		return new Segment(left.x, left.y, right.x, right.y);
-	}
-	
-	
-	function addInter(p, inter, bob){
-		angle = distanceAndAngle(bob.x,bob.y, p.x, p.y).angle - bob.angle;
-		angle_inter = distanceAndAngle(bob.x,bob.y, inter.x, inter.y).angle - bob.angle;
+		if(intersects.length > 1){
+			angle_inter_min = clipAngle(distanceAndAngle(bob.x,bob.y, intersects[0].x, intersects[0].y).angle - bob.angle);
+			angle_inter_max = angle_inter_min;
+			left = intersects[0];
+			right = intersects[0];
 
-		angle=clipAngle(angle);
-		angle_inter=clipAngle(angle_inter);
-
-
-
-		//display("angle " + angle, true);
-		//display("angle inter " + angle_inter, true);
+			for(i=1;i<intersects.length;i++){
+				var angle_inter = clipAngle(distanceAndAngle(bob.x,bob.y, intersects[i].x, intersects[i].y).angle - bob.angle);
+				if(angle_inter < angle_inter_min){
+					angle_inter_min = angle_inter;
+					right = intersects[i];
+				}
+				if(angle_inter > angle_inter_max){
+					angle_inter_max = angle_inter;
+					left = intersects[i];
+				}	
+			}
+			res = [new Segment(left.x, left.y, right.x, right.y)];
+		}else if(intersects.length==1){
 		
-		left = p;
-		right = inter;
-		if(angle > angle_inter){
-			left = inter;
-			right = p;
+			var inter = intersects[0];
+
+			if(sees_a){
+				res =  [new Segment(this.a.x, this.a.y, inter.x, inter.y)];
+			}else if(sees_b){
+				res =  [new Segment(this.b.x, this.b.y, inter.x, inter.y)];
+			}else{
+				res = [new Segment(inter.x, inter.y, this.b.x, this.b.y)];		
+			}
 		}
 		
-		return new Segment(left.x, left.y, right.x, right.y);
+		var intersect_conscious = this.intersectWithCircle(bob.x, bob.y, bob.width*bob.consciousness);
+		
+		if(intersect_conscious.length==2){
+			res.push(new Segment(intersect_conscious[0].x, intersect_conscious[0].y, intersect_conscious[1].x, intersect_conscious[1].y));
+		}
+		
+		if(intersect_conscious.length==1){
+			inter = intersect_conscious[0];
+			if(sees_a){
+				res.push(new Segment(this.a.x, this.a.y, inter.x, inter.y));
+			}else if(sees_b){
+				res.push(new Segment(this.b.x, this.b.y, inter.x, inter.y));
+			}else{
+				res.push(new Segment(inter.x, inter.y, this.b.x, this.b.y));		
+			}
+		}
 		
 	}
-
-	var inter = null;
-
-	if(intersects.length==1) inter = intersects[0];
-
-	if(sees_a && inter){
-		
-		//display("sees_a inter");
-		return addInter(this.a, inter, bob);
-	}
-	
-	if(sees_b && inter){
-		
-		//display("sees_b inter");
-		return addInter(this.b, inter, bob);
-	}
-	
-	if(inter){
-		return addInter(inter, this.b,  bob);
-		
-	}
-	
-	if(sees_a){
-		
-	}
-	
-	return null;
+	return res;
 }
 
 Segment.prototype.draw = function(paper){
@@ -187,10 +148,6 @@ Segment.prototype.draw = function(paper){
 	ctx.lineTo(this.b.x, this.b.y);
 	ctx.stroke();
 }
-
-
-
-
 
 Segment.prototype.intersect = function (other){
 
@@ -203,23 +160,20 @@ Segment.prototype.intersect = function (other){
 	var u = _u / x;
 	
 	if(x==0 && _u == 0){ // colinear
-		//console.log("colinear");
 		return null; // !!!
 	}
 	
 	if(x==0 && _u != 0){ // parallel
-		//console.log("parallel");
 		return null;
 	}
 	
-	if(x!=0 && 0<=t && t<=1 && 0<=u && u<=1){
-		//console.log("secant"); 
+	if(x!=0 && 0<=t && t<=1 && 0<=u && u<=1){ // secant
 		return {
 				x:(this.a.x + t * this_v.x),
 				y:(this.a.y + t * this_v.y)
 		};
 	}
-	//console.log("default");
+
 	return null;
 }
 
@@ -237,9 +191,10 @@ Segment.prototype.intersectWithCircle = function(cx,cy,cr){
 		
 	);
 	
-	if(res.length == 0) return null;
-	
 	var sol = [];
+	
+	if(res.length == 0) return sol;
+	
 	if(0<=res[0] && res[0]<=1){
 		sol.push({
 			x: (this.a.x + res[0] * vx),
@@ -252,7 +207,6 @@ Segment.prototype.intersectWithCircle = function(cx,cy,cr){
 			y: (this.a.y + res[1] * vy)
 		});
 	}
-	if(sol.length == 0) return null;
 	
 	return sol;
 	
@@ -268,11 +222,9 @@ Segment.prototype.intersectWithCone = function(cx,cy,cr, angle, fov_angle){
 		
 		
 		var angle_points = distanceAndAngle(cx, cy, possibles[i].x, possibles[i].y).angle;
-		// console.log("absolu: " + rad2deg(angle_points))
 		
 		var angle_relative = clipAngle(angle_points - angle);
 		
-		// console.log("relatif: " + rad2deg(angle_relative))
 		if((-fov_angle/2) <= angle_relative && angle_relative <= fov_angle/2){
 			intersects.push(possibles[i]);
 		}
@@ -281,65 +233,56 @@ Segment.prototype.intersectWithCone = function(cx,cy,cr, angle, fov_angle){
 }
 
 Segment.prototype.castShadow = function castSegmentShadow(player){
-		var seenSeg = this.seenSegment(player);
-		if(seenSeg){
-			/*paper.path(seenSeg.path()).attr({
-				"fill":"#000",
-				"stroke":"#000",
-				"stroke-width":1
-			});*/
-			
-			// paper.path(circle(seenSeg.a.x, seenSeg.a.y, 6, 0)).attr("fill", "#F00")
-			
-			var ray_1 = castRay(player.x, player.y, seenSeg.a.x, seenSeg.a.y, player.sightLength);
-			var ray_2 = castRay(player.x, player.y, seenSeg.b.x, seenSeg.b.y, player.sightLength);
-			
-			//paper.path(ray_1.path()).attr({"stroke":"#3F3", "stroke-width":3});
-			//paper.path(ray_2.path()).attr({"stroke":"#3F3", "stroke-width":3});
-			
-			
-			var angle_1 = distanceAndAngle(player.x, player.y, ray_1.a.x, ray_1.a.y).angle - player.angle,
-				angle_2 = distanceAndAngle(player.x, player.y, ray_2.a.x, ray_2.a.y).angle - player.angle;
-			
-			angle_1 = clipAngle(angle_1);
-			angle_2 = clipAngle(angle_2);
-			
-			startAngle =  Math.min(angle_1, angle_2);
-			endAngle = Math.max(angle_1, angle_2);
-			
-			startAngle = angle_1;
-			endAngle = angle_2;
+	var angle_a = distanceAndAngle(player.x, player.y, this.a.x, this.a.y).angle - player.angle,
+		angle_b = distanceAndAngle(player.x, player.y, this.b.x, this.b.y).angle - player.angle;
 
-/*			
-			var seg  = new Segment(ray_2.a.x, ray_2.a.y, ray_1.a.x, ray_1.a.y)
-			
-			var path = "M" + ray_1.a.x + " " + ray_1.a.y
-				+ "L" + ray_1.b.x + " " + ray_1.b.y
-				+ paper.circularArc(player.x, player.y, player.sightLength, player.angle+startAngle, player.angle+endAngle) 
-				+ "L" + ray_2.a.x + " " + ray_2.a.y
-				+ "L" + ray_1.a.x + " " + ray_1.a.y;
-			//console.log(path);
-*/		
-		
-			var coneData = {
-					x:player.x,
-					y:player.y,
-					ray_1 : ray_1,
-					ray_2 : ray_2,
-					angle_1 : player.angle+startAngle,
-					angle_2 : player.angle+endAngle,
-					radius : player.sightLength
-				}
-		
-			
-			/*
-			paper.path(
-				"M" + ray_1.a.x + " " + ray_1.a.y
-				+ "L" + ray_1.b.x + " " + ray_1.b.y
-			).attr({"fill":"#F33","stroke":"#F33", "stroke-width":3});
-			*/
-			
-			//player.shadow.paths.push(path);
-			player.shadow.paths.push(coneData);
-		}
+	angle_a = clipAnglePositive(angle_a);
+	angle_b = clipAnglePositive(angle_b);
+	
+	
+	var mn = Math.min(angle_a, angle_b);
+	var mx = Math.max(angle_a, angle_b);
+	
+	
+	
+	var left,
+		right;
+	if(mn==angle_a){
+		left = this.a;
+		right = this.b;
+	}else{
+		left = this.b;
+		right = this.a
 	}
+
+
+	var diff = clipAnglePositive(mx-mn);	
+	var tmp;
+	if(diff > Math.PI){
+		tmp = left;
+		left = right;
+		right = tmp;
+	}
+
+	
+	var ray_1 = castRay(player.x, player.y, left.x, left.y, player.sightLength);
+	var ray_2 = castRay(player.x, player.y, right.x, right.y, player.sightLength);
+	
+	var angle_1 = distanceAndAngle(player.x, player.y, ray_1.a.x, ray_1.a.y).angle,
+		angle_2 = distanceAndAngle(player.x, player.y, ray_2.a.x, ray_2.a.y).angle;
+	
+	
+	var coneData = {
+			x:player.x,
+			y:player.y,
+			ray_1 : ray_1,
+			ray_2 : ray_2,
+			angle_1 : angle_1,
+			angle_2 : angle_2,
+			radius : player.sightLength
+		}
+
+	
+	player.shadow.paths.push(coneData);
+
+}

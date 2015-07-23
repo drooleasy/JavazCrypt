@@ -16,9 +16,7 @@ Shadow.prototype.draw = function (paper){
 	var path = "";
 	for(var i = 0; i<this.paths.length;i++){ 
 		this.drawCone(paper, this.paths[i])
-	}
-	
-	
+	}	
 }
 
 Shadow.prototype.drawCone = function (paper, coneData){
@@ -37,7 +35,6 @@ Shadow.prototype.drawCone = function (paper, coneData){
 		ctx.lineTo(coneData.ray_2.a.x, coneData.ray_2.a.y)
 		
 		if(coneData.bob){
-			console.log(coneData.bob.width)
 			ctx.arcTo(coneData.bob.x1,coneData.bob.y1,coneData.bob.x2,coneData.bob.y2,coneData.bob.r);
 				
 		}else{
