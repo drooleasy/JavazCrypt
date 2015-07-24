@@ -2,40 +2,48 @@ Bubble = {};
 
 
 Bubble.style = {
-	margin:5,
+	"margin":5,
+	"padding":3,
+	"line-height" : 11,
 	"fill":"#FFF",
 	"stroke":"#FFF",
 	"stroke-width":1,
 	"text-fill":"#000"
 }
 
-Bubble.draw = function (paper, x,y, msg, bob){
-	var margin = Bubble.style.margin,
-		height = 14,
-		lineHeight = 9;
+Bubble.draw = function (paper, x, y, msg, bob){
+	var margin = Bubble.style.margin;		
+	var lines = msg.split("\n");
 	
-	var metrics = ctx.measureText(msg);
+	var longestLine = "";
+	for(var i=0;i<lines.length;i++){
+		if(lines[i].length > longestLine.length) longestLine = lines[i];
+	} 
+		
+	var content_height = 2*Bubble.style.padding + Bubble.style["line-height"] * lines.length;
+	
+	var metrics = ctx.measureText(longestLine);
 
-	var bubble_width = metrics.width + 2 * margin;
-	var bubble_height = height + 2 * margin;
+	var bubble_width = metrics.width + 2*Bubble.style.margin + 2*Bubble.style.padding;
+	var bubble_height = content_height + 2*Bubble.style.margin + 2*Bubble.style.padding;
 
 
 	var bubble_x = x;
-	var bubble_y = y - height - margin;
+	var bubble_y = y - content_height - Bubble.style.margin;
 
-	var text_x = bubble_x + margin;
-	var text_y = bubble_y + margin + lineHeight;
+	var text_x = bubble_x + Bubble.style.margin + Bubble.style.padding;
+	var text_y = bubble_y + Bubble.style.margin + Bubble.style.padding + Bubble.style["line-height"];
 
 
 
-	ctx.fillStyle =  Bubble.style["fill"];
+	ctx.fillStyle   = Bubble.style["fill"];
 	ctx.strokeStyle = Bubble.style["stroke"];
-	ctx.lineWidth = Bubble.style["stroke-width"];
-	ctx.fontColor = Bubble.style["font-color"];
+	ctx.lineWidth   = Bubble.style["stroke-width"];
+	ctx.fontColor   = Bubble.style["font-color"];
 	
 	var anchor = new Segment(
-		bubble_x+bubble_width/2,
-		bubble_y+bubble_height/2,
+		bubble_x + bubble_width/2,
+		bubble_y + bubble_height/2,
 		bob.x + bob.width + 2,
 		bob.y - bob.width - 2
 	);
@@ -49,12 +57,13 @@ Bubble.draw = function (paper, x,y, msg, bob){
 
 	
 	ctx.fillStyle = Bubble.style["text-fill"]; 
-	ctx.fillText(
-		msg,
-		text_x, 
-		text_y
-	);
-	
+	for(var i=0; i<lines.length;i++){
+		ctx.fillText(
+			lines[i],
+			text_x, 
+			text_y + i * Bubble.style["line-height"]
+		);
+	}
 }
 
 
