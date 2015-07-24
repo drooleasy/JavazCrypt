@@ -1,34 +1,144 @@
 function Bob(x,y, width, angle, fov_angle, fov_distance){
-	this.x = x;
-	this.y = y;
-	this.width = width; // radius !!!
-	this.angle = clipAngle(deg2rad(angle));
-	this.sightLength = fov_distance || 200;
-	this.sightWidth = fov_angle && deg2rad(fov_angle) || deg2rad(120);
+	this.x = x || Bob.defaults.x;
+	this.y = y || Bob.defaults.y;
+	this.angle = clipAngle(deg2rad(angle)) || clipAngle(Bob.defaults.angle);
+	
+	
+	this.width = width || Bob.defaults.width; // radius !!!
+	
+	this.sightLength = fov_distance || Bob.defaults.sightLength;
+	this.sightWidth = fov_angle && deg2rad(fov_angle) || Bob.defaults.sightWidth;
 	this.sightColor= "#FFFFFF";
-	this.speedForward = 2;
-	this.speedBackward = 1;
-	this.speedTurn = deg2rad(3); 
-	this.saying = false;
-	this.shadow = null;
-	this.consciousness = 2.5;
-	this.bodyStyle = {
-		"fill":"#17A9C6",
-		"stroke":"#000000",
-		"stroke-width":2
-	};
+	
+	this.consciousness = Bob.defaults.consciousness;
+	
+	
+	this.speedForward = Bob.defaults.speedForward;
+	this.speedBackward = Bob.defaults.speedBackward;
+	this.speedTurn = Bob.defaults.speedTurn; 
+	
+	
 	this.bubbleStyle = {
 		"fill":"#FFF",
 		"stroke":"#FFF",
 		"stroke-width":3
 	};
+	
+	this.body = {
+		style : {
+			"fill":Bob.defaults.body.style["fill"],
+			"stroke":Bob.defaults.body.style["stroke"],
+			"stroke-width":Bob.defaults.body.style["stroke-width"]
+		},
+		x:0,
+		y:0
+	};
+	this.eyes = {
+		left:{
+			style : {
+				"fill":Bob.defaults.eyes.left.style["fill"]
+			},
+			offset: Bob.defaults.eyes.left.offset,
+			angle: Bob.defaults.eyes.left.angle,
+			radius: Bob.defaults.eyes.left.radius
+		},
+		
+		right:{
+			style : {
+				"fill":Bob.defaults.eyes.right.style["fill"]
+			},
+			offset: Bob.defaults.eyes.right.offset,
+			angle: Bob.defaults.eyes.right.angle,
+			radius: Bob.defaults.eyes.right.radius
+		}
+	};
+	
+	this.nose = {
+		style : {
+			"fill": Bob.defaults.nose.style["fill"]
+		},
+		offset:Bob.defaults.nose.offset,
+		angle:Bob.defaults.nose.angle,
+		radius:Bob.defaults.nose.radius
+	};
+	
+
 	this.textStyle = {
 		stroke: "#000"
 	};
+
+	this.light = new Light(this.x, this.y, this.sightLength*1, Math.PI*2, this.angle);
+		
 	this.shadow = new Shadow();
-	this.light = new Light(this.x, this.y, this.sightLength*1.1, Math.PI*2, this.angle)
+	this.saying = false;
+
 }
 
+
+Bob.defaults = {
+	
+	x : 0,
+	y : 0,
+	angle : 0,
+	
+	
+	width : 10, // radius !!!
+	
+	sightLength : 200,
+	sightWidth : deg2rad(120),
+	sightColor: "#FFFFFF",
+	
+	consciousness : 2.5,
+	
+	
+	speedForward : 2,
+	speedBackward : 1,
+	speedTurn : deg2rad(3), 
+	
+	body : {
+		style : {
+			"fill":"#17A9C6",
+			"stroke":"#000000",
+			"stroke-width":2		
+		},
+		x:0,
+		y:0
+	},
+	eyes : {
+		left:{
+			style : {
+			 "fill":"#fff"
+			},
+			offset:10,
+			angle: deg2rad(-60),
+			radius:2
+		},
+		
+		right:{
+			style : {
+			 "fill":"#fff"
+			},
+			offset:10,
+			angle:deg2rad(60),
+			radius:2
+
+		}
+	},
+	
+	nose : {
+		style : {
+			"fill":"#C33"
+		},
+		offset:10,
+		angle: 0,
+		radius: 2
+	},
+	
+
+	textStyle : {
+		stroke: "#000"
+	}
+}
 
 
 Bob.prototype.replaceLight = function moveForward(){
@@ -192,23 +302,21 @@ Bob.prototype.drawSight = function(paper, path, boulder, bob){
 
 Bob.prototype.draw = function(paper){	
 	var ctx = paper.getContext('2d');
-	ctx.fillStyle = this.bodyStyle["fill"];
-	ctx.strokeStyle = this.bodyStyle["stroke"];
-	ctx.lineWidth = this.bodyStyle["stroke-width"];
+	ctx.fillStyle = this.body.style["fill"];
+	ctx.strokeStyle = this.body.style["stroke"];
+	ctx.lineWidth = this.body.style["stroke-width"];
 	
 	ctx.beginPath();
 	ctx.arc(this.x, this.y, this.width, 0, 2*Math.PI);
 	ctx.stroke();
 	ctx.fill();
 	
-	ctx.fillStyle="#C33"
-	
-	var nose_offset = 0;
+	ctx.fillStyle=this.nose.style["fill"];
 	
 	var nose = {
-		x:this.x +Math.cos(this.angle) * (this.width+nose_offset),
-		y:this.y +Math.sin(this.angle) * (this.width+nose_offset),
-		r: 3
+		x: this.x + Math.cos(this.angle + this.nose.angle) * (this.nose.offset),
+		y: this.y + Math.sin(this.angle + this.nose.angle) * (this.nose.offset),
+		r: this.nose.radius
 	}
 	
 	var eye_offset = 0;
@@ -218,23 +326,25 @@ Bob.prototype.draw = function(paper){
 	ctx.stroke();
 	ctx.fill();
 	
-	ctx.fillStyle="#fff"
+	ctx.fillStyle = this.eyes.left.style["fill"];
 	
 	var eye_left = {
-		x:this.x +Math.cos(this.angle-this.sightWidth/2) * (this.width+eye_offset),
-		y:this.y +Math.sin(this.angle-this.sightWidth/2) * (this.width+eye_offset),
-		r: 2
+		x: this.x + Math.cos(this.angle + this.eyes.left.angle) * (this.eyes.left.offset),
+		y: this.y + Math.sin(this.angle + this.eyes.left.angle) * (this.eyes.left.offset),
+		r: this.eyes.left.radius
 	}
 	
 	ctx.beginPath();
 	ctx.arc(eye_left.x, eye_left.y, eye_left.r, 0, 2*Math.PI);
 	ctx.stroke();
 	ctx.fill();
+
+	ctx.fillStyle = this.eyes.right.style["fill"];
 	
 	var eye_right = {
-		x:this.x +Math.cos(this.angle+this.sightWidth/2) * (this.width+eye_offset),
-		y:this.y +Math.sin(this.angle+this.sightWidth/2) * (this.width+eye_offset),
-		r: 2
+		x: this.x + Math.cos(this.angle + this.eyes.right.angle) * (this.eyes.right.offset),
+		y: this.y + Math.sin(this.angle + this.eyes.right.angle) * (this.eyes.right.offset),
+		r: this.eyes.right.radius
 	}
 	
 	ctx.beginPath();
@@ -247,131 +357,15 @@ Bob.prototype.draw = function(paper){
 
 Bob.prototype.speak = function(paper){
 	if(this.saying){
-		var margin = 5,
-			height = 14,
-			lineHeight = 9;
-			
+		
 		var msg = this.saying;
-		
-		var metrics = ctx.measureText(msg);
-		
-		var bubble_width = metrics.width + 2 * margin;
-		var bubble_height = height + 2 * margin;
-		
-		var bubble_x = this.x + this.width + 10 ;
-		var bubble_y = this.y - this.width - 10 - height - margin;
-
-		var text_x = bubble_x + margin;
-		var text_y = bubble_y + margin + lineHeight;
-
-		this.bubbleStyle = {
-			"fill":"#FFF",
-			"stroke":"#FFF",
-			"stroke-width":1
-		};
-
-		ctx.fillStyle = this.bubbleStyle["fill"];
-		ctx.strokeStyle = this.bubbleStyle["stroke"];
-		ctx.lineWidth = this.bubbleStyle["stroke-width"];
-		ctx.fontColor = this.bubbleStyle["font-color"];
-		
-		var anchor = new Segment(
-			bubble_x+bubble_width/2,
-			bubble_y+bubble_height/2,
-			this.x + this.width + 2,
-			this.y - this.width - 2
-		);
-		
-		anchor.draw(paper);
 			
-		
-		var rec = {
-			x:bubble_x, 
-			y:bubble_y, 
-			w:bubble_width, 
-			h:bubble_height
-		};
-		
-		
-		var top_left = {
-			x:rec.x, 
-			y:rec.y, 
-			w:rec.w/2, 
-			h:rec.h/2
-		}
-		
-		
-		var top_right = {
-			x:rec.x + rec.w/2, 
-			y:rec.y, 
-			w:rec.w/2, 
-			h:rec.h/2
-		}
-		
-		
-		var bottom_right = {
-			x:rec.x + rec.w/2, 
-			y:rec.y + rec.h/2, 
-			w:rec.w/2, 
-			h:rec.h/2
-		}
-		
-		var bottom_left = {
-			x:rec.x, 
-			y:rec.y + rec.h/2, 
-			w:rec.w/2, 
-			h:rec.h/2
-		}
-		
-		var radius = Math.min(rec.w,rec.h)/2
-		
-		ctx.moveTo(bottom_left.x, bottom_left.y);
-		ctx.arcTo(
-			top_left.x, top_left.y, 
-			top_right.x, top_right.y, 
-			radius
-		);
-		ctx.arcTo( 
-			top_right.x + top_right.w, top_right.y,
-			top_right.x + top_right.w, top_right.y + top_right.h,    
-			radius
-		);
-		ctx.arcTo(
-			bottom_right.x + bottom_right.w, bottom_right.y + bottom_right.h,  
-			bottom_right.x, bottom_right.y + bottom_right.h, 
-			radius
-		);
-		ctx.arcTo(
-			bottom_left.x, bottom_left.y + bottom_left.h,  
-			bottom_left.x, bottom_left.y, 
-			radius
-		);
-		
-		ctx.fill();
-		ctx.stroke();
+		var x = this.x + this.width + 10;
+		var y = this.y - this.width - 10;
 
-		if(false) ctx.fillRect(
-			bubble_x, 
-			bubble_y, 
-			bubble_width, 
-			bubble_height
-		)
 		
-		if(false) ctx.strokeRect(
-			bubble_x, 
-			bubble_y, 
-			bubble_width, 
-			bubble_height
-		)		
+		Bubble.draw(paper, x, y, msg, this);
 		
-		
-		
-		ctx.fillStyle= "#000"; //this.bubbleStyle["stroke"];
-		ctx.fillText(
-			msg,
-			text_x, 
-			text_y
-		);
 	}
 }
 
@@ -523,3 +517,4 @@ Bob.prototype.say = function (paper, msg){
 	var that = this;
 	setTimeout(function shutUp(){ that.saying=false}, 3*1000)
 }
+
