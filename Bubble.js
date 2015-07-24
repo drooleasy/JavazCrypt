@@ -2,37 +2,45 @@ Bubble = {};
 
 
 Bubble.style = {
-	"margin":5,
-	"padding":3,
-	"line-height" : 11,
-	"fill":"#FFF",
-	"stroke":"#FFF",
-	"stroke-width":1,
-	"text-fill":"#000"
+	"margin": 5,
+	"padding": 3,
+	"line-height": 11,
+	"fill": "#FFF",
+	"stroke": "#FFF",
+	"stroke-width": 1,
+	"text-fill": "#000",
+	minAnchorLength : 5
 }
 
-Bubble.draw = function (paper, x, y, msg, bob){
-	var margin = Bubble.style.margin;		
+Bubble.draw = function (paper, msg, x, y, angle, offset) {
+	var anchor_start_x = x + Math.cos(angle) * offset,
+		anchor_start_y = y + Math.sin(angle) * offset;
+
 	var lines = msg.split("\n");
-	
 	var longestLine = "";
 	for(var i=0;i<lines.length;i++){
 		if(lines[i].length > longestLine.length) longestLine = lines[i];
 	} 
-		
+	
+	var margin = Bubble.style.margin;		
+	var padding = Bubble.style.padding;		
+	
 	var content_height = 2*Bubble.style.padding + Bubble.style["line-height"] * lines.length;
 	
 	var metrics = ctx.measureText(longestLine);
 
-	var bubble_width = metrics.width + 2*Bubble.style.margin + 2*Bubble.style.padding;
-	var bubble_height = content_height + 2*Bubble.style.margin + 2*Bubble.style.padding;
+	var bubble_width = metrics.width + 2*margin + 2*padding;
+	var bubble_height = content_height + 2*margin + 2*padding;
 
+	var min_anchor = Bubble.style.minAnchorLength,
+		maxLength = Math.max(bubble_width, bubble_height),
+		bubble_center_x = anchor_start_x + Math.cos(angle)*(min_anchor + maxLength/2),
+		bubble_center_y = anchor_start_y + Math.sin(angle)*(min_anchor + maxLength/2),
+		bubble_x = bubble_center_x - bubble_width/2,
+		bubble_y = bubble_center_y - bubble_height/2;
 
-	var bubble_x = x;
-	var bubble_y = y - content_height - Bubble.style.margin;
-
-	var text_x = bubble_x + Bubble.style.margin + Bubble.style.padding;
-	var text_y = bubble_y + Bubble.style.margin + Bubble.style.padding + Bubble.style["line-height"];
+	var text_x = bubble_x + margin + padding;
+	var text_y = bubble_y + margin + padding + Bubble.style["line-height"];
 
 
 
@@ -42,10 +50,10 @@ Bubble.draw = function (paper, x, y, msg, bob){
 	ctx.fontColor   = Bubble.style["font-color"];
 	
 	var anchor = new Segment(
-		bubble_x + bubble_width/2,
-		bubble_y + bubble_height/2,
-		bob.x + bob.width + 2,
-		bob.y - bob.width - 2
+		bubble_center_x,
+		bubble_center_y,
+		anchor_start_x,
+		anchor_start_y
 	);
 	
 	anchor.draw(paper);
@@ -66,82 +74,3 @@ Bubble.draw = function (paper, x, y, msg, bob){
 	}
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-function drawRoundedRect(ctx, x, y, w, h){
-	
-	var rec = {
-		x:x, 
-		y:y, 
-		w:w, 
-		h:h
-	};
-	
-	
-	var top_left = {
-		x:rec.x, 
-		y:rec.y, 
-		w:rec.w/2, 
-		h:rec.h/2
-	}
-	
-	
-	var top_right = {
-		x:rec.x + rec.w/2, 
-		y:rec.y, 
-		w:rec.w/2, 
-		h:rec.h/2
-	}
-	
-	
-	var bottom_right = {
-		x:rec.x + rec.w/2, 
-		y:rec.y + rec.h/2, 
-		w:rec.w/2, 
-		h:rec.h/2
-	}
-	
-	var bottom_left = {
-		x:rec.x, 
-		y:rec.y + rec.h/2, 
-		w:rec.w/2, 
-		h:rec.h/2
-	}
-	
-	var radius = Math.min(rec.w,rec.h)/2
-	
-	ctx.moveTo(bottom_left.x, bottom_left.y);
-	ctx.arcTo(
-		top_left.x, top_left.y, 
-		top_right.x, top_right.y, 
-		radius
-	);
-	ctx.arcTo( 
-		top_right.x + top_right.w, top_right.y,
-		top_right.x + top_right.w, top_right.y + top_right.h,    
-		radius
-	);
-	ctx.arcTo(
-		bottom_right.x + bottom_right.w, bottom_right.y + bottom_right.h,  
-		bottom_right.x, bottom_right.y + bottom_right.h, 
-		radius
-	);
-	ctx.arcTo(
-		bottom_left.x, bottom_left.y + bottom_left.h,  
-		bottom_left.x, bottom_left.y, 
-		radius
-	);
-	
-	
-	
-}

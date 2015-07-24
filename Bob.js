@@ -5,6 +5,7 @@ function Bob(x,y, width, angle, fov_angle, fov_distance){
 	
 	
 	this.width = width || Bob.defaults.width; // radius !!!
+	this.width = width || Bob.defaults.width; // radius !!!
 	
 	this.sightLength = fov_distance || Bob.defaults.sightLength;
 	this.sightWidth = fov_angle && deg2rad(fov_angle) || Bob.defaults.sightWidth;
@@ -67,7 +68,11 @@ function Bob(x,y, width, angle, fov_angle, fov_distance){
 		stroke: "#000"
 	};
 
-	this.light = new Light(this.x, this.y, this.sightLength*1, Math.PI*2, this.angle);
+	this.light = new Light(
+		this.x, this.y, 
+		this.sightLength*1.1, // overshoot due to slow rate of light refreshing (when moving forward)   
+		Math.PI*2, this.angle
+	);
 		
 	this.shadow = new Shadow();
 	this.saying = false;
@@ -287,6 +292,16 @@ Bob.prototype.drawSight = function(paper, path, boulder, bob){
 	ctx.closePath();
 	ctx.stroke();
 
+	ctx.strokeStyle = "#000";
+	ctx.lineWidth = 3;
+			
+	ctx.beginPath();
+	this.drawFOV(ctx);
+	ctx.closePath();
+	ctx.stroke();
+
+
+
 	this.shadow.draw(paper, function() {	ctx.globalCompositeOperation = oldCompositeOpration;});
 
 	
@@ -357,15 +372,8 @@ Bob.prototype.draw = function(paper){
 
 Bob.prototype.speak = function(paper){
 	if(this.saying){
-		
 		var msg = this.saying;
-			
-		var x = this.x + this.width + 10;
-		var y = this.y - this.width - 10;
-
-		
-		Bubble.draw(paper, x, y, msg, this);
-		
+		Bubble.draw(paper, msg, this.x, this.y, deg2rad(-45), this.width+6);
 	}
 }
 
