@@ -95,30 +95,20 @@ slowTempo = function(){
 	}
 	
 	setTimeout(function(){
-		
 		other.light && other.light.draw(slowBuffer, path, boulder, player);
 		//slowTempo.working--;
-		
 		//mark("other drawLight")
-		
 		setTimeout(function(){
 			player.light && player.light.draw(slowBuffer, path, boulder, other);
 			//slowTempo.working--;
 			//mark("player drawLight")
-
 			setTimeout(function(){
-		
 				lastValidBuffer = slowBuffer.getContext('2d').getImageData(0, 0, slowBuffer.width, slowBuffer.height);
-		
-				//mark("update buffer")
-		
-		
+				//mark("slow tempo")
 				setTimeout(slowTempo, slowTempoDelay);
-			}, 0)
-		}, 0)
-
+			}, 0);
+		}, 0);
 	}, 0);
-	
 }
 
 

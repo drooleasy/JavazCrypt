@@ -233,8 +233,19 @@ Segment.prototype.intersectWithCone = function(cx,cy,cr, angle, fov_angle){
 }
 
 Segment.prototype.castShadow = function castSegmentShadow(bob_or_light){
-	var angle_a = distanceAndAngle(bob_or_light.x, bob_or_light.y, this.a.x, this.a.y).angle - bob_or_light.angle,
-		angle_b = distanceAndAngle(bob_or_light.x, bob_or_light.y, this.b.x, this.b.y).angle - bob_or_light.angle;
+	var metrics_a = distanceAndAngle(bob_or_light.x, bob_or_light.y, this.a.x, this.a.y),
+		metrics_b = distanceAndAngle(bob_or_light.x, bob_or_light.y, this.b.x, this.b.y);
+
+	
+	var angle_a = metrics_a.angle - bob_or_light.angle,
+		angle_b = metrics_b.angle - bob_or_light.angle;
+
+	var distance_a = metrics_a.distance,
+		distance_b = metrics_b.distance;
+
+	if(distance_a > bob_or_light.sightLength && distance_b > bob_or_light.sightLength){
+		return;
+	};
 
 	angle_a = clipAnglePositive(angle_a);
 	angle_b = clipAnglePositive(angle_b);

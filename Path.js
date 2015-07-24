@@ -14,7 +14,7 @@ function Path (/*x,y,...*/){
 	this.segments = [];
 	l = this.points.length-1; 
 	for(i=0;i<l;i++){
-		if(i>0){
+		if(false && i>0){
 			this.segments.push(new Segment(  // dummy welding to compensate line offsets
 				this.points[i-1].x, this.points[i-1].y,
 				this.points[i].x, this.points[i].y
@@ -38,7 +38,7 @@ Path.prototype.close = function(){
 			this.points[0].x,
 			this.points[0].y
 		));
-		this.segments.push(new Segment(
+		if(false) this.segments.push(new Segment(
 			this.points[0].x,
 			this.points[0].y,
 			this.points[0].x,

@@ -26,31 +26,40 @@ function Bob(x,y, width, angle, fov_angle, fov_distance){
 		stroke: "#000"
 	};
 	this.shadow = new Shadow();
-	this.light = new Light(this.x, this.y, this.sightLength*1.1)
+	this.light = new Light(this.x, this.y, this.sightLength*1.1, Math.PI*2, this.angle)
+}
+
+
+
+Bob.prototype.replaceLight = function moveForward(){
+	if(this.light){
+		this.light.moveTo(this);
+		this.light.angle = this.angle;
+	}
 }
 
 Bob.prototype.moveForward = function moveForward(){
 	this.x += Math.cos(this.angle)*this.speedForward;
 	this.y += Math.sin(this.angle)*this.speedForward;
-	this.light && this.light.moveTo(this);
+	this.replaceLight();
 }
 
 Bob.prototype.moveBackward = function moveBackward(){
 	this.x += Math.cos(this.angle)*(-1)*this.speedBackward;
 	this.y += Math.sin(this.angle)*(-1)*this.speedBackward;
-	this.light && this.light.moveTo(this);
+	this.replaceLight();
 }
 
 Bob.prototype.turnLeft = function turnLeft(){
 	this.angle -= this.speedTurn;
 	this.angle = clipAngle(this.angle);
-	this.light && this.light.moveTo(this);
+	this.replaceLight();
 }
 
 Bob.prototype.turnRight =  function turnRight(){
 	this.angle += this.speedTurn;
 	this.angle = clipAngle(this.angle);
-	this.light && this.light.moveTo(this);
+	this.replaceLight();
 }
 
 Bob.prototype.feels =  function inSight(other){ 

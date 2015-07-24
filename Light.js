@@ -1,13 +1,57 @@
 
-function Light (x,y,sightLength){
-	this._x = x;
-	this.x = x;
-	this._y = y;
-	this.y = y;
+function Light (x, y, sightLength, sightWidth, angle){
+	this.x  = x || Light.defaults.x;
+	this._x = x || Light.defaults.x;
+	this.y  = y || Light.defaults.y;
+	this._y = y || Light.defaults.y;
+	this.positionVariation = Light.defaults.positionVariation;
+	this.angle = angle || Light.defaults.angle;
+
+
+	this.sightLength = sightLength || Light.defaults.sightLength;
+	this.sightWidth = sightWidth || Light.defaults.sightWidth;
+	
+	this.lightComposite = Light.defaults.lightComposite;
+	this.shadowComposite = Light.defaults.shadowComposite;
+	
+	this.lineWidth = Light.defaults.lineWidth;
+	this.lineColor = Light.defaults.lineColor;
+
+	this.lightColor = Light.defaults.lightColor;
+	this.shadowColor = Light.defaults.shadowColor;
+	
+	this.startDecay = Light.defaults.startDecay;
+	this.decayVariation = Light.defaults.decayVariation;
+
 	this.shadow = new Shadow();
-	this.sightLength = sightLength; // cheeta
-	this.angle = 0; // dummy see segment cast shadow
+
+
 }
+
+Light.defaults = {
+	x:0,
+	y:0,
+	positionVariation : 2,
+	
+	angle: 0,
+	
+	sightWidth: Math.PI*2,
+	sightLength: 200,
+	
+	startDecay : 0.333,
+	decayVariation : 0.1,
+	
+	lineWidth:1,
+	lineColor : "#000",
+	
+	lightColor : "rgba(48,144,48,1)",
+	shadowColor : "rgba(0,0,0,1)",
+	
+	
+	lightComposite : "lighten",
+	shadowComposite : "hard-light"
+
+};
 
 Light.prototype.moveTo = function(pos){
 	this._x = pos.x;
@@ -18,10 +62,11 @@ Light.prototype.moveTo = function(pos){
 Light.prototype.draw = function(paper, path, boulder, bob){		
 	var ctx = paper.getContext('2d');
 
-
-	this.x = this._x+Math.random()*4-2;
-	this.y = this._y+Math.random()*4-2;
+	this.x = this._x + randomDelta(this.positionVariation);
+	this.y = this._y + randomDelta(this.positionVariation);
 	var that = this;
+
+	this.shadow.clear();
 
 	// WORLD SHADOWS
 	for(i=0;i<path.segments.length;i++){
@@ -36,29 +81,29 @@ Light.prototype.draw = function(paper, path, boulder, bob){
 	if(sees_bob){
 		bob.castShadow(this);
 	}
-	
 
 	var oldCompositeOpration = ctx.globalCompositeOperation;
-	ctx.globalCompositeOperation = "lighten";
-	var grd=ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.sightLength);
-	grd.addColorStop(0,"rgba(48,144,48,1)");
-	grd.addColorStop(0.333 + Math.random()*0.1-0.05,"rgba(48,144,48,1)");
-	grd.addColorStop(1,"rgba(0,0,0,1)");
-
-	ctx.fillStyle = grd;
-			
-	ctx.lineWidth = 1;
-
+	ctx.globalCompositeOperation = this.lightComposite;
+	
+	var grd=ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.sightLength);
+	grd.addColorStop(0, this.lightColor);
+	grd.addColorStop(this.startDecay + randomDelta(this.decayVariation), this.lightColor);
+	grd.addColorStop(1, this.shadowColor);
+	
+	ctx.fillStyle = grd;			
+	ctx.lineWidth = this.lineWidth;
 	ctx.beginPath();
 
+
 	ctx.moveTo(this.x, this.y);
-	ctx.arc(this.x, this.y, this.sightLength, 0, 2*Math.PI);
+	ctx.arc(this.x, this.y, this.sightLength, 0, this.sightWidth);
 
 	ctx.closePath();
 	ctx.stroke();
 	ctx.fill();
 
-	ctx.globalCompositeOperation = "hard-light";
+	ctx.globalCompositeOperation = this.shadowComposite;
+console.log(this.lightComposite)
 
 	this.shadow.draw(paper);
 		

@@ -117,6 +117,10 @@ function minus(a,b){
 
 
 
+function randomDelta(delta){
+	return Math.random() * delta - delta/2;
+}
+
 function intersection(a1,a2,b1,b2){ // a1<a2 && b1<b2
 	
 	if(b1>a2 || a1 >b2) return []
