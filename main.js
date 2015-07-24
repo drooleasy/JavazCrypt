@@ -17,15 +17,6 @@ player.sightWidth=deg2rad(120);
 
 var other = new Bob(375, 220, 10, -90);
 
-var candles = [
-	//new Candle(420,120,300),
-	//new Candle(370,270,130),
-	//new Candle(210,180,300),
-	//new Candle(100,170,130)
-];
-
-
-
 var path = new Path(
 	500, 100, 
 	500, 300, 
@@ -34,31 +25,23 @@ var path = new Path(
 	250, 200
 	
 );
-
-
 path.close();
-
-//path.inversed();
 
 var boulder = new Path(
 	250, 250,
 	240, 265, 
 	270, 260
 );
-
 boulder.close();
 
-//boulder.inversed();
+
+
 
 var old_sees_player = false;
 var old_sees_bob = false;
 
 
 var lights_on = false;
-
-
-
-
 
 
 
@@ -72,39 +55,18 @@ defaultSlowFunction = function(){ console.log("default slow")}
 
 lastValidBuffer=null;
 
-slowTempo = function(){
-
-	
-	//slowTempo.working = 2;
+slowTempo = function slowTempo(){
 	var ctx = slowBuffer.getContext("2d");
 	
 	ctx.fillStyle="#000"
 	ctx.fillRect(0,0,slowBuffer.width,slowBuffer.height);
-
-
-	var origin = new Date();
-	origin = origin.getTime();
-
-	function mark(msg){
-		var now = new Date();
-		now = now.getTime();
-		var diff = now - origin
-		console.log(diff, " " + msg)
-		origin = now;
-		
-	}
 	
 	setTimeout(function(){
 		other.light && other.light.draw(slowBuffer, path, boulder, player);
-		//slowTempo.working--;
-		//mark("other drawLight")
 		setTimeout(function(){
 			player.light && player.light.draw(slowBuffer, path, boulder, other);
-			//slowTempo.working--;
-			//mark("player drawLight")
 			setTimeout(function(){
 				lastValidBuffer = slowBuffer.getContext('2d').getImageData(0, 0, slowBuffer.width, slowBuffer.height);
-				//mark("slow tempo")
 				setTimeout(slowTempo, slowTempoDelay);
 			}, 0);
 		}, 0);
@@ -113,25 +75,16 @@ slowTempo = function(){
 
 
 
-
-
-
 function draw(){
 
 	var timer = (new Date()).getTime();
-
-
-
 
 	// CLEARING
 	var ctx = paper.getContext("2d");
 	ctx.fillStyle = "#000";
 	ctx.fillRect(0, 0, paper_width, paper_height);
 	player.shadow.clear();	
-	for(i=0;i<candles.length;i++){
-		candles[i].shadow.clear();
-	}
-
+	
 
 	// COLLISIONS
 	player.collidesWithBob(other);
@@ -154,12 +107,7 @@ function draw(){
 		boulder.draw(paper, true);
 		ctx.fill();
 		ctx.stroke();
-	}
-
-	
-
-
-	if(!lights_on){
+	} else {
 		// DRAWS FOV
 			
 		 	

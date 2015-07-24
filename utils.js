@@ -1,51 +1,4 @@
 
-function deg2rad(deg){
-	return deg*Math.PI/180;
-}
-
-function rad2deg(rad){
-	return rad*180/Math.PI;
-}
-
-
-function display(msg, dontClear){
-	var dbg = document.getElementById("dbg-info");
-	if(dbg) dbg.innerHTML = (!!dontClear ?  dbg.innerHTML + "<br/>" : "") + msg;
-}
-
-function clipAngle(angle){  
-	var turns = angle / (2*Math.PI);
-	turns = (turns<0 ? Math.ceil(turns) : Math.floor(turns)); 
-	angle -= turns * 2*Math.PI;
-	if(angle < -Math.PI) angle = 2*Math.PI + angle;
-	if(angle > Math.PI) angle =  angle - 2*Math.PI;
-	return angle;
-	// angle > 0 == to the right
-	// angle < 0 == to the left
-}
-
-
-function clipAnglePositive(angle){
-	var turns = angle / (2*Math.PI);
-	turns = (turns<0 ? Math.ceil(turns) : Math.floor(turns)); 
-	angle -= turns * 2*Math.PI;
-	if(angle < 0) angle = 2*Math.PI + angle ;
-	return angle;
-}
-
-
-function distanceAndAngle(from_x,from_y, to_x,to_y){
-	var dx = to_x - from_x,
-		dy = to_y - from_y,
-		distance = Math.sqrt(dx*dx+dy*dy),
-		angle = clipAngle(Math.atan2(dy,dx));
-	return {
-		distance : distance,
-		angle : angle
-	};
-}
-
-
 function solveP2(a, b, c){ // ax2 + bx + c = 0, a!=0 !!!!
 	var det = b*b - 4*a*c;
 	if(det>=0){
@@ -144,5 +97,9 @@ function union(a1,a2,b1,b2){ // a1<a2 && b1<b2
 	return [[mn,mx]]
 	
 }
+
+
+
+
 
 

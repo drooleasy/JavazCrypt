@@ -103,7 +103,6 @@ Light.prototype.draw = function(paper, path, boulder, bob){
 	ctx.fill();
 
 	ctx.globalCompositeOperation = this.shadowComposite;
-console.log(this.lightComposite)
 
 	this.shadow.draw(paper);
 		
