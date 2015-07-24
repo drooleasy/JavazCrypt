@@ -77,7 +77,7 @@ Light.prototype.draw = function(paper, path, boulder, bob){
 	}
 
 	// OTHERS SHADOWS
-	var sees_bob = bob && distanceAndAngle(this.x, this.y, bob.x, bob.y).distance < this.sightLength+bob.width;
+	var sees_bob = bob && distanceBetween(this.x, this.y, bob.x, bob.y) < this.sightLength+bob.width;
 	if(sees_bob){
 		bob.castShadow(this);
 	}

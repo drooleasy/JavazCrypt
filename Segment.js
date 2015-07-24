@@ -90,13 +90,13 @@ Segment.prototype.seenSegment = function(bob){
 		
 			
 		if(intersects.length > 1){
-			angle_inter_min = clipAngle(distanceAndAngle(bob.x,bob.y, intersects[0].x, intersects[0].y).angle - bob.angle);
+			angle_inter_min = angleBetween(distanceAndAngle(bob.x,bob.y, intersects[0].x, intersects[0].y) - bob.angle);
 			angle_inter_max = angle_inter_min;
 			left = intersects[0];
 			right = intersects[0];
 
 			for(i=1;i<intersects.length;i++){
-				var angle_inter = clipAngle(distanceAndAngle(bob.x,bob.y, intersects[i].x, intersects[i].y).angle - bob.angle);
+				var angle_inter = clipAngle(angleBetween(bob.x,bob.y, intersects[i].x, intersects[i].y) - bob.angle);
 				if(angle_inter < angle_inter_min){
 					angle_inter_min = angle_inter;
 					right = intersects[i];
@@ -221,7 +221,7 @@ Segment.prototype.intersectWithCone = function(cx,cy,cr, angle, fov_angle){
 	for(;i<possibles.length;i++){
 		
 		
-		var angle_points = distanceAndAngle(cx, cy, possibles[i].x, possibles[i].y).angle;
+		var angle_points = angleBetween(cx, cy, possibles[i].x, possibles[i].y);
 		
 		var angle_relative = clipAngle(angle_points - angle);
 		
@@ -279,8 +279,8 @@ Segment.prototype.castShadow = function castSegmentShadow(bob_or_light){
 	var ray_1 = castRay(bob_or_light.x, bob_or_light.y, left.x, left.y, bob_or_light.sightLength);
 	var ray_2 = castRay(bob_or_light.x, bob_or_light.y, right.x, right.y, bob_or_light.sightLength);
 	
-	var angle_1 = distanceAndAngle(bob_or_light.x, bob_or_light.y, ray_1.a.x, ray_1.a.y).angle,
-		angle_2 = distanceAndAngle(bob_or_light.x, bob_or_light.y, ray_2.a.x, ray_2.a.y).angle;
+	var angle_1 = angleBetween(bob_or_light.x, bob_or_light.y, ray_1.a.x, ray_1.a.y),
+		angle_2 = angleBetween(bob_or_light.x, bob_or_light.y, ray_2.a.x, ray_2.a.y);
 	
 	
 	var coneData = {

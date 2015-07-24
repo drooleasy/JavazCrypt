@@ -178,21 +178,18 @@ Bob.prototype.turnRight =  function turnRight(){
 }
 
 Bob.prototype.feels =  function inSight(other){ 
-	var metrics = distanceAndAngle(this.x, this.y, other.x, other.y),
-		distance = metrics.distance;
-	if((distance - other.width) < this.width*this.consciousness) return true;
+	var d = distanceBetween(this.x, this.y, other.x, other.y); 
+	if((d - other.width) < this.width*this.consciousness) return true;
 	return false;
 }
 
 Bob.prototype.sees =  function inSight(other){ 
 	var metrics = distanceAndAngle(this.x, this.y, other.x, other.y),
-		distance = metrics.distance;
-	
-	var angle = metrics.angle,	
+		distance = metrics.distance,
+		angle = metrics.angle,	
 		relativeAngle =  clipAngle(angle - this.angle),
 		width = other.width,
 		deltaAngle = Math.asin(width / distance)
-	
 	return relativeAngle + deltaAngle >= (-this.sightWidth/2) 
 		&& relativeAngle - deltaAngle <= this.sightWidth/2  
 		&& distance - width <= this.sightLength
@@ -379,10 +376,10 @@ Bob.prototype.speak = function(paper){
 
 Bob.prototype.collidesWithBob = function(bob){
 	var metrics = distanceAndAngle(this.x, this.y, bob.x, bob.y),
-		distance = this.width + bob.width;
-	if(metrics.distance < distance ){ // collides
-			this.x = bob.x - Math.cos(metrics.angle) * distance; 
-			this.y = bob.y - Math.sin(metrics.angle) * distance; 
+		distance_min = this.width + bob.width;
+	if(metrics.distance < distance_min ){ // collides
+			this.x = bob.x - Math.cos(metrics.angle) * distance_min; 
+			this.y = bob.y - Math.sin(metrics.angle) * distance_min; 
 	}
 }
 
@@ -390,10 +387,10 @@ Bob.prototype.collidesWithBob = function(bob){
 Bob.prototype.collidesWithSegment = function(segment){
 	var closest = segment.closestPointFrom(this.x, this.y);
 	var metrics = distanceAndAngle(this.x, this.y, closest.x, closest.y),
-		distance = this.width;
-	if(metrics.distance < distance ){ // collides
-			this.x = closest.x - Math.cos(metrics.angle) * distance; 
-			this.y = closest.y - Math.sin(metrics.angle) * distance; 
+		distance_min = this.width;
+	if(metrics.distance < distance_min ){ // collides
+			this.x = closest.x - Math.cos(metrics.angle) * distance_min; 
+			this.y = closest.y - Math.sin(metrics.angle) * distance_min; 
 	}
 }
 
@@ -442,7 +439,7 @@ Bob.prototype.castShadow = function cast_bob_shadow(light){
 		}
 		var ray = castRay(light.x, light.y, side.x, side.y, light.sightLength);
 		
-		var angle = distanceAndAngle(light.x, light.y, side.x, side.y).angle - light.angle;
+		var angle = angleBetween(light.x, light.y, side.x, side.y) - light.angle;
 		angle = clipAngle(angle);
 		
 		secants.push({angle:angle, ray:ray});
@@ -473,10 +470,10 @@ Bob.prototype.castShadow = function cast_bob_shadow(light){
 			}
 		}
 	
-		var left_2_angle = distanceAndAngle(this.x, this.y, left.ray.a.x, left.ray.a.y).angle - light.angle;
+		var left_2_angle = angleBetween(this.x, this.y, left.ray.a.x, left.ray.a.y) - light.angle;
 		left_2_angle = clipAngle(left_2_angle);
 	
-		var right_2_angle = distanceAndAngle(this.x, this.y, right.ray.a.x, right.ray.a.y).angle  - light.angle;    
+		var right_2_angle = angleBetween(this.x, this.y, right.ray.a.x, right.ray.a.y) - light.angle;    
 		right_2_angle = clipAngle(right_2_angle);
 		
 		if(left_2_angle > right_2_angle) {
@@ -488,7 +485,7 @@ Bob.prototype.castShadow = function cast_bob_shadow(light){
 		} 
 
 		
-	var bob_angle = distanceAndAngle(light.x, light.y, this.x, this.y).angle;
+	var bob_angle = angleBetween(light.x, light.y, this.x, this.y);
 		
 
 	var coneData = {

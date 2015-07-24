@@ -51,13 +51,13 @@ function clipAngleNegative(angle){
 
 
 
-function angle(from_x,from_y, to_x,to_y){
+function angleBetween(from_x,from_y, to_x,to_y){
 	var dx = to_x - from_x,
 		dy = to_y - from_y;
 	return clipAngle(Math.atan2(dy,dx));
 }
 
-function distance(from_x,from_y, to_x,to_y){
+function distanceBetween(from_x,from_y, to_x,to_y){
 	var dx = to_x - from_x,
 		dy = to_y - from_y;
 	return Math.sqrt(dx*dx+dy*dy); 

@@ -49,7 +49,7 @@ slowBuffer = document.createElement("canvas");
 slowBuffer.width = paper.width;
 slowBuffer.height = paper.height;
 
-slowTempoDelay = 1000/12;
+slowTempoDelay = 1000/25;
 
 defaultSlowFunction = function(){ console.log("default slow")}
 
@@ -140,7 +140,9 @@ function draw(){
 	
 	// OTHER ATTENTION
 	if(player.saying || other.feels(player)){
-		var a = clipAngle(clipAnglePositive(distanceAndAngle(other.x, other.y, player.x, player.y).angle) - clipAnglePositive(other.angle));
+		var a = clipAngle(
+			clipAnglePositive(angleBetween(other.x, other.y, player.x, player.y)) - clipAnglePositive(other.angle)
+		);
 		if(Math.abs(a) > deg2rad(2)) other.angle += deg2rad(2) * Math.abs(a)/a;
 	}
 
