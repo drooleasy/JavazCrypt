@@ -90,7 +90,7 @@ Segment.prototype.seenSegment = function(bob){
 		
 			
 		if(intersects.length > 1){
-			angle_inter_min = angleBetween(distanceAndAngle(bob.x,bob.y, intersects[0].x, intersects[0].y) - bob.angle);
+			angle_inter_min = clipAngle(angleBetween(bob.x,bob.y, intersects[0].x, intersects[0].y) - bob.angle);
 			angle_inter_max = angle_inter_min;
 			left = intersects[0];
 			right = intersects[0];

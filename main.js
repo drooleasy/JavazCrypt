@@ -130,11 +130,6 @@ function draw(){
 	
 	
 	// PLAYERS REACTION
-	/*if(sees_bob){
-		if(!old_sees_bob) player.say(paper, "Hello Bob...");
-	}else{
-		old_sees_bob = false;
-	}*/
 	player.speak(paper);
 
 	
@@ -162,7 +157,7 @@ function draw(){
 	
 	
 	// FPS CALCULATION
-	timer = (new Date()).getTime() - timer;
+/*	timer = (new Date()).getTime() - timer;
 	timer/=1000;
 	var fps = 1.0/timer;
 	min_fps = Math.min(min_fps, fps);
@@ -172,7 +167,7 @@ function draw(){
 	display("<span style='color:red;weight:bold;'>min : " +	min_fps.toFixed(3) + "</span>");
 	display("<span style='color:black;weight:bold;'>fps : " + fps.toFixed(3) + "</span>", true);
 	display("<span style='color:green;weight:bold;'>max : " + max_fps.toFixed(3) + "</span>", true);
-
+*/
 	// REQUEST NEXT FRAME
 	window.requestAnimationFrame(draw);
 }

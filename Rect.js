@@ -44,3 +44,32 @@ Rect.prototype.getPointFromCenter = function(i,j){
 		y: center.y + j * this.h 
 	};
 }
+
+Rect.prototype.verticals = function() { 
+	return [
+		[ [this.x, this.y], [this.x,this.y+this.h] ],
+		[ [this.x+this.w, this.y], [this.x+this.w,this.y+this.h] ]
+	];
+}
+Rect.prototype.horizontals = function() { 
+	return [
+		[ [this.x, this.y], [this.x+this.w, this.y] ],
+		[ [this.x, this.y+this.h], [this.x+this.w, this.y+this.h] ]
+	];
+}
+Rect.prototype.diagonals = function() { 
+	return [
+		[ [this.x, this.y], [this.x+this.w, this.y+this.h] ],
+		[ [this.x, this.y+this.h], [this.x+this.w, this.y] ]
+	];
+}
+
+Rect.prototype.isVertical = function(){
+	return this.h > this.w;
+}
+Rect.prototype.isHorizontal = function(){
+	return this.w > this.h;
+}
+Rect.prototype.isSquare = function(){
+	return this.w == this.h;
+}

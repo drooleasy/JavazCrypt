@@ -35,7 +35,7 @@ Light.defaults = {
 	
 	angle: 0,
 	
-	sightWidth: Math.PI*2,
+	sightWidth: PIPI,
 	sightLength: 200,
 	
 	startDecay : 0.333,

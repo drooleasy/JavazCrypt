@@ -71,7 +71,7 @@ function Bob(x,y, width, angle, fov_angle, fov_distance){
 	this.light = new Light(
 		this.x, this.y, 
 		this.sightLength*1.1, // overshoot due to slow rate of light refreshing (when moving forward)   
-		Math.PI*2, this.angle
+		PIPI, this.angle
 	);
 		
 	this.shadow = new Shadow();
@@ -319,7 +319,7 @@ Bob.prototype.draw = function(paper){
 	ctx.lineWidth = this.body.style["stroke-width"];
 	
 	ctx.beginPath();
-	ctx.arc(this.x, this.y, this.width, 0, 2*Math.PI);
+	ctx.arc(this.x, this.y, this.width, 0, PIPI);
 	ctx.stroke();
 	ctx.fill();
 	
@@ -334,7 +334,7 @@ Bob.prototype.draw = function(paper){
 	var eye_offset = 0;
 	
 	ctx.beginPath();
-	ctx.arc(nose.x, nose.y, nose.r, 0, 2*Math.PI);
+	ctx.arc(nose.x, nose.y, nose.r, 0, 2*PIPI);
 	ctx.stroke();
 	ctx.fill();
 	
@@ -347,7 +347,7 @@ Bob.prototype.draw = function(paper){
 	}
 	
 	ctx.beginPath();
-	ctx.arc(eye_left.x, eye_left.y, eye_left.r, 0, 2*Math.PI);
+	ctx.arc(eye_left.x, eye_left.y, eye_left.r, 0, PIPI);
 	ctx.stroke();
 	ctx.fill();
 
@@ -360,7 +360,7 @@ Bob.prototype.draw = function(paper){
 	}
 	
 	ctx.beginPath();
-	ctx.arc(eye_right.x, eye_right.y, eye_right.r, 0, 2*Math.PI);
+	ctx.arc(eye_right.x, eye_right.y, eye_right.r, 0, PIPI);
 	ctx.stroke();
 	ctx.fill();
 };
