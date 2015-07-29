@@ -73,6 +73,7 @@ function Bob(x,y, width, angle, fov_angle, fov_distance){
 		this.sightLength*1.1, // overshoot due to slow rate of light refreshing (when moving forward)   
 		PIPI, this.angle
 	);
+	this.light.belongsTo = this;
 		
 	this.shadow = new Shadow();
 	this.saying = false;

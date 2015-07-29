@@ -25,6 +25,7 @@ function Light (x, y, sightLength, sightWidth, angle){
 
 	this.shadow = new Shadow();
 
+	this.belongsTo = null;
 
 }
 
@@ -59,12 +60,13 @@ Light.prototype.moveTo = function(pos){
 }
 
 		
-Light.prototype.draw = function(paper, path, boulder, bob){		
+Light.prototype.draw = function(paper, path, boulder, bobs){		
 	var ctx = paper.getContext('2d');
 
 	this.x = this._x + randomDelta(this.positionVariation);
 	this.y = this._y + randomDelta(this.positionVariation);
 	var that = this;
+
 
 	this.shadow.clear();
 
@@ -75,14 +77,18 @@ Light.prototype.draw = function(paper, path, boulder, bob){
 	for(i=0;i<boulder.segments.length;i++){
 		boulder.segments[i].castShadow(this);
 	}
-
-	// OTHERS SHADOWS
-	var sees_bob = bob && distanceBetween(this.x, this.y, bob.x, bob.y) < this.sightLength+bob.width;
-	if(sees_bob){
-		bob.castShadow(this);
+	
+	// OTHERS SHADOWS	
+	for(i=0;i<bobs.length;i++){
+		var bob = bobs[i];
+		if(bob != this.belongsTo){
+			var sees_bob = bob && distanceBetween(this.x, this.y, bob.x, bob.y) < this.sightLength+bob.width;
+			if(sees_bob){
+				bob.castShadow(this);
+			}
+		}
 	}
-
-	var oldCompositeOpration = ctx.globalCompositeOperation;
+	var oldCompositeOperation = ctx.globalCompositeOperation;
 	ctx.globalCompositeOperation = this.lightComposite;
 	
 	var grd=ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.sightLength);
@@ -106,6 +112,6 @@ Light.prototype.draw = function(paper, path, boulder, bob){
 
 	this.shadow.draw(paper);
 		
-	ctx.globalCompositeOperation = oldCompositeOpration;
+	ctx.globalCompositeOperation = oldCompositeOperation;
 
 }

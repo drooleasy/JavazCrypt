@@ -39,6 +39,24 @@ Interval.prototype.covers = function(inter){
 	return this.min() <= inter.min && this.max() >= inter.max();
 }
 
+
+Interval.prototype.offset = function(x){
+	return new Interval(this.from() + x, this.to() + x);
+} 
+
+
+Interval.prototype.scaleFrom = function(x, factor){
+	var dfrom = this.from()-x,
+		newFrom = x + dfrom * factor;
+	
+	return new Interval(newFrom, newFrom + this.length(true) * factor);
+} 
+
+Interval.prototype.scaleFromMiddle = function(factor){ return this.scaleFrom(this.middle(), factor); }
+Interval.prototype.scaleFromStart = function(factor){ return this.scaleFrom(this.from(), factor); }
+Interval.prototype.scaleFromEnd = function(factor){ return this.scaleFrom(this.to(), factor); }
+
+
 Interval.prototype.length = function(signed){
 	var res = this.max() - this.min();
 	return (signed && this.isDescending()) ? -res : res;
@@ -88,7 +106,7 @@ Interval.prototype.isPoint = function(){
 Interval.prototype.reverse = function(){
 	var t = this.from(),
 		f = this.to();
-	return new Segment(f, t);
+	return new Interval(f, t);
 }
 
 Interval.prototype.middle = function(){

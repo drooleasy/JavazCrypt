@@ -146,7 +146,7 @@ Segment.prototype.draw = function(paper){
 	ctx.beginPath();
 	ctx.moveTo(this.a.x, this.a.y);
 	ctx.lineTo(this.b.x, this.b.y);
-	ctx.stroke();
+	
 }
 
 Segment.prototype.intersect = function (other){

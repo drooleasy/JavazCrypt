@@ -17,6 +17,13 @@ player.sightWidth=deg2rad(120);
 
 var other = new Bob(375, 220, 10, -90);
 
+
+
+var bobs =[];
+bobs.push(player);
+bobs.push(other);
+
+
 var path = new Path(
 	500, 100, 
 	500, 300, 
@@ -41,6 +48,8 @@ var old_sees_player = false;
 var old_sees_bob = false;
 
 
+
+
 var lights_on = false;
 
 
@@ -49,11 +58,19 @@ slowBuffer = document.createElement("canvas");
 slowBuffer.width = paper.width;
 slowBuffer.height = paper.height;
 
-slowTempoDelay = 1000/25;
+slowTempoDelay = 1000/12;
 
 defaultSlowFunction = function(){ console.log("default slow")}
 
 lastValidBuffer=null;
+
+
+var licht = new Light(250, 270, 200, 2*Math.PI, Math.PI);
+
+var lights = [];
+//lights.push(licht);
+lights.push(other.light);
+lights.push(player.light);
 
 slowTempo = function slowTempo(){
 	var ctx = slowBuffer.getContext("2d");
@@ -61,16 +78,38 @@ slowTempo = function slowTempo(){
 	ctx.fillStyle="#000"
 	ctx.fillRect(0,0,slowBuffer.width,slowBuffer.height);
 	
-	setTimeout(function(){
-		other.light && other.light.draw(slowBuffer, path, boulder, player);
-		setTimeout(function(){
-			player.light && player.light.draw(slowBuffer, path, boulder, other);
-			setTimeout(function(){
-				lastValidBuffer = slowBuffer.getContext('2d').getImageData(0, 0, slowBuffer.width, slowBuffer.height);
-				setTimeout(slowTempo, slowTempoDelay);
-			}, 0);
-		}, 0);
-	}, 0);
+	var renderedLights = [],
+		i=0,
+		l=lights.length,
+		n=l;
+	
+	
+	function conclude(){
+		var ctx = slowBuffer.getContext("2d");
+		lastValidBuffer = slowBuffer.getContext('2d').getImageData(0, 0, slowBuffer.width, slowBuffer.height);
+		setTimeout(slowTempo, slowTempoDelay);
+	}
+	
+	for(i=0;i<l;i++){
+		setTimeout(
+			(function(a_light){
+				return function(){
+					var ctx = slowBuffer.getContext("2d");
+					ctx.globalCompositeOperation = "ligther";
+					var oldComposite = ctx.globalCompositeOperation = "ligther";
+		
+					a_light.draw(slowBuffer, path, boulder, bobs);
+					n--;
+					renderedLights.push(slowBuffer.getContext('2d').getImageData(0, 0, slowBuffer.width, slowBuffer.height))
+					if(n==0){
+						conclude();
+					}
+					ctx.globalCompositeOperation = oldComposite;
+		
+				};
+			})(lights[i]),
+		0)
+	}
 }
 
 
