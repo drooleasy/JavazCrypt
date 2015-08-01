@@ -502,8 +502,8 @@ Bob.prototype.castShadow = function cast_bob_shadow(light){
 			
 			bob:{
 				width:this.width,
-				x1 : this.x + Math.cos(bob_angle) * this.width*2.5,
-				y1 : this.y + Math.sin(bob_angle) * this.width*2.5,
+				x1 : this.x - Math.cos(bob_angle) * this.width*2.5,
+				y1 : this.y - Math.sin(bob_angle) * this.width*2.5,
 				x2 : left.ray.a.x,
 				y2 : left.ray.a.y,
 				r : this.width

@@ -30,7 +30,10 @@ var handle_2 = new Handle(segment_1.b.x,segment_1.b.y, 5, function(){
 		segment_1.b.y = this.y;
 });
 
+segment_1.a.handle = handle_1;
 handle_1.label = "A";
+
+segment_1.b.handle = handle_2;
 handle_2.label = "B";
 
 
@@ -47,7 +50,10 @@ var handle_4 = new Handle(segment_2.b.x,segment_2.b.y, 5, function(){
 		segment_2.b.y = this.y;
 });
 
+segment_2.a.handle = handle_3;
 handle_3.label = "C";
+
+segment_2.b.handle = handle_4;
 handle_4.label = "D";
 
 
@@ -150,14 +156,14 @@ slowBuffer = document.createElement("canvas");
 slowBuffer.width = paper.width;
 slowBuffer.height = paper.height;
 
-slowTempoDelay = 1000/12;
+slowTempoDelay = 1000/25;
 
 defaultSlowFunction = function(){ console.log("default slow")}
 
 lastValidBuffer=null;
 
 
-var licht = new Light(250, 270, 200, 2*Math.PI, Math.PI);
+var licht = new Light(250, 270, 400, 2*Math.PI, 0);
 
 var lights = [];
 lights.push(licht);
@@ -181,14 +187,14 @@ slowTempo = function slowTempo(){
 	}
 	
 	for(i=0;i<l;i++){
-		if(false)setTimeout(
+		setTimeout(
 			(function(a_light){
 				return function(){
 					var ctx = slowBuffer.getContext("2d");
 					ctx.globalCompositeOperation = "ligther";
 					var oldComposite = ctx.globalCompositeOperation = "ligther";
 		
-					a_light.draw(slowBuffer, path, boulder, bobs);
+					a_light.draw(slowBuffer, null, null, null, segments);
 					n--;
 					renderedLights.push(slowBuffer.getContext('2d').getImageData(0, 0, slowBuffer.width, slowBuffer.height))
 					if(n==0){
@@ -212,6 +218,10 @@ function draw(){
 	ctx.fillRect(0, 0, paper_width, paper_height);
 	
 
+	if(lastValidBuffer){ 
+		paper.getContext("2d").putImageData(lastValidBuffer,0,0);
+	}
+
 
 	ctx.fillStyle = "#393";
 	ctx.strokeStyle = "#cfc";
@@ -233,6 +243,5 @@ function draw(){
 
 
 setTimeout(slowTempo, slowTempoDelay);
-
 
 window.requestAnimationFrame(draw);

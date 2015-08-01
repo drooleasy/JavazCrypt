@@ -149,6 +149,12 @@ Segment.prototype.draw = function(paper){
 	
 }
 
+Segment.prototype.otherPoint = function(p){
+	if(p===this.a) return this.b;
+	if(p===this.b) return this.a;
+	return null;
+}
+
 Segment.prototype.intersect = function (other){
 
 	var this_v = minus(this.b, this.a);

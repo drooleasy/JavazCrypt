@@ -51,6 +51,7 @@ var old_sees_bob = false;
 
 
 var lights_on = false;
+var draw_sight = false;
 
 
 
@@ -58,54 +59,97 @@ slowBuffer = document.createElement("canvas");
 slowBuffer.width = paper.width;
 slowBuffer.height = paper.height;
 
-slowTempoDelay = 1000/12;
+worldRenderer = document.createElement("canvas");
+worldRenderer.width = paper.width;
+worldRenderer.height = paper.height;
+
+
+slowTempoDelay = 1000/20;
 
 defaultSlowFunction = function(){ console.log("default slow")}
 
-lastValidBuffer=null;
+lastValidBuffer= document.createElement("canvas");
+lastValidBuffer.width=paper.width;
+lastValidBuffer.height=paper.height;
 
-
-var licht = new Light(250, 270, 200, 2*Math.PI, Math.PI);
+var licht = new Light(350, 270, 100, 2*Math.PI, Math.PI);
+var licht2 = new Light(150, 270, 100, 2*Math.PI, Math.PI);
+var licht3 = new Light(250, 230, 100, 2*Math.PI, Math.PI);
 
 var lights = [];
-//lights.push(licht);
 lights.push(other.light);
+
 lights.push(player.light);
+
+lights.push(licht);
+lights.push(licht2);
+lights.push(licht3);
 
 slowTempo = function slowTempo(){
 	var ctx = slowBuffer.getContext("2d");
 	
 	ctx.fillStyle="#000"
 	ctx.fillRect(0,0,slowBuffer.width,slowBuffer.height);
+
 	
 	var renderedLights = [],
 		i=0,
 		l=lights.length,
-		n=l;
+		n=l+1;
 	
 	
 	function conclude(){
+		
 		var ctx = slowBuffer.getContext("2d");
-		lastValidBuffer = slowBuffer.getContext('2d').getImageData(0, 0, slowBuffer.width, slowBuffer.height);
+		var wctx = worldRenderer.getContext("2d");
+
+		if(lights_on){
+			wctx.globalCompositeOperation = "luminosity";
+			wctx.drawImage(slowBuffer,0,0);
+		}
+		lastValidBuffer.getContext("2d").putImageData(wctx.getImageData(0,0,worldRenderer.width, worldRenderer.height), 0, 0);
 		setTimeout(slowTempo, slowTempoDelay);
 	}
+	
+	
+	setTimeout(function(){
+		var ctx = worldRenderer.getContext("2d");
+		ctx.globalCompositeOperation = "source-over";
+		
+		ctx.fillStyle="#000";
+		ctx.fillRect(0,0,worldRenderer.width,worldRenderer.height);
+		
+		// DRAWS SCENE
+		ctx.fillStyle = "#393";
+		ctx.strokeStyle = "#cfc";
+		ctx.lineWidth = 2;
+		ctx.beginPath();
+		path.draw(worldRenderer, false);
+		ctx.fill();
+		ctx.stroke();
+		
+		ctx.fillStyle = "#000";
+		ctx.beginPath();
+		boulder.draw(worldRenderer, true);
+		ctx.fill();
+		ctx.stroke();
+
+		n--;
+		if(n==0){
+			conclude();
+		}
+	},0);
 	
 	for(i=0;i<l;i++){
 		setTimeout(
 			(function(a_light){
 				return function(){
-					var ctx = slowBuffer.getContext("2d");
-					ctx.globalCompositeOperation = "ligther";
-					var oldComposite = ctx.globalCompositeOperation = "ligther";
-		
 					a_light.draw(slowBuffer, path, boulder, bobs);
 					n--;
-					renderedLights.push(slowBuffer.getContext('2d').getImageData(0, 0, slowBuffer.width, slowBuffer.height))
 					if(n==0){
 						conclude();
 					}
-					ctx.globalCompositeOperation = oldComposite;
-		
+					
 				};
 			})(lights[i]),
 		0)
@@ -131,38 +175,25 @@ function draw(){
 	for(var i=0; i<boulder.segments.length;i++) player.collidesWithSegment(boulder.segments[i]);
 
 
-	// DRAWS SCENE
-	if(lights_on){
-		ctx.fillStyle = "#393";
-		ctx.strokeStyle = "#cfc";
-		ctx.lineWidth = 2;
-		ctx.beginPath();
-		path.draw(paper, false);
-		ctx.fill();
-		ctx.stroke();
-		
-		ctx.fillStyle = "#000";
-		ctx.beginPath();
-		boulder.draw(paper, true);
-		ctx.fill();
-		ctx.stroke();
-	} else {
 		// DRAWS FOV
-			
-		 	
-		if(lastValidBuffer){ 
-			paper.getContext("2d").putImageData(lastValidBuffer,0,0);
-			player.drawSight(paper, path, boulder, other);
-		}
 
+	if(lastValidBuffer){ 
+		var oldCompo = ctx.globalCompositeOperation;
+
+		paper.getContext("2d").drawImage(lastValidBuffer,0,0);
+		
+		ctx.globalCompositeOperation = oldCompo;
+	
 	}
+	if(draw_sight) player.drawSight(paper, path, boulder, other);
+
 
 
 
 	var sees_bob = player.sees(other);
 		
 	// DRAWS OTHERS IF PERCEIVED
-	if(lights_on || sees_bob || player.feels(other)){
+	if(!lights_on || !draw_sight || sees_bob || player.feels(other)){
 		other.draw(paper);
 	}
 
