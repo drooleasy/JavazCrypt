@@ -92,11 +92,16 @@ Light.prototype.draw = function(paper, path, boulder, bobs, segments){
 	// OTHERS SHADOWS	
 	if(bobs) for(i=0;i<bobs.length;i++){
 		var bob = bobs[i];
-		if(bob != this.belongsTo){
-			var sees_bob = bob && distanceBetween(this.x, this.y, bob.x, bob.y) < this.sightLength+bob.width;
+		var d = distanceBetween(this.x, this.y, bob.x, bob.y);
+		if(
+			d > bob.width
+		){
+			var sees_bob = bob && d < this.sightLength+bob.width;
 			if(sees_bob){
 				bob.castShadow(this);
 			}
+		}else{
+			bob.castOverShadow(this);			
 		}
 	}
 	

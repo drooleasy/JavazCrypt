@@ -73,7 +73,6 @@ function Bob(x,y, width, angle, fov_angle, fov_distance){
 		this.sightLength*1.1, // overshoot due to slow rate of light refreshing (when moving forward)   
 		PIPI, this.angle
 	);
-	this.light.belongsTo = this;
 		
 	this.shadow = new Shadow();
 	this.saying = false;
@@ -150,7 +149,7 @@ Bob.defaults = {
 Bob.prototype.replaceLight = function moveForward(){
 	if(this.light){
 		this.light.moveTo(this);
-		this.light.angle = this.angle;
+	//	this.light.angle = this.angle; // bug at -PI/+PI  
 	}
 }
 
@@ -517,6 +516,17 @@ Bob.prototype.castShadow = function cast_bob_shadow(light){
 
 }
 
+
+Bob.prototype.castOverShadow = function(light){
+	var coneData = {
+		type:"over",
+		x:light.x,
+		y:light.y,
+		radius :this.width * 1.3 + Math.random()*0.2 - 0.1
+	};
+	light.shadow.paths.push(coneData);
+
+}
 
 Bob.prototype.say = function (paper, msg){	
 	this.saying = msg;
