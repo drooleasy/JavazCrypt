@@ -42,7 +42,7 @@ boulder.close();
 var old_sees_player = false;
 var old_sees_bob = false;
 
-var door = new Door(250,250, 250,200);
+var door = new Door(250,250+1, 250,200-1);
 var glass = new Glass(270,260, 270,300);
 
 var segments = [];
@@ -66,7 +66,7 @@ lights.push(player.light);
 
 lights.push(licht);
 lights.push(licht2);
-lights.push(licht3);
+//lights.push(licht3);
 
 function draw(){
 

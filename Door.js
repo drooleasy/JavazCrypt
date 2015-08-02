@@ -11,6 +11,7 @@ function Door(x1, y1, x2, y2){
 	this.openess = 0;
 	
 	this.center = 0; // -1...1
+	this.yawness = .5;
 }
 
 
@@ -91,8 +92,8 @@ Door.prototype.subSegments = function(){
 		sin2 = Math.sin(Math.PI + metrics.angle),
 		d= metrics.distance;
 		
-	var left = d*(1-this.openess)/2 -1;
-	var right = d*(1-this.openess)/2 -1;
+	var left = d*(1-this.openess)/2 - this.yawness;
+	var right = d*(1-this.openess)/2 -this.yawness;
 	
 	right *= 1 - this.center;
 	left  *= 1 + this.center;

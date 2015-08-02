@@ -270,24 +270,6 @@ Bob.prototype.drawSight = function(paper, segments, bob){
 	ctx.fill();
 
 	ctx.globalCompositeOperation = "source-over";
-
-	
-	
-
-	// DRAWS SEEN WALLS
-
-	ctx.strokeStyle = "#FFF";
-	ctx.lineWidth = 2;
-	ctx.lineCap = "round";
-
-	ctx.beginPath();
-	for(i=0;i<seenSegments.length;i++){
-		ctx.moveTo(seenSegments[i].a.x, seenSegments[i].a.y);
-		ctx.lineTo(seenSegments[i].b.x, seenSegments[i].b.y);
-	}
-	ctx.closePath();
-	ctx.stroke();
-
 	
 	ctx.strokeStyle = "#000";
 	ctx.lineWidth = 3;
