@@ -23,7 +23,7 @@ function renderScene(paper, path, boulder, bobs, segments){
 	slowTempo = function slowTempo(){
 		var ctx = slowBuffer.getContext("2d");
 		
-		ctx.fillStyle="#000"
+		ctx.fillStyle="#000";
 		ctx.fillRect(0,0,slowBuffer.width,slowBuffer.height);
 
 		
@@ -36,7 +36,7 @@ function renderScene(paper, path, boulder, bobs, segments){
 		
 		function drawScene(ctx, nofill){
 			// DRAWS SCENE
-			ctx.fillStyle = "#393";
+			ctx.fillStyle = "#333";
 			ctx.strokeStyle = "#cfc";
 			if(nofill) ctx.fillStyle = "rgba(0,0,0,0)";
 			ctx.lineWidth = 4;
@@ -54,6 +54,7 @@ function renderScene(paper, path, boulder, bobs, segments){
 			for(var i=0; i< segments.length;i++){
 				ctx.strokeStyle = "#cfc";
 				if(segments[i] instanceof Glass) ctx.strokeStyle="rgba(255,255,255, 0.3)" 
+				if(segments[i] instanceof Door) ctx.strokeStyle="#cc6" 
 				ctx.beginPath();
 				segments[i].draw(worldRenderer);
 				ctx.stroke();
@@ -65,8 +66,11 @@ function renderScene(paper, path, boulder, bobs, segments){
 			var wctx = worldRenderer.getContext("2d");
 
 			if(lights_on){
+
 				wctx.globalCompositeOperation = "luminosity";
 				wctx.drawImage(slowBuffer,0,0);
+
+				// re draw wall 
 				wctx.globalCompositeOperation = "source-over";
 				drawScene(wctx, true);
 
@@ -80,7 +84,7 @@ function renderScene(paper, path, boulder, bobs, segments){
 			var ctx = worldRenderer.getContext("2d");
 			ctx.globalCompositeOperation = "source-over";
 			
-			ctx.fillStyle="#000";
+			ctx.fillStyle="#393";
 			ctx.fillRect(0,0,worldRenderer.width,worldRenderer.height);
 			drawScene(ctx);
 

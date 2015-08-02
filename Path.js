@@ -54,28 +54,57 @@ Path.prototype.draw = function(paper, isBoulder){
 	
 	var ctx = paper.getContext('2d');
 	
-	ctx.beginPath();
+	
+	if(!isBoulder){
+		ctx.moveTo( this.points[0].x ,  this.points[0].y);
+		var i = 0,
+			l = this.segments.length;
+		for(;i<l;i++){
+			ctx.lineTo(this.segments[i].b.x, this.segments[i].b.y);
+		}
+		if(this.closed) ctx.closePath();
+
+		ctx.fill();
+	}
 	
 	ctx.moveTo( this.points[0].x ,  this.points[0].y);
 	var i = 0,
 		l = this.segments.length;
 	for(;i<l;i++){
-		ctx.lineTo(this.segments[i].b.x, this.segments[i].b.y);
+		ctx.strokeStyle = "#cfc";
+		if(this.segments[i] instanceof Glass) ctx.strokeStyle="rgba(255,255,255, 0.3)" 
+		if(this.segments[i] instanceof Door) ctx.strokeStyle="#cc6" 
+		this.segments[i].draw(paper);		
 	}
 	if(this.closed) ctx.closePath();
 	
-	if(isBoulder){
-		ctx.stroke();
-		ctx.fill();
-		
 	
-	}else{
+	if(isBoulder){
+		ctx.moveTo( this.points[0].x ,  this.points[0].y);
+		var i = 0,
+			l = this.segments.length;
+		for(;i<l;i++){
+			ctx.lineTo(this.segments[i].b.x, this.segments[i].b.y);
+		}
+		if(this.closed) ctx.closePath();
+
 		ctx.fill();
-		ctx.stroke();
 	}
 	
 	
 } 
+
+Path.prototype.makeDoor = function(i){
+
+	var old = this.segments[i];
+	this.segments[i] = new Door(old.a.x, old.a.y, old.b.x, old.b.y); 
+}
+
+Path.prototype.makeGlass = function(i){
+
+	var old = this.segments[i];
+	this.segments[i] = new Glass(old.a.x, old.a.y, old.b.x, old.b.y); 
+}
 
 Path.prototype.drawShadow = function(player){
 	

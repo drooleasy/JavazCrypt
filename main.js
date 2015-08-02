@@ -25,12 +25,23 @@ bobs.push(other);
 var path = new Path(
 	500, 100, 
 	500, 300, 
+	400, 300, 
+	350, 300, 
 	100, 300,
+	100, 200,
+	100, 150,
 	100, 100, 
-	250, 200
+	250, 200,
+	350, 175,
+	450, 125
 	
 );
 path.close();
+
+path.makeDoor(path.segments.length-2);
+path.makeGlass(2);
+path.makeGlass(5);
+
 
 var boulder = new Path(
 	250, 250,
@@ -70,7 +81,6 @@ lights.push(licht2);
 
 function draw(){
 
-	var timer = (new Date()).getTime();
 
 	// CLEARING
 	var ctx = paper.getContext("2d");
@@ -84,8 +94,8 @@ function draw(){
 	for(var i=0; i<all_segments.length;i++) player.collidesWithSegment(all_segments[i]);
 
 	// DOORS OPENING/CLOSING
-	for(i=0;i<segments.length;i++){
-		var segment = segments[i]; 
+	for(i=0;i<all_segments.length;i++){
+		var segment = all_segments[i]; 
 		if(segment instanceof Door) {
 			var closest = segment.closestPointFrom(player.x, player.y);
 			var d = distanceBetween(closest.x, closest.y, player.x, player.y)

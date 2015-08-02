@@ -125,11 +125,8 @@ Door.prototype.draw = function(paper){
 	
 	ctx.beginPath();
 	
-	ctx.moveTo(segs[0].a.x, segs[0].a.y);
-	ctx.lineTo(segs[0].b.x, segs[0].b.y);
-	ctx.moveTo(segs[1].a.x, segs[1].a.y);
-	ctx.lineTo(segs[1].b.x, segs[1].b.y);
-	
+	segs[0].draw(paper);
+	segs[1].draw(paper);
 }
 
 

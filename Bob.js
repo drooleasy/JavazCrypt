@@ -204,9 +204,7 @@ Bob.prototype.sees =  function inSight(other, segments){
 					return false;
 				}
 			}
-			else{
-				console.log(arguments.caller);
-			}
+			
 			return true;
 	}
 	return false;
@@ -390,13 +388,38 @@ Bob.prototype.collidesWithSegment = function(segment){
 			this.collidesWithSegment(segs[i]);
 		}
 	}else{
-		var closest = segment.closestPointFrom(this.x, this.y);
-		var metrics = distanceAndAngle(this.x, this.y, closest.x, closest.y),
-			distance_min = this.width;
-		if(metrics.distance < distance_min ){ // collides
-				this.x = closest.x - Math.cos(metrics.angle) * distance_min; 
-				this.y = closest.y - Math.sin(metrics.angle) * distance_min; 
+		
+		function checkCircle(that, x,y,r, segment){
+			
+			var closest = segment.closestPointFrom(that.x+x, that.y+y);
+			var metrics = distanceAndAngle(that.x+x, that.y+y, closest.x, closest.y);
+			if(metrics.distance < r){// collides
+				that.x = closest.x - Math.cos(metrics.angle) * r -x; 
+				that.y = closest.y - Math.sin(metrics.angle) * r -y; 
+			}
 		}
+		
+		checkCircle(this, 0,0,this.width, segment);
+/*		checkCircle(this, 
+			Math.cos(this.angle+this.nose.angle) * this.nose.offset,
+			Math.sin(this.angle+this.nose.angle) * this.nose.offset,
+			this.nose.radius, 
+			segment
+		);
+		checkCircle(this, 
+			Math.cos(this.angle+this.eyes.left.angle) * this.eyes.left.offset,
+			Math.sin(this.angle+this.eyes.left.angle) * this.eyes.left.offset,
+			this.eyes.left.radius, 
+			segment
+		);
+		checkCircle(this, 
+			Math.cos(this.angle+this.eyes.right.angle) * this.eyes.right.offset,
+			Math.sin(this.angle+this.eyes.right.angle) * this.eyes.right.offset,
+			this.eyes.right.radius, 
+			segment
+		);
+*/		
+		
 	}
 }
 

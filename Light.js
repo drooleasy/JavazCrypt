@@ -11,8 +11,6 @@ function Light (x, y, sightLength, sightWidth, angle){
 	this.sightLength = sightLength || Light.defaults.sightLength;
 	this.sightWidth = sightWidth || Light.defaults.sightWidth;
 	
-	this.lightComposite = Light.defaults.lightComposite;
-	this.shadowComposite = Light.defaults.shadowComposite;
 	
 	this.lineWidth = Light.defaults.lineWidth;
 	this.lineColor = Light.defaults.lineColor;
@@ -50,12 +48,9 @@ Light.defaults = {
 	lineColor : "#000",
 	
 	//lightColor : "rgba(48,144,48,1)",
-	lightColor : "#303030",
+	lightColor : "rgba(128,128,128,0.3)",
 	shadowColor : "rgba(0,0,0,1)",
 	
-	
-	lightComposite : "multiply",
-	shadowComposite : "source-over"
 
 };
 
@@ -118,29 +113,25 @@ Light.prototype.draw = function(paper, segments, bobs){
 	ctx.closePath();
 
 
-
-	ctx.fillStyle="#FFF"
-	ctx.strokeStyle="#000"
+	// CLIPPING
 	ctx.save();
 	ctx.beginPath();
 	ctx.arc(this.x, this.y, this.sightLength, 0, this.sightWidth);
-	ctx.fill();
-	ctx.stroke();
 	ctx.clip()
 
+	// DRAWS SHADOWS
 	ctx.fillStyle="#000";
-	
-	ctx.globalCompositeOperation = this.shadowComposite;
+	ctx.globalCompositeOperation = "source-over";
 	this.shadow.draw(this.renderer);
 	ctx.fill();
 	
-	ctx.globalCompositeOperation = "darken";
 	
+	// draw lumens
+	ctx.globalCompositeOperation = "darken";
 	var grd=ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.sightLength);
 	grd.addColorStop(0, this.lightColor);
 	grd.addColorStop(this.startDecay + randomDelta(this.decayVariation), this.lightColor);
 	grd.addColorStop(1, this.shadowColor);
-	
 	ctx.fillStyle = grd;			
 	ctx.lineWidth = this.lineWidth;
 	ctx.beginPath();
@@ -148,6 +139,7 @@ Light.prototype.draw = function(paper, segments, bobs){
 
 	ctx.globalCompositeOperation = "source-over";
 	
+	// light border hack
 	ctx.strokeStyle="#000";
 	ctx.lineWidth = "6"
 	ctx.beginPath();
@@ -155,7 +147,7 @@ Light.prototype.draw = function(paper, segments, bobs){
 	ctx.closePath();
 	ctx.stroke();
 
-
+	// draws light bulb
 	ctx.globalCompositeoperation="source-over";
 	ctx.fillStyle="#999";
 	ctx.beginPath();
@@ -168,7 +160,7 @@ Light.prototype.draw = function(paper, segments, bobs){
 	
 	var pctx = paper.getContext("2d");
 	oldCompositeOperation = pctx.globalCompositeOperation;
-	pctx.globalCompositeOperation = "lighter";
+	pctx.globalCompositeOperation = "lighten";
 	pctx.drawImage(this.renderer,0,0);
 	pctx.globalCompositeOperation = oldCompositeOperation;
 	
