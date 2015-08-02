@@ -65,7 +65,7 @@ Light.prototype.moveTo = function(pos){
 }
 
 		
-Light.prototype.draw = function(paper, path, boulder, bobs, segments){		
+Light.prototype.draw = function(paper, segments, bobs){		
 	
 
 	this.renderer.width = paper.width;
@@ -82,11 +82,11 @@ Light.prototype.draw = function(paper, path, boulder, bobs, segments){
 	this.shadow.clear();
 
 	// WORLD SHADOWS
-	if(path) for(i=0;i<path.segments.length;i++){
-		path.segments[i].castShadow(this);
-	}
-	if(boulder) for(i=0;i<boulder.segments.length;i++){
-		boulder.segments[i].castShadow(this);
+	if(segments){
+		for(i=0;i<segments.length;i++){
+			var segment = segments[i];
+			segment.castShadow(this);
+		}
 	}
 	
 	// OTHERS SHADOWS	
@@ -105,12 +105,6 @@ Light.prototype.draw = function(paper, path, boulder, bobs, segments){
 		}
 	}
 	
-	if(segments){
-		for(i=0;i<segments.length;i++){
-			var segment = segments[i];
-			segment.castShadow(this);
-		}
-	}
 	
 
 

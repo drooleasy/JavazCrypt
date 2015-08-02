@@ -480,23 +480,15 @@ Bob.prototype.castShadow = function cast_bob_shadow(light){
 			}
 		}
 	
-		var left_2_angle = angleBetween(this.x, this.y, left.ray.a.x, left.ray.a.y) - light.angle;
-		left_2_angle = clipAngle(left_2_angle);
-	
-		var right_2_angle = angleBetween(this.x, this.y, right.ray.a.x, right.ray.a.y) - light.angle;    
-		right_2_angle = clipAngle(right_2_angle);
-		
-		if(left_2_angle > right_2_angle) {
-			
-			var tmp = left_2_angle;
-			left_2_angle = right_2_angle;
-			right_2_angle = tmp;
-			
-		} 
-
 		
 	var bob_angle = angleBetween(light.x, light.y, this.x, this.y);
-		
+	
+
+	if(Math.abs(left.angle-right.angle)>Math.PI){
+		var tmp =left;
+		left = right;
+		right = tmp;
+	}
 
 	var coneData = {
 			x:light.x,
