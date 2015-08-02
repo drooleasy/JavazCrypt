@@ -26,8 +26,8 @@ Shadow.prototype.draw = function (paper){
 Shadow.prototype.drawCone = function (paper, coneData){
 	var ctx = paper.getContext('2d');
 
-	ctx.strokeStyle = "#000000";
-	ctx.fillStyle = "#000";
+	ctx.strokeStyle = this.style.stroke;
+	ctx.fillStyle = this.style.fill;
 	ctx.beginPath();
 		
 	

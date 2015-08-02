@@ -77,6 +77,7 @@ function draw(){
 	ctx.fillStyle = "#000";
 	ctx.fillRect(0, 0, paper_width, paper_height);
 	player.shadow.clear();	
+	player.tints.clear();	
 	
 	// COLLISIONS
 	player.collidesWithBob(other);
@@ -104,7 +105,7 @@ function draw(){
 	}
 
 	// DRAWS FOV	
-	if(draw_sight) player.drawSight(paper, path, boulder, other, segments);
+	if(draw_sight) player.drawSight(paper, all_segments, other);
 		
 	// DRAWS OTHERS IF PERCEIVED
 	var sees_bob = player.sees(other);

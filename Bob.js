@@ -75,6 +75,9 @@ function Bob(x,y, width, angle, fov_angle, fov_distance){
 	);
 		
 	this.shadow = new Shadow();
+	this.tints = new Shadow();
+	this.tints.style.fill="rgba(0,0,0,0.5)";
+	this.tints.style.stroke=this.tints.style.fill;
 	this.saying = false;
 
 }
@@ -225,26 +228,24 @@ Bob.prototype.drawFOV = function(ctx){
 	ctx.closePath();
 }		
 
-Bob.prototype.drawSight = function(paper, path, boulder, bob, segments){		
+Bob.prototype.drawSight = function(paper, segments, bob){		
 	var ctx = paper.getContext('2d');
+
 
 	var oldCompositeOpration = ctx.globalCompositeOperation;
 
-	var seenSegments = path.seenSegments(this);		
-	var seenSegments2 = boulder.seenSegments(this);
-	var seenSegments3 = segments[0].seenSegment(this);
+	var seenSegments = [];
+	for(var i =0; i<segments.length; i++){
+		if(segments[i] instanceof Glass) segments[i].castTint(this) 
 
+		seenSegments = seenSegments.concat(segments[i].seenSegment(this));
+	}
 
 	// WORLD SHADOWS
 	for(i=0;i<seenSegments.length;i++){
 		seenSegments[i].castShadow(this);
 	}
-	for(i=0;i<seenSegments2.length;i++){
-		seenSegments2[i].castShadow(this);
-	}
-	for(i=0;i<seenSegments3.length;i++){
-		seenSegments3[i].castShadow(this);
-	}
+	
 	// OTHERS SHADOWS
 	var sees_bob = bob && this.sees(bob);
 	if(sees_bob){
@@ -253,12 +254,16 @@ Bob.prototype.drawSight = function(paper, path, boulder, bob, segments){
 	
 
 
+	ctx.globalCompositeOperation = "source-over";
+	this.tints.draw(paper, function() {	});
+
+
 	ctx.globalCompositeOperation = "destination-atop";
 	//ctx.globalCompositeOperation = "source-over";
 
 
 	ctx.fillStyle = "rgba(48,144,48,1)";
-			
+
 	ctx.beginPath();
 	this.drawFOV(ctx);
 	ctx.closePath();
@@ -283,15 +288,7 @@ Bob.prototype.drawSight = function(paper, path, boulder, bob, segments){
 	ctx.closePath();
 	ctx.stroke();
 
-	ctx.beginPath();
-	for(i=0;i<seenSegments2.length;i++){	
-		ctx.moveTo(seenSegments2[i].a.x, seenSegments2[i].a.y);
-		ctx.lineTo(seenSegments2[i].b.x, seenSegments2[i].b.y);
-	}
-
-	ctx.closePath();
-	ctx.stroke();
-
+	
 	ctx.strokeStyle = "#000";
 	ctx.lineWidth = 3;
 			
@@ -302,7 +299,10 @@ Bob.prototype.drawSight = function(paper, path, boulder, bob, segments){
 
 
 
+	ctx.globalCompositeOperation = "source-over";
 	this.shadow.draw(paper, function() {	ctx.globalCompositeOperation = oldCompositeOpration;});
+
+	
 
 	
 	
@@ -428,6 +428,12 @@ Bob.prototype.fovSegments = function(){
 Bob.prototype.drawShadow = function draw_bob_shadow(paper, player){
 		if(this.shadow.paths.length>0) this.shadow.draw(paper);
 }	
+
+
+Bob.prototype.drawTints = function draw_bob_tints(paper, player){
+		if(this.tints.paths.length>0) this.tints.draw(paper);
+}	
+
 
 Bob.prototype.castShadow = function cast_bob_shadow(light){	
 

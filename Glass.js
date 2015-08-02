@@ -27,12 +27,6 @@ Glass.prototype.isSeenByBob = function(bob){
 }
 
 
-Glass.prototype.seenSegment = function(bob){
-	var subs = this.subSegments(),
-		res = subs[0].seenSegment(bob);
-	res = res.concat(subs[1].seenSegment(bob));
-	return res;
-}
 
 
 Glass.prototype.draw = function(paper){
@@ -41,6 +35,90 @@ Glass.prototype.draw = function(paper){
 	ctx.moveTo(this.a.x, this.a.y);
 	ctx.lineTo(this.b.x, this.b.y);
 
+}
+
+Glass.prototype.intersect = function (other){
+
+	var this_v = minus(this.b, this.a);
+	var other_v = minus(other.b, other.a);
+	var diff = minus(other.a, this.a);
+	var x = crossProduct(this_v, other_v);
+	var t = crossProduct(diff, other_v) / x;
+	var _u = crossProduct(diff, this_v);
+	var u = _u / x;
+	
+	if(x==0 && _u == 0){ // colinear
+		return null; // !!!
+	}
+	
+	if(x==0 && _u != 0){ // parallel
+		return null;
+	}
+	
+	if(x!=0 && 0<=t && t<=1 && 0<=u && u<=1){ // secant
+		return {
+				x:(this.a.x + t * this_v.x),
+				y:(this.a.y + t * this_v.y)
+		};
+	}
+
+	return null;
+}
+
+
+Glass.prototype.intersectWithCircle = function(cx,cy,cr){
+	var v = minus(this.b,this.a),
+		vx = v.x,
+		vy = v.y,
+		ox = this.a.x,
+		oy = this.a.y;
+		
+	var res = solveP2(
+		(vx*vx+vy*vy),
+		(2*ox*vx - 2*vx*cx + 2*oy*vy - 2*vy*cy),
+		(ox*ox + oy*oy - 2*ox*cx -2*oy*cy + cx*cx + cy*cy - cr*cr)
+		
+	);
+	
+	var sol = [];
+	
+	if(res.length == 0) return sol;
+	
+	if(0<=res[0] && res[0]<=1){
+		sol.push({
+			x: (this.a.x + res[0] * vx),
+			y: (this.a.y + res[0] * vy)
+		});
+	}
+	if(0<=res[1] && res[1]<=1){
+		sol.push({
+			x: (this.a.x + res[1] * vx),
+			y: (this.a.y + res[1] * vy)
+		});
+	}
+	
+	return sol;
+	
+}
+
+
+Glass.prototype.intersectWithCone = function(cx,cy,cr, angle, fov_angle){
+	var possibles = this.intersectWithCircle(cx,cy,cr);
+	if(possibles == null) return [];
+	var i=0;
+	var intersects = [];
+	for(;i<possibles.length;i++){
+		
+		
+		var angle_points = angleBetween(cx, cy, possibles[i].x, possibles[i].y);
+		
+		var angle_relative = clipAngle(angle_points - angle);
+		
+		if((-fov_angle/2) <= angle_relative && angle_relative <= fov_angle/2){
+			intersects.push(possibles[i]);
+		}
+	}
+	return intersects;
 }
 
 Glass.prototype.closestPointFrom = function(x,y){
@@ -87,7 +165,7 @@ Glass.prototype.seenSegment = function(bob){
 
 	
 	if(sees_a && sees_b){
-		res =  [new Segment(this.a.x, this.a.y, this.b.x, this.b.y)];
+		res =  [new Glass(this.a.x, this.a.y, this.b.x, this.b.y)];
 	}else{
 
 		
@@ -121,37 +199,104 @@ Glass.prototype.seenSegment = function(bob){
 					left = intersects[i];
 				}	
 			}
-			res = [new Segment(left.x, left.y, right.x, right.y)];
+			res = [new Glass(left.x, left.y, right.x, right.y)];
 		}else if(intersects.length==1){
 		
 			var inter = intersects[0];
 
 			if(sees_a){
-				res =  [new Segment(this.a.x, this.a.y, inter.x, inter.y)];
+				res =  [new Glass(this.a.x, this.a.y, inter.x, inter.y)];
 			}else if(sees_b){
-				res =  [new Segment(this.b.x, this.b.y, inter.x, inter.y)];
+				res =  [new Glass(this.b.x, this.b.y, inter.x, inter.y)];
 			}else{
-				res = [new Segment(inter.x, inter.y, this.b.x, this.b.y)];		
+				res = [new Glass(inter.x, inter.y, this.b.x, this.b.y)];		
 			}
 		}
 		
 		var intersect_conscious = this.intersectWithCircle(bob.x, bob.y, bob.width*bob.consciousness);
 		
 		if(intersect_conscious.length==2){
-			res.push(new Segment(intersect_conscious[0].x, intersect_conscious[0].y, intersect_conscious[1].x, intersect_conscious[1].y));
+			res.push(new Glass(intersect_conscious[0].x, intersect_conscious[0].y, intersect_conscious[1].x, intersect_conscious[1].y));
 		}
 		
 		if(intersect_conscious.length==1){
 			inter = intersect_conscious[0];
 			if(sees_a){
-				res.push(new Segment(this.a.x, this.a.y, inter.x, inter.y));
+				res.push(new Glass(this.a.x, this.a.y, inter.x, inter.y));
 			}else if(sees_b){
-				res.push(new Segment(this.b.x, this.b.y, inter.x, inter.y));
+				res.push(new Glass(this.b.x, this.b.y, inter.x, inter.y));
 			}else{
-				res.push(new Segment(inter.x, inter.y, this.b.x, this.b.y));		
+				res.push(new Glass(inter.x, inter.y, this.b.x, this.b.y));		
 			}
 		}
 		
 	}
 	return res;
+}
+
+
+Glass.prototype.castTint = function castSegmentShadow(bob_or_light){
+	var metrics_a = distanceAndAngle(bob_or_light.x, bob_or_light.y, this.a.x, this.a.y),
+		metrics_b = distanceAndAngle(bob_or_light.x, bob_or_light.y, this.b.x, this.b.y);
+
+	
+	var angle_a = metrics_a.angle - bob_or_light.angle,
+		angle_b = metrics_b.angle - bob_or_light.angle;
+
+	var distance_a = metrics_a.distance,
+		distance_b = metrics_b.distance;
+
+	if(distance_a > bob_or_light.sightLength && distance_b > bob_or_light.sightLength){
+		return;
+	};
+
+	angle_a = clipAnglePositive(angle_a);
+	angle_b = clipAnglePositive(angle_b);
+	
+	
+	var mn = Math.min(angle_a, angle_b);
+	var mx = Math.max(angle_a, angle_b);
+	
+	
+	
+	var left,
+		right;
+	if(mn==angle_a){
+		left = this.a;
+		right = this.b;
+	}else{
+		left = this.b;
+		right = this.a
+	}
+
+
+	var diff = clipAnglePositive(mx-mn);	
+	var tmp;
+	if(diff > Math.PI){
+		tmp = left;
+		left = right;
+		right = tmp;
+	}
+
+	
+	var ray_1 = castRay(bob_or_light.x, bob_or_light.y, left.x, left.y, bob_or_light.sightLength);
+	var ray_2 = castRay(bob_or_light.x, bob_or_light.y, right.x, right.y, bob_or_light.sightLength);
+	
+	var angle_1 = angleBetween(bob_or_light.x, bob_or_light.y, ray_1.a.x, ray_1.a.y),
+		angle_2 = angleBetween(bob_or_light.x, bob_or_light.y, ray_2.a.x, ray_2.a.y);
+	
+	
+	var coneData = {
+			x:bob_or_light.x,
+			y:bob_or_light.y,
+			ray_1 : ray_1,
+			ray_2 : ray_2,
+			angle_1 : angle_1,
+			angle_2 : angle_2,
+			radius : bob_or_light.sightLength
+		}
+
+	
+	bob_or_light.tints.paths.push(coneData);
+
 }

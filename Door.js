@@ -10,7 +10,7 @@ function Door(x1, y1, x2, y2){
 	};
 	this.openess = 0;
 	
-	this.center = -1; // -1...1
+	this.center = 0; // -1...1
 }
 
 
