@@ -108,7 +108,6 @@ Light.prototype.draw = function(paper, path, boulder, bobs, segments){
 	if(segments){
 		for(i=0;i<segments.length;i++){
 			var segment = segments[i];
-			delete segment.done;
 			segment.castShadow(this);
 		}
 	}
@@ -162,7 +161,14 @@ Light.prototype.draw = function(paper, path, boulder, bobs, segments){
 	ctx.closePath();
 	ctx.stroke();
 
+
+	ctx.globalCompositeoperation="source-over";
+	ctx.fillStyle="#999";
+	ctx.beginPath();
+	ctx.arc(this.x, this.y, 2+Math.random()*2-1, 0, Math.PI*2)
+	ctx.fill();
 	ctx.globalCompositeOperation = oldCompositeOperation;
+	
 	
 	ctx.restore();
 	

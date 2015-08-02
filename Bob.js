@@ -225,13 +225,14 @@ Bob.prototype.drawFOV = function(ctx){
 	ctx.closePath();
 }		
 
-Bob.prototype.drawSight = function(paper, path, boulder, bob){		
+Bob.prototype.drawSight = function(paper, path, boulder, bob, segments){		
 	var ctx = paper.getContext('2d');
 
 	var oldCompositeOpration = ctx.globalCompositeOperation;
 
 	var seenSegments = path.seenSegments(this);		
 	var seenSegments2 = boulder.seenSegments(this);
+	var seenSegments3 = segments[0].seenSegment(this);
 
 
 	// WORLD SHADOWS
@@ -241,7 +242,9 @@ Bob.prototype.drawSight = function(paper, path, boulder, bob){
 	for(i=0;i<seenSegments2.length;i++){
 		seenSegments2[i].castShadow(this);
 	}
-
+	for(i=0;i<seenSegments3.length;i++){
+		seenSegments3[i].castShadow(this);
+	}
 	// OTHERS SHADOWS
 	var sees_bob = bob && this.sees(bob);
 	if(sees_bob){
@@ -385,12 +388,19 @@ Bob.prototype.collidesWithBob = function(bob){
 
 
 Bob.prototype.collidesWithSegment = function(segment){
-	var closest = segment.closestPointFrom(this.x, this.y);
-	var metrics = distanceAndAngle(this.x, this.y, closest.x, closest.y),
-		distance_min = this.width;
-	if(metrics.distance < distance_min ){ // collides
-			this.x = closest.x - Math.cos(metrics.angle) * distance_min; 
-			this.y = closest.y - Math.sin(metrics.angle) * distance_min; 
+	if(segment instanceof Door){
+		var segs = segment.subSegments();
+		for(var i=0; i<segs.length;i++){
+			this.collidesWithSegment(segs[i]);
+		}
+	}else{
+		var closest = segment.closestPointFrom(this.x, this.y);
+		var metrics = distanceAndAngle(this.x, this.y, closest.x, closest.y),
+			distance_min = this.width;
+		if(metrics.distance < distance_min ){ // collides
+				this.x = closest.x - Math.cos(metrics.angle) * distance_min; 
+				this.y = closest.y - Math.sin(metrics.angle) * distance_min; 
+		}
 	}
 }
 

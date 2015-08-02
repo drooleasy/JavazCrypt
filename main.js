@@ -49,6 +49,11 @@ var old_sees_bob = false;
 
 
 
+var door = new Door(250,250, 250,200);
+
+segments = [];
+
+segments.push(door);
 
 var lights_on = false;
 var draw_sight = false;
@@ -74,7 +79,7 @@ lastValidBuffer.height=paper.height;
 
 var licht = new Light(350, 270, 100, 2*Math.PI, Math.PI);
 var licht2 = new Light(150, 270, 100, 2*Math.PI, Math.PI);
-var licht3 = new Light(250, 230, 100, 2*Math.PI, Math.PI);
+var licht3 = new Light(253, 230, 100, 2*Math.PI, Math.PI);
 
 var lights = [];
 lights.push(other.light);
@@ -98,6 +103,30 @@ slowTempo = function slowTempo(){
 		n=l+1;
 	
 	
+	
+	function drawScene(ctx, nofill){
+		// DRAWS SCENE
+		ctx.fillStyle = "#393";
+		ctx.strokeStyle = "#cfc";
+		if(nofill) ctx.fillStyle = "rgba(0,0,0,0)";
+		ctx.lineWidth = 4;
+		ctx.beginPath();
+		path.draw(worldRenderer, false);
+		if(!nofill) ctx.fill();
+		ctx.stroke();
+		
+		ctx.fillStyle = "#000";
+		ctx.beginPath();
+		boulder.draw(worldRenderer, true);
+		if(!nofill) ctx.fill();
+		ctx.stroke();
+
+		for(var i=0; i< segments.length;i++){
+			ctx.beginPath();
+			segments[i].draw(worldRenderer);
+			ctx.stroke();
+		}
+	}
 	function conclude(){
 		
 		var ctx = slowBuffer.getContext("2d");
@@ -106,6 +135,9 @@ slowTempo = function slowTempo(){
 		if(lights_on){
 			wctx.globalCompositeOperation = "luminosity";
 			wctx.drawImage(slowBuffer,0,0);
+			wctx.globalCompositeOperation = "source-over";
+			drawScene(wctx, true);
+
 		}
 		lastValidBuffer.getContext("2d").putImageData(wctx.getImageData(0,0,worldRenderer.width, worldRenderer.height), 0, 0);
 		setTimeout(slowTempo, slowTempoDelay);
@@ -118,21 +150,7 @@ slowTempo = function slowTempo(){
 		
 		ctx.fillStyle="#000";
 		ctx.fillRect(0,0,worldRenderer.width,worldRenderer.height);
-		
-		// DRAWS SCENE
-		ctx.fillStyle = "#393";
-		ctx.strokeStyle = "#cfc";
-		ctx.lineWidth = 2;
-		ctx.beginPath();
-		path.draw(worldRenderer, false);
-		ctx.fill();
-		ctx.stroke();
-		
-		ctx.fillStyle = "#000";
-		ctx.beginPath();
-		boulder.draw(worldRenderer, true);
-		ctx.fill();
-		ctx.stroke();
+		drawScene(ctx);
 
 		n--;
 		if(n==0){
@@ -144,7 +162,7 @@ slowTempo = function slowTempo(){
 		setTimeout(
 			(function(a_light){
 				return function(){
-					a_light.draw(slowBuffer, path, boulder, bobs);
+					a_light.draw(slowBuffer, path, boulder, bobs, segments);
 					n--;
 					if(n==0){
 						conclude();
@@ -173,9 +191,25 @@ function draw(){
 	player.collidesWithBob(other);
 	for(var i=0; i<path.segments.length;i++) player.collidesWithSegment(path.segments[i]);
 	for(var i=0; i<boulder.segments.length;i++) player.collidesWithSegment(boulder.segments[i]);
+	for(var i=0; i<segments.length;i++) player.collidesWithSegment(segments[i]);
 
 
-		// DRAWS FOV
+	// DOORS
+
+	for(i=0;i<segments.length;i++){
+		var segment = segments[i]; 
+		if(segment instanceof Door) {
+			var closest = segment.closestPointFrom(player.x, player.y);
+			var d = distanceBetween(closest.x, closest.y, player.x, player.y)
+			if(d<player.width*1.5){
+				segment.open();
+			}else{
+				segment.close();
+			}
+		}
+	}
+
+	// DRAWS FOV
 
 	if(lastValidBuffer){ 
 		var oldCompo = ctx.globalCompositeOperation;
@@ -185,7 +219,8 @@ function draw(){
 		ctx.globalCompositeOperation = oldCompo;
 	
 	}
-	if(draw_sight) player.drawSight(paper, path, boulder, other);
+	
+	if(draw_sight) player.drawSight(paper, path, boulder, other, segments);
 
 
 
