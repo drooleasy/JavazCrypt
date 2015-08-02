@@ -15,7 +15,15 @@ function Door(x1, y1, x2, y2){
 }
 
 
+Door.prototype.intersect = function (other){
+	var segs = this.subSegments();
+	for(var i=0; i<segs.length;i++){
+		var inter = segs[i].intersect(other);
+		if(inter) return inter;
+	}
+	return null;
 
+}
 
 Door.speed = 1/66;
 
@@ -69,10 +77,10 @@ Door.prototype.closestPointFrom = function(x,y){
 }
 
 
-Door.prototype.isSeenByBob = function(bob){
+Door.prototype.isSeenByBob = function(bob, segments){
 	var subs = this.subSegments();
 	var res = false;
-	for(var i=0; i<subs.length;i++) res = res || subs[i].isSeenByBob(bob);
+	for(var i=0; i<subs.length;i++) res = res || subs[i].isSeenByBob(bob, segments);
 	return res;
 }
 

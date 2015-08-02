@@ -186,16 +186,30 @@ Bob.prototype.feels =  function inSight(other){
 	return false;
 }
 
-Bob.prototype.sees =  function inSight(other){ 
+Bob.prototype.sees =  function inSight(other, segments){ 
 	var metrics = distanceAndAngle(this.x, this.y, other.x, other.y),
 		distance = metrics.distance,
 		angle = metrics.angle,	
 		relativeAngle =  clipAngle(angle - this.angle),
 		width = other.width,
 		deltaAngle = Math.asin(width / distance)
-	return relativeAngle + deltaAngle >= (-this.sightWidth/2) 
+	if( relativeAngle + deltaAngle >= (-this.sightWidth/2) 
 		&& relativeAngle - deltaAngle <= this.sightWidth/2  
-		&& distance - width <= this.sightLength
+		&& distance - width <= this.sightLength){
+			var line = new Segment(this.x,this.y,other.x,other.y);
+			if(segments)
+			for(var i=0;i<segments.length;i++){
+				if(segments[i] instanceof Glass) continue;
+				if(segments[i].intersect(line)){
+					return false;
+				}
+			}
+			else{
+				console.log(arguments.caller);
+			}
+			return true;
+	}
+	return false;
 }
 
 
@@ -238,7 +252,7 @@ Bob.prototype.drawSight = function(paper, segments, bob){
 	for(var i =0; i<segments.length; i++){
 		if(segments[i] instanceof Glass) segments[i].castTint(this) 
 
-		seenSegments = seenSegments.concat(segments[i].seenSegment(this));
+		seenSegments = seenSegments.concat(segments[i].seenSegment(this, segments));
 	}
 
 	// WORLD SHADOWS
@@ -247,7 +261,7 @@ Bob.prototype.drawSight = function(paper, segments, bob){
 	}
 	
 	// OTHERS SHADOWS
-	var sees_bob = bob && this.sees(bob);
+	var sees_bob = bob && this.sees(bob, segments);
 	if(sees_bob){
 		bob.castShadow(this);
 	}

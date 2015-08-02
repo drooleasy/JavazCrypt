@@ -108,7 +108,7 @@ function draw(){
 	if(draw_sight) player.drawSight(paper, all_segments, other);
 		
 	// DRAWS OTHERS IF PERCEIVED
-	var sees_bob = player.sees(other);
+	var sees_bob = player.sees(other, all_segments);
 	if(!lights_on || !draw_sight || sees_bob || player.feels(other)){
 		other.draw(paper);
 	}
@@ -125,7 +125,7 @@ function draw(){
 	}
 
 	// OTHERS REACTION
-	var sees_player = other.sees(player);
+	var sees_player = other.sees(player, all_segments);
 	if(sees_player){
 		if(!old_sees_player) other.say(paper, "Hello Bob !");
 	}else{

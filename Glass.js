@@ -19,10 +19,10 @@ function Glass(x1, y1, x2, y2){
 
 
 
-Glass.prototype.isSeenByBob = function(bob){
+Glass.prototype.isSeenByBob = function(bob, segments){
 	var subs = this.subSegments();
 	var res = false;
-	for(var i=0; i<subs.length;i++) res = res || subs[i].isSeenByBob(bob);
+	for(var i=0; i<subs.length;i++) res = res || subs[i].isSeenByBob(bob, segments);
 	return res;
 }
 
@@ -150,7 +150,7 @@ Glass.prototype.castShadow = function castGlassShadow(bob_or_light){
 
 }
 
-Glass.prototype.seenSegment = function(bob){
+Glass.prototype.seenSegment = function(bob, segments){
 	var sees_a = false,
 		sees_b = false,
 		res = [];

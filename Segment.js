@@ -42,12 +42,12 @@ Segment.prototype.closestPointFrom = function(x,y){
 }
 
 
-Segment.prototype.isSeenByBob = function(bob){
+Segment.prototype.isSeenByBob = function(bob, segments){
 	
 	if(	
-		bob.sees({x:this.a.x, y:this.a.y, width:1})
+		bob.sees({x:this.a.x, y:this.a.y, width:1}, segments)
 		||
-		bob.sees({x:this.b.x, y:this.b.y, width:1})
+		bob.sees({x:this.b.x, y:this.b.y, width:1}, segments)
 	) return true;
 	var fov = bob.fovSegments(),
 		intersect_1 = this.intersect(fov.left),	
@@ -57,16 +57,16 @@ Segment.prototype.isSeenByBob = function(bob){
 }
 
 
-Segment.prototype.seenSegment = function(bob){
+Segment.prototype.seenSegment = function(bob, segments){
 	var sees_a = false,
 		sees_b = false,
 		res = [];
 
 	var a = {x:this.a.x, y:this.a.y, width:2};
-	if(bob.sees(a) || bob.feels(a)) sees_a = true; 
+	if(bob.sees(a, []) || bob.feels(a)) sees_a = true; 
 	
 	var b = {x:this.b.x, y:this.b.y, width:2}
-	if(bob.sees(b) || bob.feels(b)) sees_b = true;
+	if(bob.sees(b, []) || bob.feels(b)) sees_b = true;
 
 	var angle_a, angle_b, angle_inter, angle_inter_1, angle_inter_2, left, rigth;
 
