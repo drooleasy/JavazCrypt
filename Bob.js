@@ -76,7 +76,7 @@ function Bob(x,y, width, angle, fov_angle, fov_distance){
 		
 	this.shadow = new Shadow();
 	this.tints = new Shadow();
-	this.tints.style.fill="rgba(0,0,0,0.5)";
+	this.tints.style.fill="rgba(0,0,32,0.66)";
 	this.tints.style.stroke=this.tints.style.fill;
 	this.saying = false;
 
