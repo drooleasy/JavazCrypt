@@ -88,15 +88,17 @@ Light.prototype.draw = function(paper, segments, bobs){
 	if(bobs) for(i=0;i<bobs.length;i++){
 		var bob = bobs[i];
 		var d = distanceBetween(this.x, this.y, bob.x, bob.y);
-		if(
-			d > bob.width
-		){
-			var sees_bob = bob && d < this.sightLength+bob.width;
-			if(sees_bob){
-				bob.castShadow(this);
+		if(bob.light !== this){
+			if(
+				d > bob.width
+			){
+				var sees_bob = bob && d < this.sightLength+bob.width;
+				if(sees_bob){
+					bob.castShadow(this);
+				}
+			}else{
+				bob.castOverShadow(this);			
 			}
-		}else{
-			bob.castOverShadow(this);			
 		}
 	}
 	

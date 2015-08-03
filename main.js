@@ -64,10 +64,11 @@ var all_segments = segments.concat(path.segments).concat(boulder.segments);
 
 var lights_on = false;
 var draw_sight = false;
+var relative = false;
 
 var licht = new Light(350, 270, 100, 2*Math.PI, Math.PI);
-var licht2 = new Light(150, 270, 100, 2*Math.PI, Math.PI);
-var licht3 = new Light(253, 230, 100, 2*Math.PI, Math.PI);
+var licht2 = new Light(150, 200, 100, 2*Math.PI, Math.PI);
+//var licht3 = new Light(253, 230, 100, 2*Math.PI, Math.PI);
 
 
 var lights = [];
@@ -84,10 +85,22 @@ function draw(){
 
 	// CLEARING
 	var ctx = paper.getContext("2d");
+
+
 	ctx.fillStyle = "#000";
 	ctx.fillRect(0, 0, paper_width, paper_height);
 	player.shadow.clear();	
 	player.tints.clear();	
+	
+	ctx.save();
+
+	if(relative){
+		ctx.translate(paper.width/2,paper.height/2);	
+		ctx.rotate(-player.angle-Math.PI/2);
+		ctx.translate(-player.x,-player.y);	
+	}
+	
+	
 	
 	// COLLISIONS
 	player.collidesWithBob(other);
@@ -112,6 +125,7 @@ function draw(){
 		var oldCompo = ctx.globalCompositeOperation;
 		paper.getContext("2d").drawImage(renderScene.lastValidBuffer,0,0);	
 		ctx.globalCompositeOperation = oldCompo;
+		
 	}
 
 	// DRAWS FOV	
@@ -145,6 +159,8 @@ function draw(){
 	
 	// DRAWS PLAYER
 	player.draw(paper);
+	
+	ctx.restore();
 	
 	// REQUEST NEXT FRAME
 	window.requestAnimationFrame(draw);
