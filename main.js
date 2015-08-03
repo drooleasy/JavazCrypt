@@ -65,6 +65,7 @@ var all_segments = segments.concat(path.segments).concat(boulder.segments);
 var lights_on = false;
 var draw_sight = false;
 var relative = false;
+var relative_angle = false;
 
 var licht = new Light(350, 270, 100, 2*Math.PI, Math.PI);
 var licht2 = new Light(150, 200, 100, 2*Math.PI, Math.PI);
@@ -96,7 +97,7 @@ function draw(){
 
 	if(relative){
 		ctx.translate(paper.width/2,paper.height/2);	
-		ctx.rotate(-player.angle-Math.PI/2);
+		if(relative_angle) ctx.rotate(-player.angle-Math.PI/2);
 		ctx.translate(-player.x,-player.y);	
 	}
 	

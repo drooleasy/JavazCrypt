@@ -29,9 +29,50 @@
 		<script src="Glass.js" ></script>
 		<script src="Light.js" ></script>
 		<script src="Path.js" ></script>
+		<script src="Stair.js" ></script>
 		<script src="keyboard-control.js" ></script>
 		<script src="renderScene.js" ></script>
-		<script src="main.js" ></script>
+		<script>
+		
+var paper_width = 650;
+var paper_height = 400;
+			
+			
+var paper = document.getElementById("paper");
+paper.width = paper_width;			
+paper.height = paper_height;			
+					
+			var stairDown = new Stair(100,50,30,60, 10, false);
+			var stairUp = new Stair(300,50,30,60, 10, true);
+			
+			var stairs = [];
+			stairs.push(stairDown);
+			stairs.push(stairUp);
+			
+			var player = new Bob();
+			player.x=10;
+			player.y=10;
+			
+			
+			var original_width = player.width;
+			
+			function draw(){
+				
+				var ctx = paper.getContext("2d");
+				ctx.fillStyle="#000";
+				ctx.fillRect(0,0, paper.width, paper.height);
+				
+				for(var i=0;i<stairs.length;i++){
+					stairs[i].check(player);
+					stairs[i].draw(paper);
+				}
+				player.draw(paper);
+				window.requestAnimationFrame(draw);
+			}
+			window.requestAnimationFrame(draw);
+			keyboardControl(player);
+
+		</script>
 	
 	</body>
 </html>

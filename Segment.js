@@ -141,12 +141,12 @@ Segment.prototype.seenSegment = function(bob, segments){
 	return res;
 }
 
-Segment.prototype.draw = function(paper){
+Segment.prototype.draw = function(paper, dontStroke){
 	var ctx = paper.getContext("2d");
-	ctx.beginPath();
-	ctx.moveTo(this.a.x, this.a.y);
+	if(!dontStroke) ctx.beginPath();
+	if(!dontStroke) ctx.moveTo(this.a.x, this.a.y);
 	ctx.lineTo(this.b.x, this.b.y);
-	ctx.stroke();
+	if(!dontStroke) ctx.stroke();
 }
 
 Segment.prototype.otherPoint = function(p){
