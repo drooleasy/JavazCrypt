@@ -14,6 +14,8 @@ function Bob(x,y, width, angle, fov_angle, fov_distance){
 	this.consciousness = Bob.defaults.consciousness;
 	
 	
+	this.scale = 1;
+	
 	this.speedForward = Bob.defaults.speedForward;
 	this.speedBackward = Bob.defaults.speedBackward;
 	this.speedTurn = Bob.defaults.speedTurn; 
@@ -315,16 +317,21 @@ Bob.prototype.draw = function(paper){
 	ctx.strokeStyle = this.body.style["stroke"];
 	ctx.lineWidth = this.body.style["stroke-width"];
 	
+	
+	ctx.translate(this.x, this.y);
+	ctx.rotate(this.angle);
+	ctx.scale(this.scale, this.scale);
+	
 	ctx.beginPath();
-	ctx.arc(this.x, this.y, this.width, 0, PIPI);
+	ctx.arc(0,0 , this.width, 0, PIPI);
 	ctx.stroke();
 	ctx.fill();
 	
 	ctx.fillStyle=this.nose.style["fill"];
 	
 	var nose = {
-		x: this.x + Math.cos(this.angle + this.nose.angle) * (this.nose.offset),
-		y: this.y + Math.sin(this.angle + this.nose.angle) * (this.nose.offset),
+		x: Math.cos(this.nose.angle) * (this.nose.offset),
+		y: Math.sin(this.nose.angle) * (this.nose.offset),
 		r: this.nose.radius
 	}
 	
@@ -338,8 +345,8 @@ Bob.prototype.draw = function(paper){
 	ctx.fillStyle = this.eyes.left.style["fill"];
 	
 	var eye_left = {
-		x: this.x + Math.cos(this.angle + this.eyes.left.angle) * (this.eyes.left.offset),
-		y: this.y + Math.sin(this.angle + this.eyes.left.angle) * (this.eyes.left.offset),
+		x: Math.cos(this.eyes.left.angle) * (this.eyes.left.offset),
+		y: Math.sin(this.eyes.left.angle) * (this.eyes.left.offset),
 		r: this.eyes.left.radius
 	}
 	
@@ -351,8 +358,8 @@ Bob.prototype.draw = function(paper){
 	ctx.fillStyle = this.eyes.right.style["fill"];
 	
 	var eye_right = {
-		x: this.x + Math.cos(this.angle + this.eyes.right.angle) * (this.eyes.right.offset),
-		y: this.y + Math.sin(this.angle + this.eyes.right.angle) * (this.eyes.right.offset),
+		x: Math.cos(this.eyes.right.angle) * (this.eyes.right.offset),
+		y: Math.sin(this.eyes.right.angle) * (this.eyes.right.offset),
 		r: this.eyes.right.radius
 	}
 	
@@ -360,6 +367,11 @@ Bob.prototype.draw = function(paper){
 	ctx.arc(eye_right.x, eye_right.y, eye_right.r, 0, PIPI);
 	ctx.stroke();
 	ctx.fill();
+	
+	
+	ctx.scale(1/this.scale,1/this.scale);
+	ctx.rotate(-this.angle);
+	ctx.translate(-this.x, -this.y)
 };
 
 
