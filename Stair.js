@@ -27,7 +27,7 @@ function rect(x,y,w,h, angle){
 };
 
 
-function Stair(x,y, w, h, steps, angle, up){
+function Stair(x,y, w, h, steps, angle, up, onReach){
 	
 	
 	
@@ -40,12 +40,11 @@ function Stair(x,y, w, h, steps, angle, up){
 	this.angle = angle ;
 	this.steps = steps
 	this.up = up;
-	this.case = new Path(
-		this.x, this.y,
-		this.x, this.y+this.h,
-		this.x+this.w, this.y+this.h,
-		this.x+this.w, this.y
-	);
+	
+	this.onReach = onReach || function(player){
+		console.log((this.up ? "up" : "down") + "stairs!!!");
+		player.collidesWithSegment(this.reach());
+	}
 	
 	this.dec = this.w*0.033;
 	
@@ -72,10 +71,11 @@ function Stair(x,y, w, h, steps, angle, up){
 		];
 	}
 	
-	var offset = (this.up ? -1 : 1) * this.dec * (this.steps-1);
 	
 	this.innerCase = function(){
 		var rec = rect(this.x,this.y, this.w,this.h, this.angle)
+		var offset = (this.up ? -1 : 1) * this.dec * (this.steps-1);
+
 		return [
 			new Segment(
 				rec[0].x, rec[0].y, 
@@ -89,6 +89,7 @@ function Stair(x,y, w, h, steps, angle, up){
 	};
 	this.reach = function(){
 		var rec = rect(this.x,this.y, this.w,this.h, this.angle)
+		var offset = (this.up ? -1 : 1) * this.dec * (this.steps-1);
 
 		return new Segment(
 			rec[1].x + Math.cos(this.angle) * offset, rec[1].y + Math.sin(this.angle) * offset,
@@ -251,14 +252,37 @@ Stair.prototype.check = function checkStair(player){
 			var ratio =  d/d2 ;
 			
 			player.scale = 1 + (this.up ? 0.5 : -1) * z*z * ratio;
-			
+			if(this.debug)console.log("1 + "+(this.up ? 0.5 : -1) + " * "+z.toFixed(1)+"*"+z.toFixed(1)+" * " + ratio.toFixed(1))
 			var cp = reach.closestPointFrom(player.x,player.y);
 			var d = distanceBetween(cp.x, cp.y, player.x, player.y);
 			if(d<player.width){
-				console.log((this.up ? "up" : "down") + "stairs!!!")
-				player.collidesWithSegment(this.reach())
+				this.onReach.call(this, player);
 			}
 			
 		}
 		
 	}
+
+
+Stair.prototype.inverse = function(){
+	
+	var x = this.x + Math.cos(this.angle) * this.w + Math.cos(this.angle+Math.PI/2) * this.h,
+		y = this.y + Math.sin(this.angle) * this.w + Math.sin(this.angle+Math.PI/2) * this.h,
+		w = this.w,
+		h = this.h,
+		s = this.steps,
+		a = clipAngle(this.angle - Math.PI),
+		u = !this.up,
+		cb = this.onReach;
+		 
+	
+	this.x = x;
+	this.y = y;
+	this.w = w;
+	this.h = h;
+	this.steps = s;
+	this.angle = a;
+	this.up = u;
+	this.onReach = cb;
+	
+}

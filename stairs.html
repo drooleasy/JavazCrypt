@@ -44,10 +44,17 @@ paper.height = paper_height;
 					
 			var stairDown = new Stair(100,50,30,60, 10, Math.PI/2, false);
 			var stairUp = new Stair(300,50,30,60, 10, Math.PI/4, true);
+			var stairSwitch = new Stair(200,100,30,60, 10, -Math.PI/4, true, function(player){
+				this.inverse()
+			});
+			
+			stairDown.debug = true;
+			stairSwitch.debug = true;
 			
 			var stairs = [];
 			stairs.push(stairDown);
 			stairs.push(stairUp);
+			stairs.push(stairSwitch);
 			
 			var player = new Bob();
 			player.x=10;
@@ -57,10 +64,6 @@ paper.height = paper_height;
 			var original_width = player.width;
 			
 			function draw(){
-				
-				
-				
-				
 				
 				var ctx = paper.getContext("2d");
 				ctx.fillStyle="#000";
