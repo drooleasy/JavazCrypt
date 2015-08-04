@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>Raphael JS</title>
+	</head>
+	<body style="background-color:#000">
+
+		<canvas id="paper" style="background-color:#000;width:650px;float:left;height:400px;padding:0px;margin:20px"></canvas>
+		<br><a href="javascript:pointCloud = randomPointCloud(300-130,200-130, 260, 260, num_points);pointCloud.sort();void(0)">random Points AABB</a>
+		<br><a href="javascript:pointCloud = randomPointCloudFromCenter(300,200, 70, 130, num_points);pointCloud.sort();void(0)">random Points from Center</a>
+		<br><a href="javascript:pointCloud = randomPointCloudFromCircle(300,200, 100, 30, num_points);pointCloud.sort();void(0)">random Points from Circle</a>
+		
+		<div id="dbg-info" style="width:200px;float:right"></div>
+		
+		<script src="lib/jquery-2.1.4.min.js" ></script>
+		<script src="utils.js" ></script>
+		<script src="Interval.js" ></script>
+		<script src="angle-utils.js" ></script>
+		<script src="Rect.js" ></script>
+		<script src="canvas-utils.js" ></script>
+		<script src="Shadow.js" ></script>
+		<script src="Bubble.js" ></script>
+		<script src="Bob.js" ></script>
+		<script src="Segment.js" ></script>
+		<script src="Door.js" ></script>
+		<script src="Glass.js" ></script>
+		<script src="Light.js" ></script>
+		<script src="Path.js" ></script>
+		<script src="Stair.js" ></script>
+		<script src="keyboard-control.js" ></script>
+		<script src="renderScene.js" ></script>
+		<script src="PointCloud.js" ></script>
+		<script>
+					
+			var paper_width = 650;
+			var paper_height = 400;
+						
+						
+			var paper = document.getElementById("paper");
+			paper.width = paper_width;			
+			paper.height = paper_height;			
+					
+
+			function randomPointCloud(x,y, w, h, num){
+				var points = [];
+				for(var i=0; i<num;i++){
+					points.push(x+Math.random()*w);
+					points.push(y+Math.random()*h);
+				}
+				var pointCloud = PointCloud.apply(new PointCloud(), points);
+				return pointCloud;
+			}
+
+
+
+			function randomPointCloudFromCenter(x,y, r_min, r_max, num){
+				var points = [];
+				for(var i=0; i<num;i++){
+					var angle = Math.random()*2*Math.PI;
+					var distance = r_min + Math.random()*(r_max-r_min);
+					points.push(x+Math.cos(angle)*distance);
+					points.push(y+Math.sin(angle)*distance);
+				}
+				var pointCloud = PointCloud.apply(new PointCloud(), points);
+				return pointCloud;
+			}
+
+			function randomPointCloudFromCircle(x,y, r, delta, num){
+				var points = [];
+				for(var i=0; i<num;i++){
+					var angle = Math.random()*2*Math.PI;
+					var distance = r + Math.random()*delta*2-delta;
+					points.push(x+Math.cos(angle)*distance);
+					points.push(y+Math.sin(angle)*distance);
+				}
+				var pointCloud = PointCloud.apply(new PointCloud(), points);
+				return pointCloud;
+			}
+
+
+			function randomTowardLeft(p){ // bias : 0, .5,  1
+				p = p || 2;
+				var r = Math.random(),
+					s = 1;
+				r = Math.pow(r, p);
+				return 0 + s * r;
+			}
+
+
+			function randomTowardRight(p){ // bias : 0, .5,  1
+				p = p || 2; 
+				var r = Math.random(),
+					s = -1;
+				r = Math.pow(r, p);
+				return 1 + s * r;
+			}
+			
+			
+			function randomTowardCenter(p){ // bias : 0, .5,  1
+				p = p || 2; 
+				var r = Math.random(),
+					s = Math.random()>.5 ? 1 : -1;
+				r = Math.pow(r, p) / Math.pow(2,p-1);
+				
+				return .5 + s * r;
+			}
+		
+			function randomBiased(bias, p){
+				p = p || 2; 
+				if(bias == 0) return randomTowardCenter(p);
+				else if(bias > 0) return randomTowardRight(p);
+				else return randomTowardLeft(p);
+			}
+
+
+			var FILL = "#000";
+
+			var num_points = 12;
+			var pointCloud = null;
+			pointCloud = randomPointCloudFromCircle(300,200, 100, 30, num_points);
+			pointCloud.sort();
+			
+			
+			
+			function draw(){
+			
+//				pointCloud = randomPointCloud(num_points);
+//				pointCloud.sort();
+			
+				
+				var ctx = paper.getContext("2d");
+				ctx.fillStyle=FILL;
+				ctx.fillRect(0,0, paper.width, paper.height);				
+
+				ctx.fillStyle = "#fff";				
+				ctx.strokeStyle = "#FFF";
+				pointCloud.draw(paper);
+				pointCloud.plot(paper);
+				pointCloud.plotInnerOuter(paper);
+				pointCloud.strokeAABB(paper);
+				
+				
+				window.requestAnimationFrame(draw);
+				
+			
+				
+			}
+			window.requestAnimationFrame(draw);
+			//keyboardControl(player);
+
+
+
+			$(paper).on("click", function(evt){
+				
+				var mx = evt.pageX - $(paper).offset().left;
+				var my = evt.pageY - $(paper).offset().top;
+				
+				
+				if(pointCloud.inside(mx, my)){ 
+						FILL = "#333"
+				}else{
+					FILL = "#000"
+				}
+			});
+
+
+
+var n = 1000;
+var left =0,
+    center = 0,
+    right = 0,
+    bias = 2;
+for(var i=0; i<n; i++){
+   left+= randomBiased(-1, bias);
+   center+= randomBiased(0, bias);
+   right+= randomBiased(1, bias);
+}
+console.log("left: " + left/n);
+console.log("centert: "+center/n);
+console.log("right: " + right/n);
+
+
+		</script>
+	
+	</body>
+</html>
