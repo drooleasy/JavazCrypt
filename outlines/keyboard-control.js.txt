@@ -1,0 +1,4 @@
+function keyboardControl(item){
+	$("body").keydown(function(evt){
+	$("body").keyup(function(evt){
+	setInterval(function(){				

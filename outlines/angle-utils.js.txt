@@ -1,0 +1,44 @@
+function deg2rad(deg){
+function rad2deg(rad){
+
+function display(msg, dontClear){
+
+function turns(angle){
+
+function clipAngle(angle){  
+function clipAnglePositive(angle){
+function clipAngleNegative(angle){
+
+function angleBetween(from_x,from_y, to_x,to_y){
+function distanceBetween(from_x,from_y, to_x,to_y){
+function distanceAndAngle(from_x,from_y, to_x,to_y){
+
+function quadrant(angle){
+function cossin(angle){
+
+
+
+function rad(a){
+	res.rad = function radToRad(){
+	res.deg = function radToDeg(){
+	res.clip = function radClip(){
+	res.positive = function radClipPositive(){
+	res.negative = function radClipNegative(){
+	res.turns = function radTurns(){
+	res.sin = function radSin(){
+		this.sin = function radSinCache(){
+	res.cos = function radCos(){
+		this.cos = function radCosCache(){ 
+	res.quadrant = function radQuadrant(){
+function deg(a){
+	res.deg = function degToDeg(){
+	res.rad = function degToRad(){
+	res.clip = function degClip(){
+	res.positive = function degClipPositive(){
+	res.negative = function degClipPositive(){
+	res.turns = function degTurns(){
+	res.sin = function degSin(){
+		this.sin = function degSinCache(){
+	res.cos = function degCos(){
+		this.cos = function degCosCache(){ 
+	res.quadrant = function degQuadrant(){

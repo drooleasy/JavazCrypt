@@ -61,6 +61,10 @@ function crossProduct(a,b){
 }
 
 
+function dotProduct(a, b){
+	return a.x * b.x + a.y * b.y
+}
+
 function minus(a,b){
 	return {
 		x: (a.x - b.x),
@@ -69,10 +73,6 @@ function minus(a,b){
 }
 
 
-
-function randomDelta(delta){
-	return Math.random() * delta - delta/2;
-}
 
 function intersection(a1,a2,b1,b2){ // a1<a2 && b1<b2
 	

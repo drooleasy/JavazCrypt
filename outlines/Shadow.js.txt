@@ -1,0 +1,7 @@
+function Shadow(){
+
+Shadow.prototype.clear = function (paper){
+
+Shadow.prototype.draw = function (paper){
+
+Shadow.prototype.drawCone = function (paper, coneData){

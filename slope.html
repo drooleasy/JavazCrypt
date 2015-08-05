@@ -43,17 +43,16 @@
 					
 
 
-var points = [
-	100,50,
-	80,200,
-	220,250,
-	200,120,
-
-]			
+			var points = [
+				100,50,
+				80,200,
+				220,250,
+				200,120
+			]			
 			
 			
 			var slope = Slope.apply(new Slope(), points);
-			
+			slope.up = true;
 			
 			var player = new Bob(225, 200, 10, 0);
 			player.sightWidth=deg2rad(120);
@@ -71,8 +70,10 @@ var points = [
 				ctx.fillStyle="#000";
 				ctx.fillRect(0,0, paper.width, paper.height);				
 
-				slope.draw(paper);
-				
+				slope.draw(paper, player);
+				slope.check(player);
+					
+			
 			
 				// DRAWS PLAYER
 				player.draw(paper);

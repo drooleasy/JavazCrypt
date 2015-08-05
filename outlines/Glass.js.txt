@@ -1,0 +1,21 @@
+function Glass(x1, y1, x2, y2){
+
+
+Glass.prototype.closestPointFrom = function(x,y){
+	function closest_point_on_seg(seg, circ_pos){
+
+Glass.prototype.intersect = function (other){
+Glass.prototype.intersectWithCircle = function(cx,cy,cr){
+Glass.prototype.intersectWithCone = function(cx,cy,cr, angle, fov_angle){
+
+
+
+Glass.prototype.isSeenByBob = function(bob, segments){
+
+Glass.prototype.draw = function(paper){
+
+Glass.prototype.castShadow = function castGlassShadow(bob_or_light){
+
+Glass.prototype.seenSegment = function(bob, segments){
+
+Glass.prototype.castTint = function castSegmentShadow(bob_or_light){

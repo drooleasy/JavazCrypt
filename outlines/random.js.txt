@@ -1,0 +1,6 @@
+function randomDelta(delta, p){
+function randomTowardLeft(p){ // bias : 0, .5,  1
+function randomTowardRight(p){ // bias : 0, .5,  1
+function randomTowardCenter(p){ // bias : 0, .5,  1
+function randomBiased(bias, p){
+function test(){

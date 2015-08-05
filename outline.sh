@@ -1,3 +1,5 @@
 #!/bin/bash
 
-grep "function" < "$1"  > outline."$1".txt
+cd ./js
+for f in *.js; do grep "function" < "$f"  > ../outlines/"$f".txt; done;
+cd -

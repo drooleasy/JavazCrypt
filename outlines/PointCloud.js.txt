@@ -1,0 +1,22 @@
+function PointCloud(/*x,y,...*/){
+
+PointCloud.prototype.center = function(){
+PointCloud.prototype.distances = function(from){
+PointCloud.prototype.angles = function(from){
+PointCloud.prototype.distancesAndAngles = function(from){
+
+PointCloud.prototype.innerOuter = function(){
+
+
+PointCloud.prototype.plot = function(paper){
+PointCloud.prototype.draw = function(paper){
+PointCloud.prototype.strokeAABB = function strokeAABB(paper){
+PointCloud.prototype.drawPoint = function drawPoint(p, paper, r){
+PointCloud.prototype.plotInnerOuter = function plotInnerOuter(paper){
+
+PointCloud.prototype.sort = function(){
+	this.points = this.points.sort(function(a, b){
+
+PointCloud.prototype.inside = function(x,y){	
+
+PointCloud.prototype.AABB = function(){

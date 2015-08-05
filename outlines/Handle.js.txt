@@ -1,0 +1,6 @@
+function Handle(x,y,r, onMove){
+	this.onMouseOver = function(){
+	this.onMouseOut = function(){
+
+
+Handle.prototype.draw = function(paper){

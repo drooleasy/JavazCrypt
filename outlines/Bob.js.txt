@@ -1,0 +1,46 @@
+function Bob(x,y, width, angle, fov_angle, fov_distance){
+
+
+
+Bob.prototype.moveForward = function moveForward(){
+Bob.prototype.moveBackward = function moveBackward(){
+Bob.prototype.turnLeft = function turnLeft(){
+Bob.prototype.turnRight =  function turnRight(){
+
+Bob.prototype.replaceLight = function moveForward(){
+
+
+Bob.prototype.castShadow = function cast_bob_shadow(light){	
+	function addInner(k, v_perp, that, light, secants){
+	secants = secants.sort(function(a,b){return a.angle - b.angle});
+Bob.prototype.castOverShadow = function(light){
+Bob.prototype.drawShadow = function draw_bob_shadow(paper, player){
+
+
+Bob.prototype.fovSegments = function(){
+
+
+Bob.prototype.drawFOV = function(ctx){
+Bob.prototype.drawSight = function(paper, segments, bob){		
+	this.tints.draw(paper, function() {	});
+	this.shadow.draw(paper, function() {	ctx.globalCompositeOperation = oldCompositeOpration;});
+Bob.prototype.draw = function(paper){	
+Bob.prototype.drawTints = function draw_bob_tints(paper, player){
+
+
+
+Bob.prototype.speak = function(paper){
+
+
+Bob.prototype.feels =  function inSight(other){ 
+
+Bob.prototype.sees =  function inSight(other, segments){ 
+
+
+Bob.prototype.collidesWithBob = function(bob){
+Bob.prototype.collidesWithSegment = function(segment){
+		function checkCircle(that, x,y,r, segment){
+
+
+Bob.prototype.say = function (paper, msg){	
+	setTimeout(function shutUp(){ that.saying=false}, 3*1000)

@@ -1,0 +1,11 @@
+function solveP2(a, b, c){ // ax2 + bx + c = 0, a!=0 !!!!
+
+function castRay(ox, oy, tx, ty, limit){
+
+function crossProduct(a,b){
+function dotProduct(a, b){
+
+function minus(a,b){
+
+function intersection(a1,a2,b1,b2){ // a1<a2 && b1<b2
+function union(a1,a2,b1,b2){ // a1<a2 && b1<b2
