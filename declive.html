@@ -30,7 +30,12 @@
 		<script src="PointCloud.js" ></script>
 		<script src="random.js" ></script>
 		<script src="Slope.js" ></script>
+		<script src="Platform.js" ></script>
 		<script>
+					
+					
+					
+					
 					
 			var paper_width = 650;
 			var paper_height = 400;
@@ -43,51 +48,32 @@
 
 
 			var num_points = 12;
-			var donut = randomDonut(300,200, 115, 30, num_points);
-			var innerCloud = donut.inner
+			
+			var innerCloud = ring(140,200, 80, num_points)
 			innerCloud.sort();	
-			var outerCloud = donut.outer;
+			var outerCloud = ring(140,200, 130, num_points);
 			outerCloud.sort();	
 			
 			
+			var platform = new Platform(innerCloud, outerCloud, true);
 			
-			var slopes = [];
+			var innerCloud = ring(400,200, 80, num_points)
+			innerCloud.sort();	
+			var outerCloud = ring(400,200, 130, num_points);
+			outerCloud.sort();	
 			
+			var platform2 = new Platform(innerCloud, outerCloud, false);
 			
-			
-			
-			function addSlope(inner, outer, i){
-				var arr = [];
-				
-				var j = i+1;
-				if(j>=inner.points.length) j = 0; 
-				arr.push(inner.points[i].x);
-				arr.push(inner.points[i].y);
-				
-				
-				arr.push(outer.points[i].x);
-				arr.push(outer.points[i].y);
-				
-				
-				arr.push(outer.points[j].x);
-				arr.push(outer.points[j].y);
-				
-				
-				arr.push(inner.points[j].x);
-				arr.push(inner.points[j].y);
-				
-				return Slope.apply(new Slope(), arr);
-			}
-			
-			for(var i=0;i<num_points;i++){
-				slopes.push(addSlope(innerCloud,outerCloud,i));
-			}
+			var platforms = [];
+			platforms.push(platform);
+			platforms.push(platform2);
 			
 			
 			
+			var sun = {x:1,y:1};
+	
 			
-			
-			var player = new Bob(225, 200, 10, 0);
+			var player = new Bob(20, 20, 10, 0);
 			player.sightWidth=deg2rad(120);
 			keyboardControl(player);
 
@@ -95,35 +81,32 @@
 			
 			function draw(){
 			
-//				pointCloud = randomPointCloud(num_points);
-//				pointCloud.sort();
-			
 				
 				var ctx = paper.getContext("2d");
-				ctx.fillStyle="#000";
+				ctx.fillStyle="#888";
 				ctx.fillRect(0,0, paper.width, paper.height);				
 
-			ctx.strokeStyle="#0f0";
-			ctx.fillStyle="rgba(0,0,0,0)";
-			innerCloud.draw(paper);
-			ctx.strokeStyle="#f00";
-			outerCloud.draw(paper);
+/*
+				ctx.fillStyle="rgba(0,0,0,0)";
+
+				ctx.strokeStyle="#0f0";
 
 
-			for(var i=0;i<slopes.length;i++){
-					slopes[i].draw(paper);
-				
-					if(slopes[i].inside(player.x, player.y)){
-						slopes[i].check(player);
-					}
+				innerCloud.draw(paper);
+				ctx.strokeStyle="#f00";
+				outerCloud.draw(paper);
+*/
+
+				for(var i=0;i<platforms.length;i++){
+					platforms[i].draw(paper, player);
+					platforms[i].check(player)
 				}
-			
 				// DRAWS PLAYER
 				player.draw(paper);
 
-				
+					
 				window.requestAnimationFrame(draw);
-				
+					
 			
 				
 			}

@@ -68,6 +68,50 @@ function randomDonut(x,y, r, delta, num){
 }
 
 
+
+function ring(x,y,d,num){
+	var points = [];
+	var angle = Math.PI*2/num;
+	var i = 0;
+	for(;i<num;i++){
+		points.push(x+Math.cos(i*angle)*d);
+		points.push(y+Math.sin(i*angle)*d);
+	}
+	return PointCloud.apply(new PointCloud(), points);
+}
+
+
+
+function randomSimpleDonut(x,y, r, delta, num){
+	var points = [];
+	for(var i=0; i<num;i++){
+		var angle = Math.random()*2*Math.PI;
+		var distance1 = r + Math.random()*delta*2-delta;
+		points.push(x+Math.cos(angle)*distance1);
+		points.push(y+Math.sin(angle)*distance1);
+	}
+	var pointCloud = PointCloud.apply(new PointCloud(), points);
+
+	var center = pointCloud.center();
+	
+	var metrics = pointCloud.distancesAndAngles(center);
+	
+	var points2 = [];
+	
+	for(var i=0; i<num;i++){
+		var rnd= 1.7;
+		points2.push(center.x+Math.cos(metrics[i].angle)*metrics[i].distance*rnd);
+		points2.push(center.y+Math.sin(metrics[i].angle)*metrics[i].distance*rnd);
+	}
+	var pointCloud2 = PointCloud.apply(new PointCloud(), points2);
+
+	return {
+		inner: pointCloud,
+		outer: pointCloud2
+	};
+}
+
+
 function randomTowardLeft(p){ // bias : 0, .5,  1
 	p = p || 2;
 	var r = Math.random(),

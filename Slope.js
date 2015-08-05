@@ -18,97 +18,61 @@ function Slope(/*x1,y1,...,x4,y4*/){
 	this.start = arguments.length && new Segment(points[0].x,points[0].y,points[3].x,points[3].y) || null;
 	this.reach = arguments.length && new Segment(points[1].x,points[1].y,points[2].x,points[2].y) || null;
 
+
+	this.up = true;
+	
+
 	return this;
 }
 
 
-Slope.prototype.draw = function(paper){
+Slope.prototype.draw = function(paper, sun){
 	var ctx = paper.getContext('2d');
 
-if(false){
-	var center_start = {
-		x:(this.start.a.x+this.start.b.x)/2,
-		y:(this.start.a.y+this.start.b.y)/2
-	};
-	var center_reach = {
-		x:(this.reach.a.x+this.reach.b.x)/2,
-		y:(this.reach.a.y+this.reach.b.y)/2
+	if(false){
+		var center_start = {
+			x:(this.start.a.x+this.start.b.x)/2,
+			y:(this.start.a.y+this.start.b.y)/2
+		};
+		var center_reach = {
+			x:(this.reach.a.x+this.reach.b.x)/2,
+			y:(this.reach.a.y+this.reach.b.y)/2
+		}
+		
+
+		ctx.fillStyle = "#00F";				
+		this.pointCloud.drawPoint(center_start, paper, 6);
+		ctx.fill();
+		ctx.fillStyle = "#99F";
+		this.pointCloud.drawPoint(center_reach, paper, 6);
+		ctx.fill();
 	}
-	
-
-ctx.fillStyle = "#00F";				
-this.pointCloud.drawPoint(center_start, paper, 6);
-ctx.fill();
-ctx.fillStyle = "#99F";
-this.pointCloud.drawPoint(center_reach, paper, 6);
-ctx.fill();
-}
-/*
-	var grd = ctx.createLinearGradient(
-		center_start.x, 
-		center_start.y, 
-		center_reach.x, 
-		center_reach.y
-	);
-
-	var grd = ctx.createRadialGradient(
-		center_start.x, 
-		center_start.y,
-		0, 
-		center_start.x, 
-		center_start.y,
-		distanceBetween(center_start.x, center_start.y,center_reach.x, center_reach.y)
-		
-		
-	);
-/*	
-	var grd = ctx.createLinearGradient(
-		this.start.a.x, 
-		this.start.a.y, 
-		this.reach.a.x, 
-		this.reach.a.y
-	);
-
-	grd.addColorStop(0, "#fff");
-	grd.addColorStop(1, "#000");
 
 
 
 
+	var middle_reach = {
+		x:(this.reach.a.x + this.reach.b.x)/2,
+		y:(this.reach.a.y + this.reach.b.y)/2,
+	};
+	var angle_sun = angleBetween(sun.x, sun.y, middle_reach.x, middle_reach.y);
+	var angle_reach = angleBetween(this.reach.a.x,this.reach.a.y, this.reach.b.x, this.reach.b.y);
 
 
+	var angle_relative = angle_reach -  angle_sun;
+	var sin = Math.sin(angle_relative);
 
-	ctx.save();
-*/				
-	//this.pointCloud.draw(paper);
+	if(this.up){
+		if(sin<=0) l = 50 +  Math.floor(-sin * 155);
+		else l = 50 - Math.floor(sin * 50);
+	}else{
+		if(sin>0) l = 50 +  Math.floor(sin * 155);
+		else l = 50 - Math.floor(-sin * 50);
+	}
 
-//	ctx.clip()
-//	ctx.fillStyle = grd;	
-
-//	ctx.fillRect(0,0,paper.width,paper.height);
-//	ctx.restore();
-
-
-var sun = {x:1,y:1};
-var angle_sun = angleBetween(0,0, sun.x, sun.y);
-var angle_reach = angleBetween(this.reach.a.x,this.reach.a.y, this.reach.b.x, this.reach.b.y);
-
-
-var angle_relative = angle_reach -  angle_sun;
-var sin = Math.sin(angle_relative);
-
-
-l = 0;
-if(l<=0) l = 50 +  Math.floor(-sin * 155);
-else l = 50;
-
-
-		ctx.fillStyle = "rgba("+l+","+l+","+l+",.6)";				
-		this.pointCloud.draw(paper);
-	
-	
+	ctx.fillStyle = "rgba("+l+","+l+","+l+",.6)";				
+	this.pointCloud.draw(paper);	
 	ctx.fill();
-
 
 	var dax = this.reach.a.x - this.start.a.x;
 	var day = this.reach.a.y - this.start.a.y;
@@ -120,7 +84,7 @@ else l = 50;
 	for(i=0;i<n;i++){
 			var l = Math.floor(i*256/n),
 				t = 1-i/n;
-			l=255;
+			l=128;
 			ctx.strokeStyle= "rgba("+l+","+l+","+l+", "+t+")"
 			ctx.beginPath();
 			ctx.moveTo(
@@ -200,8 +164,6 @@ Slope.prototype.interpole = function interpole(player){
 
 Slope.prototype.check = function checkStair(player){
 	
-	
-	this.up = true;
 		
 	var x = player.x;
 	var y = player.y;
@@ -214,7 +176,9 @@ Slope.prototype.check = function checkStair(player){
 		
 		
 		
-		player.scale = 1+z*z;
+		if(this.up) player.scale = 1 + (z / 2);
+		else player.scale = 1 - (z / 4);
+		
 		
 		var cp = this.reach.closestPointFrom(player.x,player.y);
 		var d = distanceBetween(cp.x, cp.y, player.x, player.y);
