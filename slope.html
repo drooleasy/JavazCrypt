@@ -7,10 +7,7 @@
 	<body style="background-color:#000">
 
 		<canvas id="paper" style="background-color:#000;width:650px;float:left;height:400px;padding:0px;margin:20px"></canvas>
-		<br><a href="javascript:pointCloud = randomPointCloud(300-130,200-130, 260, 260, num_points);pointCloud.sort();void(0)">random Points AABB</a>
-		<br><a href="javascript:pointCloud = randomPointCloudFromCenter(300,200, 70, 130, num_points);pointCloud.sort();void(0)">random Points from Center</a>
-		<br><a href="javascript:pointCloud = randomPointCloudFromCircle(300,200, 100, 30, num_points);pointCloud.sort();void(0)">random Points from Circle</a>
-		
+
 		<div id="dbg-info" style="width:200px;float:right"></div>
 		
 		<script src="lib/jquery-2.1.4.min.js" ></script>
@@ -32,6 +29,7 @@
 		<script src="renderScene.js" ></script>
 		<script src="PointCloud.js" ></script>
 		<script src="random.js" ></script>
+		<script src="Slope.js" ></script>
 		<script>
 					
 			var paper_width = 650;
@@ -44,13 +42,22 @@
 					
 
 
-			var FILL = "#000";
+var points = [
+	100,50,
+	80,200,
+	220,250,
+	200,120,
 
-			var num_points = 12;
-			var pointCloud = null;
-			pointCloud = randomPointCloudFromCircle(300,200, 100, 30, num_points);
-			pointCloud.sort();
+]			
 			
+			
+			var slope = Slope.apply(new Slope(), points);
+			
+			
+			var player = new Bob(225, 200, 10, 0);
+			player.sightWidth=deg2rad(120);
+			keyboardControl(player);
+
 			
 			
 			function draw(){
@@ -60,18 +67,15 @@
 			
 				
 				var ctx = paper.getContext("2d");
-				ctx.fillStyle=FILL;
+				ctx.fillStyle="#000";
 				ctx.fillRect(0,0, paper.width, paper.height);				
 
-				ctx.fillStyle = "#fff";				
-				ctx.strokeStyle = "#FFF";
-				ctx.fillStyle = "rgba(255,255,255,0.33)"
-
-				pointCloud.draw(paper);
-				pointCloud.plot(paper);
-				pointCloud.plotInnerOuter(paper);
-				pointCloud.strokeAABB(paper);
+				slope.draw(paper);
 				
+			
+				// DRAWS PLAYER
+				player.draw(paper);
+
 				
 				window.requestAnimationFrame(draw);
 				
@@ -83,21 +87,8 @@
 
 
 
-			$(paper).on("click", function(evt){
-				
-				var mx = evt.pageX - $(paper).offset().left;
-				var my = evt.pageY - $(paper).offset().top;
-				
-				
-				if(pointCloud.inside(mx, my)){ 
-						FILL = "#333"
-				}else{
-					FILL = "#000"
-				}
-			});
 
 
-			test();
 
 		</script>
 	

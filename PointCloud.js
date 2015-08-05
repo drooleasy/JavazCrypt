@@ -116,13 +116,13 @@ PointCloud.prototype.plot = function(paper){
 PointCloud.prototype.draw = function(paper){
 	var ctx = paper.getContext("2d");
 	var n=this.points.length;	
-	ctx.fillStyle = "rgba(255,255,255,0.33)"
 	ctx.beginPath();
 	ctx.moveTo(this.points[0].x, this.points[0].y);
-	for(var i=0;i<n;i++){
+	for(var i=1;i<n;i++){
 		ctx.lineTo(this.points[i].x, this.points[i].y);
 	}
 	ctx.lineTo(this.points[0].x, this.points[0].y);
+	ctx.closePath();
 	ctx.fill();
 	ctx.stroke();
 }
@@ -137,32 +137,20 @@ PointCloud.prototype.sort = function(){
 }
 
 
-PointCloud.prototype.inside = function(x,y){
-	
+PointCloud.prototype.inside = function(x,y){	
 	var metrics = this.angles({x:x,y:y});
-	
-	console.log("----------")
-	//console.log(metrics)
 	var previous_angle = clipAnglePositive(metrics[this.points.length-1]);
 	var diff = metrics[0] - previous_angle;
 	var previous_sign = diff < 0 ? -1 : 1;
-
-
-var sum = 0;
-	for(var i=0; i<this.points.length; i++){
-		
-	
+	var sum = 0;
+	for(var i=0; i<this.points.length; i++){	
 		diff = clipAngle(metrics[i] - previous_angle);
 		sign = diff < 0 ? -1 : 1;
-		//if(sign != previous_sign) return true;
-		
-		//console.log(rad2deg(diff).toFixed(1));
 		sum+=diff;
 		var previous_angle = metrics[i];
 		var previous_sign = sign;
 
 	}
-	console.log(rad2deg(sum).toFixed(1));
 	return Math.abs(sum) > 0.001;
 	
 }
