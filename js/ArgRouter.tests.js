@@ -1,6 +1,6 @@
 function testCombine(){
 		var ctx = {};
-		var router = new ArgRouter(ctx);
+		var router = new ArgRouter();
 		var hash1 = {
 			"num":function(num){
 				console.log("num " + num); 
@@ -29,14 +29,14 @@ function testCombine(){
 		}
 
 		router.combine(hash1, hash2, hash3);
-		if(!router.route(arguments)) console.log("no route found")
+		if(!router.route(ctx, arguments)) console.log("no route found")
 }
 
 
 
 
 function test(){
-	var router = new ArgRouter(this);
+	var router = new ArgRouter();
 	router.add("()", function(){console.log("empty args")})
 	router.add("(num)", function(){console.log("one num")})
 	router.add("(num,num)", function(){console.log("two num")})
@@ -44,7 +44,7 @@ function test(){
 	router.add("(num,num, obj)", function(){console.log("two num and one obj")})
 	router.add("(num,num, arr)", function(){console.log("two num and one obj")})
 	
-	if(!router.route(arguments)){
+	if(!router.route(this, arguments)){
 		console.log("no route found")
 	}
 }

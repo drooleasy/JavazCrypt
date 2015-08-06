@@ -52,10 +52,9 @@ ArgRouter.parseType = function (t){
 }
 
 
-function ArgRouter(_that){
+function ArgRouter(){
 	var signatures = [];
 	var callbacks = [];
-	this.that = function(){return _that};
 	this.add = function(signature, callback){
 		//console.log("adding " + signature)
 		var next = this.length();
@@ -93,12 +92,13 @@ ArgRouter.prototype.testRule = function(args, rule_num){
 		return true;
 }
 
-ArgRouter.prototype.route = function(args){
+ArgRouter.prototype.route = function(ctx, args){
+	ctx = ctx || {};
 	for(var i=0; i<this.length(); i++){
 		//console.log("routing " + i)
 		//console.log(this.rule(i).signature)
 		if(this.testRule(args, i)){
-			this.rule(i).callback.apply(this.that(), args);
+			this.rule(i).callback.apply(ctx, args);
 			return true;
 		}
 	}
@@ -128,7 +128,7 @@ ArgRouter.prototype.combine = function(/* hash... */){
     combs_args = newCombs_args;
   }
   for(var old in combs){
-	var cb =(function(combs, key, ctx){
+	var cb =(function(combs, key){
 		
 		var cbs = combs[key];
 		var cbs_args = combs_args[key];
@@ -141,10 +141,10 @@ ArgRouter.prototype.combine = function(/* hash... */){
 					argdex++;
 					arg.push(arguments[argdex])
 				}	
-				cbs[i].apply(ctx, arg);
+				cbs[i].apply(this, arg);
 			}
 		}
-	})(combs, old, this.that());
+	})(combs, old);
 	combs[old] = cb
   }
   
