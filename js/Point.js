@@ -1,8 +1,10 @@
+window.onError = function(){debugger;}
+
 function Point(){
 
 	var router = new ArgRouter(this);
 	router.add("", function(){
-		Point.apply(this, 0, 0)
+		Point.call(this, 0, 0);
 	});
 	router.add("arr", function(arr){
 		Point.apply(this, arr);
@@ -14,7 +16,7 @@ function Point(){
 		this.x = parseFloat(arguments[0] || 0);
 		this.y = parseFloat(arguments[1] || 0);
 	});
-	if(!router.route(arguments)) throw new Error("invalid args");
+	if(!router.route(arguments)) throw "invalid args";
 	return this;
 
 }
@@ -56,7 +58,7 @@ Point.prototype.dot= function(){
 	
 	router.combine(from_route);
 	
-	if(!router.route(arguments)) console.log("no route found");
+	if(!router.route(arguments)) throw "invalid args";
 	
 	return this.x * ctx.from.x + this.y * ctx.from.y
 }
@@ -80,35 +82,38 @@ Point.prototype.cross= function(){
 	
 	router.combine(from_route);
 	
-	if(!router.route(arguments)) console.log("no route found");
+	if(!router.route(arguments)) throw "invalid args"
 	
 	return this.x * ctx.from.y - this.y * ctx.from.x;
 
 }
 
 
+Point.route = function(key){
+	return { 
+		"":function(){},
+		"obj.x.y": function(_from){
+			this[key] = _from;
+		},
+		"num, num": function(x,y){
+			this[key] = new Point(x,y);
+		},
+		"arr":function(arr){
+			this[key] = new Point(arr[0],arr[1]);
+		}
+	}
+}
 
 Point.prototype.distanceAndAngle = function(){
 	var ctx = {
 		from : new Point(0,0)
 	};	
 	var router = new ArgRouter(ctx);
-	var from_route = {
-		"":function(){},
-		"obj.x.y": function(_from){
-			this.from = _from;
-		},
-		"num, num": function(x,y){
-			this.from = new Point(x,y);
-		},
-		"arr":function(arr){
-			this.from = new Point(arr[0],arr[1]);
-		}
-	}
+	var from_route = Point.route("from")
 	
 	router.combine(from_route);
 	
-	if(!router.route(arguments)) console.log("no route found");
+	if(!router.route(arguments)) throw "invalid args";
 
 	var dx = ctx.from.x - this.x,
 		dy = ctx.from.y - this.y,
@@ -126,22 +131,11 @@ Point.prototype.angle = function(){
 		from : new Point(0,0)
 	};	
 	var router = new ArgRouter(ctx);
-	var from_route = {
-		"":function(){},
-		"obj.x.y": function(_from){
-			this.from = _from;
-		},
-		"num, num": function(x,y){
-			this.from = new Point(x,y);
-		},
-		"arr":function(arr){
-			this.from = new Point(arr[0],arr[1]);
-		}
-	}
+	var from_route = Point.route("from");
 	
 	router.combine(from_route);
 	
-	if(!router.route(arguments)) console.log("no route found");
+	if(!router.route(arguments)) throw "invalid args";
 
 
 	var dx = ctx.from.x - this.x,
@@ -154,22 +148,11 @@ Point.prototype.distance = function(){
 		from : new Point(0,0)
 	};	
 	var router = new ArgRouter(ctx);
-	var from_route = {
-		"":function(){},
-		"obj.x.y": function(_from){
-			this.from = _from;
-		},
-		"num, num": function(x,y){
-			this.from = new Point(x,y);
-		},
-		"arr":function(arr){
-			this.from = new Point(arr[0],arr[1]);
-		}
-	}
+	var from_route = Point.route("from");
 	
 	router.combine(from_route);
 	
-	if(!router.route(arguments)) console.log("no route found");
+	if(!router.route(arguments)) throw "invalid args";
 
 	var dx = ctx.from.x - this.x,
 		dy = ctx.from.y - this.y;
@@ -187,34 +170,12 @@ Point.prototype.translate = function (/*by, from*/){
 		from : this
 	};	
 	var router = new ArgRouter(ctx);
-	var by_route = {
-		"":function(){},
-		"obj.x.y": function(_by){
-			this.by = _by;
-		},
-		"num, num": function(x,y){
-			this.by = new Point(x,y);
-		},
-		"arr":function(arr){
-			this.by = new Point(arr[0],arr[1]);
-		}
-	}
-	var from_route = {
-		"":function(){},
-		"obj.x.y": function(_from){
-			this.from = _from;
-		},
-		"num, num": function(x,y){
-			this.from = new Point(x,y);
-		},
-		"arr":function(arr){
-			this.from = new Point(arr[0],arr[1]);
-		}
-	}
+	var by_route = Point.route("by")
+	var from_route = Point.route("from");
 	
 	router.combine(by_route, from_route);
 	
-	if(!router.route(arguments)) console.log("no route found");
+	if(!router.route(arguments)) throw "invalid args";
 	//console.log("by " + ctx.by)
 	//console.log("from " + ctx.from);
 	
@@ -238,20 +199,10 @@ Point.prototype.scale = function (/*amount, _from*/){
 			this.amount = _amount;
 		}
 	}
-	var from_route = {
-		"":function(){},
-		"obj.x.y": function(_from){
-			this.from = _from;
-		},
-		"num, num": function(x,y){
-			this.from = new Point(x,y);
-		},
-		"arr":function(arr){
-			this.from = new Point(arr[0],arr[1]);
-		}
-	}
+	var from_route = Point.route("from");
+	
 	router.combine(amount_route, from_route);
-	if(!router.route(arguments)) console.log("no route found");
+	if(!router.route(arguments)) throw "invalid args";
 	
 	//console.log("amount: " + ctx.amount);
 	//console.log("from: " + ctx.from);
@@ -281,21 +232,11 @@ Point.prototype.rotate = function (/*angle, _distance, _from*/){
 			this.distance = _distance;
 		}
 	}
-	var from_route = {
-		"":function(){},
-		"obj.x.y": function(_from){
-			this.from = _from;
-		},
-		"num, num": function(x,y){
-			this.from = new Point(x,y);
-		},
-		"arr":function(arr){
-			this.from = new Point(arr[0],arr[1]);
-		}
-	}
+	var from_route = Point.route("from")
+	
 	router.combine(by_route, from_route);
 	
-	if(!router.route(arguments)) console.log("no route found");	
+	if(!router.route(arguments)) throw "invalid args";	
 		
 	//console.log("angle: " + ctx.angle);
 	//console.log("distance: " + ctx.distance);
