@@ -1,18 +1,28 @@
-function Door(x1, y1, x2, y2){
-	this.a = {x:x1, y:y1};
-	this.b = {x:x2, y:y2};
-	this.shadow = null;
-	this.style = {
+function Door(){
+	var that = this instanceof Door ? this : new Door(0,0,0,0);
+	
+	if(!Door.router.route(that, arguments)) throw "Invalid arguments";
+		
+	that.shadow = null;
+	that.style = {
 		"fill":"#000",
 		"stroke":"#000000",
 		"stroke-width":2,
 		"stroke-linecap":"round"
 	};
-	this.openess = 0;
+	that.openess = 0;
 	
-	this.center = 0; // -1...1
-	this.yawness = .5;
+	that.center = 0; // -1...1
+	that.yawness = .5;
+	
+	return that;
 }
+
+Door.router = new ArgRouter();
+Door.router.combine(Point.route("a"), Point.route("b"));
+
+Door.prototype = new Segment();
+Door.prototype.constructor = Door;
 
 
 Door.prototype.intersect = function (other){

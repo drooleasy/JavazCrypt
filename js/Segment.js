@@ -1,21 +1,38 @@
-function Segment(x1, y1, x2, y2){
-	this.a = {x:x1, y:y1};
-	this.b = {x:x2, y:y2};
-	this.shadow = null;
-	this.style = {
+function Segment(){
+	
+	var that = this instanceof Segment ? this : new Segment(0,0,0,0);
+	if(!Segment.router.route(that, arguments)) throw "Invalid arguments"
+	
+	that.shadow = null;
+	that.style = {
 		"fill":"#000",
 		"stroke":"#000000",
 		"stroke-width":2,
 		"stroke-linecap":"round"
 	};
+	return that;
 }
 
+Segment.router = new ArgRouter();
+Segment.router.combine(Point.route("a"), Point.route("b"));
+// new ArgRouter(Segment.router).combine(Point.route("a"), Point.route("b"))
+
 Segment.prototype.inversed = function(){
-	return new Segment(this.b.x, this.b.y, this.a.x, this.a.y);
+	return new Segment(this.b, this.a);
 };
 
 
-Segment.prototype.closestPointFrom = function(x,y){
+Segment.prototype.closestPointFrom = function(){
+	
+	var ctx = {
+		p:null
+	};
+	
+	if(!Segment.prototype.closestPointFrom.router.route(ctx, arguments)) throw "Invalid arguments";
+	
+	
+	var x = ctx.p.x;
+	var y = ctx.p.y;
 	
 	function closest_point_on_seg(seg, circ_pos){
 		var seg_v = {x:(seg.b.x - seg.a.x), y:(seg.b.y - seg.a.y)},
@@ -40,7 +57,8 @@ Segment.prototype.closestPointFrom = function(x,y){
 	return closest_point_on_seg(this, {x:x,y:y});
 
 }
-
+Segment.prototype.closestPointFrom.router = new ArgRouter();
+Segment.prototype.closestPointFrom.router.combine(Point.route("p"))
 
 Segment.prototype.isSeenByBob = function(bob, segments){
 	
@@ -56,6 +74,9 @@ Segment.prototype.isSeenByBob = function(bob, segments){
 	return intersect_1 != null || intersect_2 != null || intersect_cone.length > 0;
 }
 
+Segment.prototype.clone(){
+	return new Segment(this.a.x, this.a.y, this.b.x, this.b.y);
+}
 
 Segment.prototype.seenSegment = function(bob, segments){
 	var sees_a = false,
@@ -72,7 +93,7 @@ Segment.prototype.seenSegment = function(bob, segments){
 
 	
 	if(sees_a && sees_b){
-		res =  [new Segment(this.a.x, this.a.y, this.b.x, this.b.y)];
+		res =  [this.clone()];
 	}else{
 
 		
