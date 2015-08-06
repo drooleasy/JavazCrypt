@@ -1,11 +1,12 @@
+
 window = window || this;
 
-function is_numeric(n){
+ArgRouter.is_numeric = function (n){
 	return !isNaN(parseFloat(n)) && isFinite(n);	
 }
 
 
-function parseSignature(signature){
+ArgRouter.parseSignature = function (signature){
 	signature = signature.replace(/\(|\)|\s+/gmi, "");
 	var typesRaw = signature.split(","),
 		types = [];
@@ -18,7 +19,7 @@ function parseSignature(signature){
 	return types;
 }
 
-function parseType(t){
+ArgRouter.parseType = function (t){
 
 	var props = t.split(/\./gmi)
 	t=props[0];
@@ -41,7 +42,7 @@ function parseType(t){
 	else if(t=="str") type_condition = function(v){return typeof v == "string"}
 	else if(t=="bool") type_condition = function(v){return typeof v == "boolean"}
 	else if(t=="obj") type_condition = function(v){return typeof v == "object"}
-	else if(t=="arr") type_condition = function(v){return is_numeric(v.length)}
+	else if(t=="arr") type_condition = function(v){return ArgRouter.is_numeric(v.length)}
 	else type_condition = function(v){return v instanceof window[t]}
 	
 	
@@ -58,7 +59,7 @@ function ArgRouter(_that){
 	this.add = function(signature, callback){
 		//console.log("adding " + signature)
 		var next = this.length();
-		signatures[next] = parseSignature(signature);
+		signatures[next] = ArgRouter.parseSignature(signature);
 		callbacks[next] = callback;
 	};
 	this.rule = function(i){
@@ -83,7 +84,7 @@ ArgRouter.prototype.testRule = function(args, rule_num){
 		if(args.length != types.length) return false;
 		for(;i<types.length;i++){
 			//console.log("checking " + types[i])
-			var check = parseType(types[i]);
+			var check = ArgRouter.parseType(types[i]);
 			if(!check(args[i])){
 				 //console.log("...failed");
 				 return false;
@@ -104,20 +105,55 @@ ArgRouter.prototype.route = function(args){
 	return false;
 }
 
-
-function test(){
-	var router = new ArgRouter(this);
-	router.add("()", function(){console.log("empty args")})
-	router.add("(num)", function(){console.log("one num")})
-	router.add("(num,num)", function(){console.log("two num")})
-	router.add("(num, obj)", function(){console.log("one num and one obj")})
-	router.add("(num,num, obj)", function(){console.log("two num and one obj")})
-	router.add("(num,num, arr)", function(){console.log("two num and one obj")})
-	
-	if(!router.route(arguments)){
-		console.log("no route found")
+ArgRouter.prototype.combine = function(/* hash... */){
+  var combs = {};
+  var combs_args = {};
+  for(var prop in arguments[0]){
+    combs[prop] = [arguments[0][prop]];
+    combs_args[prop] = [prop];
+ }
+  for(var i=1;i<arguments.length;i++){
+    var newCombs = {};
+    var newCombs_args = {};
+    for(var prop in arguments[i]){
+		  for(var old in combs){
+				var neo = old;
+				if(prop) neo+=","
+				neo += prop
+				newCombs[neo] = combs[old].concat(arguments[i][prop]);
+				newCombs_args[neo] = combs_args[old].concat([prop]);
+		  }
+    }
+    combs = newCombs;
+    combs_args = newCombs_args;
+  }
+  for(var old in combs){
+	var cb =(function(combs, key, ctx){
+		
+		var cbs = combs[key];
+		var cbs_args = combs_args[key];
+		return function(){
+			var argdex = -1;
+			for(var i=0;i<cbs_args.length;i++){
+				var signature = ArgRouter.parseSignature(cbs_args[i]);
+				var arg = [];
+				for(j=0; j<signature.length; j++){
+					argdex++;
+					arg.push(arguments[argdex])
+				}	
+				cbs[i].apply(ctx, arg);
+			}
+		}
+	})(combs, old, this.that());
+	combs[old] = cb
+  }
+  
+  
+	for(var old in combs){
+		//console.log("add " + old);
+		this.add(old, combs[old]);
 	}
+   
+  //return combs;
 }
-
-
 
