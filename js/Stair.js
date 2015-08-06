@@ -31,13 +31,17 @@ function Stair(x,y, w, h, steps, angle, up, onReach){
 	
 	
 	
-	
+	Transform.mixin(this);
 	
 	this.x = x;
 	this.y = y;
 	this.w = w;
 	this.h = h;
 	this.angle = angle ;
+
+
+
+
 	this.steps = steps
 	this.up = up;
 	
@@ -103,9 +107,10 @@ Stair.prototype.draw = function(paper){
 	var ctx = paper.getContext("2d");
 
 
-	ctx.translate(this.x,this.y);
-	ctx.rotate(this.angle);
+	//ctx.translate(this.x,this.y);
+	//ctx.rotate(this.angle);
 
+	this.transform.toLocal(ctx)
 
 	ctx.fillStyle="#999";
 	ctx.strokeStyle="#FFF";
@@ -158,8 +163,10 @@ Stair.prototype.draw = function(paper){
 
 
 
-	ctx.rotate(-this.angle);
-	ctx.translate(-this.x,-this.y);
+	//ctx.rotate(-this.angle);
+	//ctx.translate(-this.x,-this.y);
+	
+	this.transform.toGlobal(ctx);
 
 
 

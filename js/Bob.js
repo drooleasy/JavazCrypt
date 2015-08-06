@@ -1,10 +1,18 @@
+
+
+
+
 function Bob(x,y, width, angle, fov_angle, fov_distance){
+	
+	
+	Transform.mixin(this);
+	
+	
 	this.x = x || Bob.defaults.x;
 	this.y = y || Bob.defaults.y;
 	this.angle = clipAngle(deg2rad(angle)) || clipAngle(Bob.defaults.angle);
+	this.scale = 1;
 	
-	
-	this.width = width || Bob.defaults.width; // radius !!!
 	this.width = width || Bob.defaults.width; // radius !!!
 	
 	this.sightLength = fov_distance || Bob.defaults.sightLength;
@@ -14,7 +22,6 @@ function Bob(x,y, width, angle, fov_angle, fov_distance){
 	this.consciousness = Bob.defaults.consciousness;
 	
 	
-	this.scale = 1;
 	
 	this.speedForward = Bob.defaults.speedForward;
 	this.speedBackward = Bob.defaults.speedBackward;
@@ -317,10 +324,13 @@ Bob.prototype.draw = function(paper){
 	ctx.strokeStyle = this.body.style["stroke"];
 	ctx.lineWidth = this.body.style["stroke-width"];
 	
-	
+	/*
 	ctx.translate(this.x, this.y);
 	ctx.rotate(this.angle);
 	ctx.scale(this.scale, this.scale);
+	*/
+	
+	this.transform.toLocal(ctx);
 	
 	ctx.beginPath();
 	ctx.arc(0,0 , this.width, 0, PIPI);
@@ -368,10 +378,12 @@ Bob.prototype.draw = function(paper){
 	ctx.stroke();
 	ctx.fill();
 	
-	
+	/*
 	ctx.scale(1/this.scale,1/this.scale);
 	ctx.rotate(-this.angle);
 	ctx.translate(-this.x, -this.y)
+	*/
+	this.transform.toGlobal(ctx);
 };
 
 
