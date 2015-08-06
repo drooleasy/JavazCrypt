@@ -1,18 +1,44 @@
 
 
-var Transform = function(x,y,angle,scal){
-	this.x = x || 0;
-	this.y = y || 0;
-	this.angle = angle || 0;
-	this.scale = scale || 1;
-
+var Transform = function(){
+	var that = this instanceof Transform ? this : new Transform(0,0,0,1);
+	var ctx = {p:new Point()};
+	if(!Transform.router.route(ctx, arguments)) throw "Invalid arguments";
+	that.x = ctx.p.x;
+	that.y = ctx.p.y;
+	that.angle = ctx.angle;
+	that.scale = ctx.scale;
+	
+	return that
 }
 
-Transform.mixin = function(that,x,y,angle,scale){
-	that.x = x || 0;
-	that.y = y || 0;
-	that.angle = angle || 0;
-	that.scale = scale || 1;
+Transform.router = new ArgRouter();
+Transform.router.combine(
+	Point.route("p"),
+	{
+		"":function(){
+			this.angle = 0;
+			this.scale = 1;
+		},
+		"num":function(_angle){
+			
+			this.angle = _angle;
+			this.scale = 1;
+		},
+		"num, num":function(_angle, _scale){
+			
+			this.angle = _angle;
+			this.scale = _scale;
+		}
+	}
+);
+
+Transform.mixin = function(that){
+	var t = new Transform();
+	that.x = t.x;
+	that.y = t.y;
+	that.angle = t.angle;
+	that.scale = t.scale;
 	that.transform = {
 		toLocal : function(/*ctx*/){
 			Transform.prototype.toLocal.apply(that, arguments);

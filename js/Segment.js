@@ -74,7 +74,7 @@ Segment.prototype.isSeenByBob = function(bob, segments){
 	return intersect_1 != null || intersect_2 != null || intersect_cone.length > 0;
 }
 
-Segment.prototype.clone(){
+Segment.prototype.clone = function(){
 	return new Segment(this.a.x, this.a.y, this.b.x, this.b.y);
 }
 
