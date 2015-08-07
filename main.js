@@ -101,26 +101,47 @@ function draw(){
 		ctx.translate(-player.x,-player.y);	
 	}
 	
-	
+	;
 	
 	// COLLISIONS
-	player.collidesWithBob(other);
-	for(var i=0; i<all_segments.length;i++) player.collidesWithSegment(all_segments[i]);
 
-	// DOORS OPENING/CLOSING
-	for(i=0;i<all_segments.length;i++){
-		var segment = all_segments[i]; 
-		if(segment instanceof Door) {
-			var closest = segment.closestPointFrom(player.x, player.y);
-			var d = distanceBetween(closest.x, closest.y, player.x, player.y)
-			if(d<player.width*1.5){
-				segment.open();
-			}else{
-				segment.close();
+	var p_aabb = player.AABB(1);
+	
+	(function collision_tests(){
+		player.collidesWithBob(other);
+		for(var i=0; i<all_segments.length;i++){
+			var segment = all_segments[i];
+			var s_aabb = segment.AABB(1);
+			if(!p_aabb.intersects(s_aabb)) continue;	
+			player.collidesWithSegment(segment);
+		}
+	})();
+	
+	(function doors_tests(){
+	
+		// DOORS OPENING/CLOSING
+		for(i=0;i<all_segments.length;i++){
+			var segment = all_segments[i]; 
+			
+			if(segment instanceof Door) {
+				var door = segment;
+				var d_aabb = door.AABB(1.5);
+				if(!p_aabb.intersects(d_aabb)){ 
+					door.close();
+					continue;	
+				}
+				var closest = segment.closestPointFrom(player.x, player.y);
+				var d = distanceBetween(closest.x, closest.y, player.x, player.y)
+				if(d<player.width*1.5){
+					door.open();
+				}else{
+					door.close();
+				}
 			}
 		}
-	}
+	})();
 
+	
 	// GET LAST RENDERING
 	if(renderScene.lastValidBuffer){ 
 		var oldCompo = ctx.globalCompositeOperation;

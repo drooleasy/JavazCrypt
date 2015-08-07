@@ -331,3 +331,28 @@ Segment.prototype.castShadow = function castSegmentShadow(bob_or_light){
 	bob_or_light.shadow.paths.push(coneData);
 
 }
+
+
+Segment.prototype.AABB = function segmentAABB(tolerance){
+	tolerance = tolerance || 1;
+	var topLeft = {
+		x : Math.min(this.a.x, this.b.x),
+		y : Math.min(this.a.y, this.b.y),
+	}
+	var w = Math.abs(this.a.x - this.b.x)
+	var h = Math.abs(this.a.y - this.b.y)
+	
+	var w2 = w*tolerance;
+	var h2 = h*tolerance;
+	
+	topLeft.x += (w-w2)/2;
+	topLeft.y += (h-h2)/2;
+	
+	return new AABB(
+		topLeft.x,
+		topLeft.y,
+		w2,
+		h2
+	);
+	
+}

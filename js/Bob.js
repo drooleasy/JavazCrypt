@@ -585,3 +585,26 @@ Bob.prototype.say = function (paper, msg){
 	setTimeout(function shutUp(){ that.saying=false}, 3*1000)
 }
 
+
+Bob.prototype.AABB = function bobAABB(tolerance){
+	var topLeft = {
+		x : this.x - this.width,
+		y : this.y - this.width
+	}
+	var w = this.width*2;
+	var h = this.width*2;
+	
+	var w2 = w*tolerance;
+	var h2 = h*tolerance;
+	
+	topLeft.x += (w-w2)/2;
+	topLeft.y += (h-h2)/2;
+
+	return new AABB(
+		topLeft.x,
+		topLeft.y,
+		w2,
+		h2
+	);
+	
+}

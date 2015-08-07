@@ -176,12 +176,15 @@ PointCloud.prototype.AABB = function(){
 		if(p.y > bottomRight.y) bottomRight.y = p.y;	
 	}
 	
-	return {
-		x:topLeft.x,
-		y:topLeft.y,
-		w:bottomRight.x - topLeft.x,
-		h:bottomRight.y - topLeft.y
-	}
+	var w=bottomRight.x - topLeft.x,
+		h=bottomRight.y - topLeft.y;
+	
+	return new AABB(
+		topLeft.x,
+		topLeft.y,
+		w,
+		h
+	);
 }
 
 
