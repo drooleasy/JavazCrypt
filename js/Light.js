@@ -76,10 +76,18 @@ Light.prototype.draw = function(paper, segments, bobs){
 
 	this.shadow.clear();
 
+
+	var l_aabb = this.AABB();
 	// WORLD SHADOWS
 	if(segments){
 		for(i=0;i<segments.length;i++){
+
 			var segment = segments[i];
+			var s_aabb = segment.AABB();
+			if(!l_aabb.intersects(s_aabb)){ 
+				continue;	
+			}
+
 			segment.castShadow(this);
 		}
 	}
@@ -87,8 +95,9 @@ Light.prototype.draw = function(paper, segments, bobs){
 	// OTHERS SHADOWS	
 	if(bobs) for(i=0;i<bobs.length;i++){
 		var bob = bobs[i];
-		var d = distanceBetween(this.x, this.y, bob.x, bob.y);
 		if(bob.light !== this){
+			var d = distanceBetween(this.x, this.y, bob.x, bob.y);
+		
 			if(
 				d > bob.width
 			){
@@ -167,4 +176,27 @@ Light.prototype.draw = function(paper, segments, bobs){
 	pctx.globalCompositeOperation = oldCompositeOperation;
 	
 
+}
+
+Light.prototype.AABB = function lightAABB(tolerance){
+	var topLeft = {
+		x : this.x - this.sightLength,
+		y : this.y - this.sightLength
+	}
+	var w = this.sightLength*2;
+	var h = this.sightLength*2;
+	
+	var w2 = w*tolerance;
+	var h2 = h*tolerance;
+	
+	topLeft.x += (w-w2)/2;
+	topLeft.y += (h-h2)/2;
+
+	return new AABB(
+		topLeft.x,
+		topLeft.y,
+		w2,
+		h2
+	);
+	
 }
