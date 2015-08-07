@@ -1,8 +1,15 @@
 function Segment(){
 	
 	var that = this instanceof Segment ? this : new Segment(0,0,0,0);
-	if(!Segment.router.route(that, arguments)) throw "Invalid arguments"
-	
+	if(!Segment.router.route(that, arguments)){ 
+		console.log("arguments")
+		console.log(arguments)
+		console.log(Segment.router.length() +" routes")
+		console.log("possibles");
+		console.log(Segment.router.candidates(0));
+		for(var i=0; i<Segment.router.length(); i++) console.log(Segment.router.rule(i))
+		throw "Invalid arguments"
+	}
 	that.shadow = null;
 	that.style = {
 		"fill":"#000",

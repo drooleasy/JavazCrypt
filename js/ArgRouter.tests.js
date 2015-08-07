@@ -29,9 +29,9 @@ function testCombine(){
 		}
 
 		router.combine(hash1, hash2, hash3);
+		for(var i=0;i<1000;i++)router.route(ctx, arguments);
 		if(!router.route(ctx, arguments)) console.log("no route found")
 }
-
 
 
 
