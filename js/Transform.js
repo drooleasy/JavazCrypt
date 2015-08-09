@@ -1,37 +1,40 @@
+;//console.log("loading transform");
+;//console.log("this");
+;//console.log(this);
 
 
-var Transform = function(){
-	var that = this instanceof Transform ? this : new Transform(0,0,0,1);
-	var ctx = {p:new Point()};
-	if(!Transform.router.route(ctx, arguments)) throw "Invalid arguments";
-	that.x = ctx.p.x;
-	that.y = ctx.p.y;
-	that.angle = ctx.angle;
-	that.scale = ctx.scale;
-	
-	return that
-}
 
-Transform.router = new ArgRouter();
-Transform.router.combine(
-	Point.route("p"),
+var Transform = ArgRouter.decorate(
 	{
-		"":function(){
-			this.angle = 0;
-			this.scale = 1;
-		},
-		"num":function(_angle){
-			
-			this.angle = _angle;
-			this.scale = 1;
-		},
-		"num, num":function(_angle, _scale){
-			
-			this.angle = _angle;
-			this.scale = _scale;
+		p: null,
+		angle: 0,
+		scale: 1
+	},
+	ArgRouter.combine(
+		Point.route("p"),
+		{
+			"":function(){
+			},
+			"num":function(_angle){
+				
+				this.angle = _angle;
+				this.scale = 1;
+			},
+			"num, num":function(_angle, _scale){
+				
+				this.angle = _angle;
+				this.scale = _scale;
+			}
 		}
+	),
+	function Transform(ctx){
+		this.x = ctx.p.x;
+		this.y = ctx.p.y;
+		this.angle = ctx.angle;
+		this.scale = ctx.scale;
 	}
 );
+
 
 Transform.mixin = function(that){
 	var t = new Transform();

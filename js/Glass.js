@@ -1,26 +1,25 @@
-function Glass(){
-	var that = this instanceof Glass ? this : new Glass(0,0,0,0);
-	
-	if(!Glass.router.route(that, arguments)) throw "Invalid arguments";
 
+var Glass = ArgRouter.decorate(
+	{},
+	ArgRouter.combine(
+		Point.route("a"),
+		Point.route("b")
+	),
+	function Glass(ctx){
+		ctx.__merge__(this);
+		this.shadow = null;
+		this.style = {
+			"fill":"#000",
+			"stroke":"#000000",
+			"stroke-width":2,
+			"stroke-linecap":"round"
+		};
+		this.openess = 0;
+		
+		this.center = -1; // -1...1
+	}
+);
 
-	that.shadow = null;
-	that.style = {
-		"fill":"#000",
-		"stroke":"#000000",
-		"stroke-width":2,
-		"stroke-linecap":"round"
-	};
-	that.openess = 0;
-	
-	that.center = -1; // -1...1
-	
-	return that;
-}
-
-
-Glass.router = new ArgRouter();
-Glass.router.combine(Point.route("a"), Point.route("b"));
 
 
 

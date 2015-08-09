@@ -3,19 +3,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<title>Raphael JS</title>
-	</head>
-	<body style="background-color:#000">
-
-		<canvas id="paper" style="background-color:#000;width:650px;float:left;height:400px;padding:0px;margin:20px"></canvas>
-		<br><a href="javascript:lights_on=!lights_on;document.getElementById('lights').innerHTML=(lights_on? 'ON' : 'OFF');void(0)">lights : <span id="lights">OFF</span></a>
-		<br><a href="javascript:draw_sight=!draw_sight;document.getElementById('sight').innerHTML=(draw_sight? 'ON' : 'OFF');void(0)">Sight : <span id="sight">OFF</span></a>
-		<br><a href="javascript:relative=!relative;document.getElementById('relative').innerHTML=(relative? 'ON' : 'OFF');void(0)">Relative : <span id="relative">OFF</span></a>
-		<br><a href="javascript:relative_angle=!relative_angle;document.getElementById('relative_angle').innerHTML=(relative_angle? 'ON' : 'OFF');void(0)">Relative angle: <span id="relative_angle">OFF</span></a>
-		<br><a href="javascript:player.say(paper, 'Hello...?\nY a quelqu\'un ?\nHého !');void(0)">Say "hello".</span></a>
-		
-		<div id="dbg-info" style="width:200px;float:right"></div>
-		
-		<script type="text/javascript" src="lib/jquery-2.1.4.min.js" ></script>
+				<script type="text/javascript" src="lib/jquery-2.1.4.min.js" ></script>
 		
 		<script type="text/javascript" src="./js/ArgRouter.js" ></script>
 		<script type="text/javascript" src="./js/AABB.js" ></script>
@@ -42,6 +30,19 @@
 		<script type="text/javascript" src="./js/random.js" ></script>
 		<script type="text/javascript" src="./js/Slope.js" ></script>
 		<script type="text/javascript" src="./js/Platform.js" ></script>
+
+	</head>
+	<body style="background-color:#000">
+
+		<canvas id="paper" style="background-color:#000;width:650px;float:left;height:400px;padding:0px;margin:20px"></canvas>
+		<br><a href="javascript:lights_on=!lights_on;document.getElementById('lights').innerHTML=(lights_on? 'ON' : 'OFF');void(0)">lights : <span id="lights">OFF</span></a>
+		<br><a href="javascript:draw_sight=!draw_sight;document.getElementById('sight').innerHTML=(draw_sight? 'ON' : 'OFF');void(0)">Sight : <span id="sight">OFF</span></a>
+		<br><a href="javascript:relative=!relative;document.getElementById('relative').innerHTML=(relative? 'ON' : 'OFF');void(0)">Relative : <span id="relative">OFF</span></a>
+		<br><a href="javascript:relative_angle=!relative_angle;document.getElementById('relative_angle').innerHTML=(relative_angle? 'ON' : 'OFF');void(0)">Relative angle: <span id="relative_angle">OFF</span></a>
+		<br><a href="javascript:player.say(paper, 'Hello...?\nY a quelqu\'un ?\nHého !');void(0)">Say "hello".</span></a>
+		
+		<div id="dbg-info" style="width:200px;float:right"></div>
+		
 		<script type="text/javascript" src="main.js" ></script>
 	
 	</body>

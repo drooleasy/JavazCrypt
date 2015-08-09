@@ -3,7 +3,7 @@ function AABB(x, y, w, h){
 	this.y = y;
 	this.w = w;
 	this.h = h;
-}
+};
 
 AABB.prototype.intersects = function(other){
 	if(!other instanceof AABB) throw "argument is not an AABB";
@@ -15,4 +15,6 @@ AABB.prototype.intersects = function(other){
 	);
 	return !dontIntersects;  
 
-}
+};
+
+//console.log("loaded AABB");

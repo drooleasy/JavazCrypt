@@ -1,20 +1,39 @@
-window.onError = function(){debugger;}
+;//console.log("loading point");
+var Point = ArgRouter.decorate(
+	{},
+	"", function(){
+		this.x = 0; 
+		this.y = 0;
+	},
+	"arr", function(arr){
+		this.x = arr[0]; 
+		this.y = arr[1];
+	},
+	"obj.x.y", function(point){
+		this.x = point.x; 
+		this.y = point.y;
+	},
+	"num, num", function(arr){
+		this.x = parseFloat(arguments[0] || 0);
+		this.y = parseFloat(arguments[1] || 0);
+	},
+	function Point(ctx){
+		//console.log("ctx");
+		//console.log(ctx);
+		ctx.__merge__(this);
+		
+	}
+);
 
-function Point(){
-	var that = this instanceof Point ? this : new Point(0,0);	
-	
-	var router = Point.router;
-	if(!router.route(that, arguments)) throw "invalid args";
-	
-	return that;
-
-}
+//console.log(!!Point);
 
 Point.route = function(key){
 	return { 
-		"":function(){},
-		"obj.x.y": function(_from){
-			this[key] = _from.clone();
+		"":function(){
+			this[key] = new Point(0,0);
+		},
+		"obj.x.y": function(pseudopoint){
+			this[key] = pseudopoint.clone();
 		},
 		"num, num": function(x,y){
 			this[key] = new Point(parseFloat(x),parseFloat(y));
@@ -25,21 +44,6 @@ Point.route = function(key){
 	}
 }
 
-// POINT ROUTES
-Point.router = new ArgRouter();
-Point.router.add("", function(){
-	Point.call(this, 0, 0);
-});
-Point.router.add("arr", function(arr){
-	Point.call(this, arr[0], arr[1]);
-});
-Point.router.add("obj.x.y", function(point){
-	Point.call(this, point.x, point.y);
-});
-Point.router.add("num, num", function(arr){
-	this.x = parseFloat(arguments[0] || 0);
-	this.y = parseFloat(arguments[1] || 0);
-});
 
 
 Point.prototype.toString = function(){
@@ -60,179 +64,149 @@ Point.prototype.pushOn = function(arr){
 	return this;
 }
 
-Point.prototype.dot= function(){
-	var ctx = {
-		from : null
-	};	
-	
-	if(!Point.prototype.dot.router.route(ctx, arguments)) throw "invalid args";
-	
-	return this.x * ctx.from.x + this.y * ctx.from.y
-}
-// POINT ROUTES
-Point.prototype.dot.router = new ArgRouter();
-Point.prototype.dot.router.combine(Point.route("from"));
-
-
-Point.prototype.cross= function(){
-	var ctx = {
-		from : null
-	};	
-	
-	if(!Point.prototype.cross.router.route(ctx, arguments)) throw "invalid args"
-	
-	return this.x * ctx.from.y - this.y * ctx.from.x;
-
-}
-Point.prototype.cross.router = new ArgRouter();
-Point.prototype.cross.router.combine(Point.route("from"));
-
-
-
-Point.prototype.distanceAndAngle = function(){
-	var ctx = {
+Point.prototype.dot = ArgRouter.decorate(
+	{
 		from : new Point(0,0)
-	};
-	if(!Point.prototype.distanceAndAngle.router.route(ctx, arguments)) throw "invalid args";
+	},
+	ArgRouter.combine(Point.route("from")),
+	function dot(ctx){
+		return this.x * ctx.from.x + this.y * ctx.from.y
+	}
+);
 
-	var dx = ctx.from.x - this.x,
-		dy = ctx.from.y - this.y,
-		distance = Math.sqrt(dx*dx+dy*dy),
-		angle = Point.clipAngle(Math.atan2(dy,dx));
-	return {
-		distance : distance,
-		angle : angle
-	};
-
-}
-	
-Point.prototype.distanceAndAngle.router = new ArgRouter();
-Point.prototype.distanceAndAngle.router.combine(Point.route("from"));
-	
-
-Point.prototype.angle = function(){
-		var ctx = {
+Point.prototype.cross = ArgRouter.decorate(
+	{
 		from : new Point(0,0)
-	};	
-	
-	if(!Point.prototype.angle.router.route(ctx, arguments)) throw "invalid args";
+	},
+	ArgRouter.combine(Point.route("from")),
+	function cross(ctx){
+		return this.x * ctx.from.y - this.y * ctx.from.x;
+
+	}
+);
 
 
-	var dx = ctx.from.x - this.x,
-		dy = ctx.from.y - this.y;
-	return Point.clipAngle(Math.atan2(dy,dx));
-
-}
-
-Point.prototype.angle.router = new ArgRouter();
-Point.prototype.angle.router.combine(Point.route("from"));
-
-
-Point.prototype.distance = function(){
-	var ctx = {
+Point.prototype.distanceAndAngle =  ArgRouter.decorate(
+	{
 		from : new Point(0,0)
-	};	
-	
-	if(!Point.prototype.distance.router.route(ctx, arguments)) throw "invalid args";
+	},
+	ArgRouter.combine(Point.route("from")),
+	function distanceAndAngle(ctx){
+		var dx = ctx.from.x - this.x,
+			dy = ctx.from.y - this.y,
+			distance = Math.sqrt(dx*dx+dy*dy),
+			angle = Point.clipAngle(Math.atan2(dy,dx));
+		return {
+			distance : distance,
+			angle : angle
+		};
+	}
+);
 
-	var dx = ctx.from.x - this.x,
-		dy = ctx.from.y - this.y;
-	return Math.sqrt(dx*dx+dy*dy);
+Point.prototype.angle =  ArgRouter.decorate(
+	{
+		from : new Point(0,0)
+	},
+	ArgRouter.combine(Point.route("from")),
+	function angle(ctx){
+		var dx = ctx.from.x - this.x,
+			dy = ctx.from.y - this.y;
+		return Point.clipAngle(Math.atan2(dy,dx));
 
-}
-Point.prototype.distance.router = new ArgRouter();
-Point.prototype.distance.router.combine(Point.route("from"));
+	}
+);
+
+Point.prototype.distance = ArgRouter.decorate(
+	{
+		from : new Point(0,0)
+	},
+	ArgRouter.combine(Point.route("from")),
+	function distance(ctx){		
+		var dx = ctx.from.x - this.x,
+			dy = ctx.from.y - this.y;
+		return Math.sqrt(dx*dx+dy*dy);
+
+	}
+);
 
 
 
 
 
 
-
-Point.prototype.translate = function (/*by, from*/){
-	var ctx = {
+Point.prototype.translate = ArgRouter.decorate(
+	{
 		by : new Point(0,0),
 		from : this
-	};	
-	
-	
-	if(!Point.prototype.translate.router.route(ctx, arguments)) throw "invalid args";
-	//console.log("by " + ctx.by)
-	//console.log("from " + ctx.from);
-	
-	this.x = ctx.from.x + ctx.by.x;
-	this.y = ctx.from.y + ctx.by.y;
-	
-	return this;
-}
-Point.prototype.translate.router = new ArgRouter();
-Point.prototype.translate.router.combine(Point.route("by"), Point.route("from"));
+	},
+	ArgRouter.combine(
+		Point.route("by"), 
+		Point.route("from")
+	),
+	function translate (ctx){	
+		this.x = ctx.from.x + ctx.by.x;
+		this.y = ctx.from.y + ctx.by.y;
+		return this;
+	}
+);
 	
 
 
-Point.prototype.scale = function (/*amount, _from*/){
-	var ctx = {
+Point.prototype.scale = ArgRouter.decorate(
+	{
 		amount : 1,
 		from : new Point(0,0)
-	};
-	
-	if(!Point.prototype.scale.router.route(ctx, arguments)) throw "invalid args";
-	
-	//console.log("amount: " + ctx.amount);
-	//console.log("from: " + ctx.from);
-	
-	var metrics = this.distanceAndAngle(ctx.from.x, ctx.from.y);
-	
-	this.x = ctx.from.x + Math.cos(metrics.angle) * metrics.distance * ctx.amount;
-	this.y = ctx.from.y + Math.cos(metrics.angle) * metrics.distance * ctx.amount;
-	return this;
-}
-Point.prototype.scale.router = new ArgRouter();
-Point.prototype.scale.router.combine(
-	{	
-		"":function(){},
-		"num": function(_amount){
-			this.amount = _amount;
-		} 
-	}, 
-	Point.route("from")
-);
-	
-
-
-Point.prototype.rotate = function (/*angle, _distance, _from*/){	
-	
-	var ctx = {
-		angle : 0,
-		distance : this.distance(),
-		from : new Point(0,0)
-	};	
-
-	if(!Point.prototype.rotate.router.route(ctx, arguments)) throw "invalid args";	
+	},
+	ArgRouter.combine(
+		{	
+			"":function(){},
+			"num": function(_amount){
+				this.amount = _amount;
+			} 
+		}, 
+		Point.route("from")
+	),
+	function  scale(ctx){
+			
+		var metrics = this.distanceAndAngle(ctx.from.x, ctx.from.y);
 		
-	//console.log("angle: " + ctx.angle);
-	//console.log("distance: " + ctx.distance);
-	//console.log("from: " + ctx.from);
-	
-	this.x = ctx.from.x + Math.cos(ctx.angle) * ctx.distance;
-	this.y = ctx.from.x + Math.sin(ctx.angle) * ctx.distance;
-	
-	return this;
-}
+		this.x = ctx.from.x + Math.cos(metrics.angle) * metrics.distance * ctx.amount;
+		this.y = ctx.from.y + Math.cos(metrics.angle) * metrics.distance * ctx.amount;
+		return this;
+	}
+);	
 
-Point.prototype.rotate.router = new ArgRouter();
-Point.prototype.rotate.router.combine(
+
+Point.prototype.rotate = ArgRouter.decorate(
 	{
-		"num": function(_angle){
-			this.angle = _angle;
+		angle : null,
+		distance : null,
+		from : new Point(0,0)
+	},
+	ArgRouter.combine(
+		{
+			"": function(){
+				this.angle = 0;
+				this.distance = this.__this__.distance();
+			},
+			"num": function(_angle){
+				this.angle = _angle;
+				this.distance = this.__this__.distance();
+			},
+			"num, num": function(_angle, _distance){
+				this.angle = _angle;
+				this.distance = _distance;
+			}
 		},
-		"num, num": function(_angle, _distance){
-			this.angle = _angle;
-			this.distance = _distance;
-		}
-	}, 
-	Point.route("from")
+		Point.route("from")
+	), 
+	function rotate(ctx){	
+		this.x = ctx.from.x + Math.cos(ctx.angle) * ctx.distance;
+		this.y = ctx.from.x + Math.sin(ctx.angle) * ctx.distance;	
+		return this;
+	}
 );
+
 	
 
 

@@ -1,71 +1,69 @@
-function Segment(){
-	
-	var that = this instanceof Segment ? this : new Segment(0,0,0,0);
-	if(!Segment.router.route(that, arguments)){ 
-		console.log("arguments")
-		console.log(arguments)
-		console.log(Segment.router.length() +" routes")
-		console.log("possibles");
-		console.log(Segment.router.candidates(0));
-		for(var i=0; i<Segment.router.length(); i++) console.log(Segment.router.rule(i))
-		throw "Invalid arguments"
+var Segment = ArgRouter.decorate(
+	{},
+	ArgRouter.combine(
+		Point.route("a"), 
+		Point.route("b")
+	),
+	function Segment(ctx){
+		ctx.__merge__(this);
+		this.shadow = null;
+		this.style = {
+			"fill":"#000",
+			"stroke":"#000000",
+			"stroke-width":2,
+			"stroke-linecap":"round"
+		};
 	}
-	that.shadow = null;
-	that.style = {
-		"fill":"#000",
-		"stroke":"#000000",
-		"stroke-width":2,
-		"stroke-linecap":"round"
-	};
-	return that;
-}
-
-Segment.router = new ArgRouter();
-Segment.router.combine(Point.route("a"), Point.route("b"));
-// new ArgRouter(Segment.router).combine(Point.route("a"), Point.route("b"))
+);
 
 Segment.prototype.inversed = function(){
 	return new Segment(this.b, this.a);
 };
 
 
-Segment.prototype.closestPointFrom = function(){
-	
-	var ctx = {
-		p:null
-	};
-	
-	if(!Segment.prototype.closestPointFrom.router.route(ctx, arguments)) throw "Invalid arguments";
-	
-	
-	var x = ctx.p.x;
-	var y = ctx.p.y;
-	
-	function closest_point_on_seg(seg, circ_pos){
-		var seg_v = {x:(seg.b.x - seg.a.x), y:(seg.b.y - seg.a.y)},
-			pt_v = {x:(circ_pos.x - seg.a.x), y:(circ_pos.y - seg.a.y)},
-			seg_v_len = Math.sqrt(seg_v.x*seg_v.x + seg_v.y*seg_v.y);
-		if(seg_v_len < 0){
-			throw new Error("Invalid segment length");
-		}
-		var seg_v_unit = {x:(seg_v.x / seg_v_len), y:(seg_v.y / seg_v_len)},
-			proj = pt_v.x * seg_v_unit.x + pt_v.y * seg_v_unit.y; // dot product
-		if(proj <= 0){
-			return {x: seg.a.x, y:seg.a.y};
-		}
-		if(proj >= seg_v_len){
-			return {x: seg.b.x, y:seg.b.y};
-		}
-		var proj_v = {x:seg_v_unit.x * proj, y:seg_v_unit.y * proj},
-			closest = {x:proj_v.x + seg.a.x, y:proj_v.y + seg.a.y};
-		return closest
-	}
-
-	return closest_point_on_seg(this, {x:x,y:y});
-
+Segment.prototype.clone = function(){
+	return new Segment(this.a, this.b);
 }
-Segment.prototype.closestPointFrom.router = new ArgRouter();
-Segment.prototype.closestPointFrom.router.combine(Point.route("p"))
+
+Segment.prototype.toString = function toString(){
+	return "Segment("+ this.a.x + ", " +this.a.y + ", " + this.b.x + ", " +this.b.y +")";
+}
+
+Segment.prototype.closestPointFrom = ArgRouter.decorate(
+	{
+		p:null
+	},	
+	ArgRouter.combine(
+		Point.route("p")
+	),
+	function(ctx){	
+		var x = ctx.p.x;
+		var y = ctx.p.y;
+		
+		function closest_point_on_seg(seg, circ_pos){
+			var seg_v = {x:(seg.b.x - seg.a.x), y:(seg.b.y - seg.a.y)},
+				pt_v = {x:(circ_pos.x - seg.a.x), y:(circ_pos.y - seg.a.y)},
+				seg_v_len = Math.sqrt(seg_v.x*seg_v.x + seg_v.y*seg_v.y);
+			if(seg_v_len < 0){
+				throw new Error("Invalid segment length");
+			}
+			var seg_v_unit = {x:(seg_v.x / seg_v_len), y:(seg_v.y / seg_v_len)},
+				proj = pt_v.x * seg_v_unit.x + pt_v.y * seg_v_unit.y; // dot product
+			if(proj <= 0){
+				return {x: seg.a.x, y:seg.a.y};
+			}
+			if(proj >= seg_v_len){
+				return {x: seg.b.x, y:seg.b.y};
+			}
+			var proj_v = {x:seg_v_unit.x * proj, y:seg_v_unit.y * proj},
+				closest = {x:proj_v.x + seg.a.x, y:proj_v.y + seg.a.y};
+			return closest
+		}
+
+		return closest_point_on_seg(this, {x:x,y:y});
+
+	}
+);
 
 Segment.prototype.isSeenByBob = function(bob, segments){
 	
@@ -276,10 +274,6 @@ Segment.prototype.castShadow = function castSegmentShadow(bob_or_light){
 
 	var distance_a = metrics_a.distance,
 		distance_b = metrics_b.distance;
-
-	if(distance_a > bob_or_light.sightLength && distance_b > bob_or_light.sightLength){
-		return;
-	};
 
 	angle_a = clipAnglePositive(angle_a);
 	angle_b = clipAnglePositive(angle_b);

@@ -1,25 +1,25 @@
-function Door(){
-	var that = this instanceof Door ? this : new Door(0,0,0,0);
-	
-	if(!Door.router.route(that, arguments)) throw "Invalid arguments";
+var Door = ArgRouter.decorate(
+	{},
+	ArgRouter.combine(
+		Point.route("a"), 
+		Point.route("b")
+	),
+	function Door(ctx){
+		ctx.__merge__(this);
+		this.shadow = null;
+		this.style = {
+			"fill":"#000",
+			"stroke":"#000000",
+			"stroke-width":2,
+			"stroke-linecap":"round"
+		};
+		this.openess = 0;
 		
-	that.shadow = null;
-	that.style = {
-		"fill":"#000",
-		"stroke":"#000000",
-		"stroke-width":2,
-		"stroke-linecap":"round"
-	};
-	that.openess = 0;
-	
-	that.center = 0; // -1...1
-	that.yawness = .5;
-	
-	return that;
-}
-
-Door.router = new ArgRouter();
-Door.router.combine(Point.route("a"), Point.route("b"));
+		this.center = 0; // -1...1
+		this.yawness = .5;
+		
+	}
+);
 
 Door.prototype = new Segment();
 Door.prototype.constructor = Door;
