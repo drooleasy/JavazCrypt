@@ -6,6 +6,7 @@ var paper_height = 400;
 var paper = document.getElementById("paper");
 paper.width = paper_width;			
 paper.height = paper_height;
+
 var ctx = paper.getContext("2d");
 
 			
@@ -95,6 +96,7 @@ function draw(){
 	
 	ctx.save();
 
+	// TRANSFORMS
 	if(relative){
 		ctx.translate(paper.width/2,paper.height/2);	
 		if(relative_angle) ctx.rotate(-player.angle-Math.PI/2);
@@ -104,10 +106,8 @@ function draw(){
 	;
 	
 	// COLLISIONS
-
 	var p_aabb = player.AABB(1);
-	
-	(function collision_tests(){
+	(function collision_tests(){ // iife for profiling segmentation purpose
 		player.collidesWithBob(other);
 		for(var i=0; i<all_segments.length;i++){
 			var segment = all_segments[i];
@@ -117,7 +117,7 @@ function draw(){
 		}
 	})();
 	
-	(function doors_tests(){
+	(function doors_tests(){ // iife for profiling segmentation purpose
 	
 		// DOORS OPENING/CLOSING
 		for(i=0;i<all_segments.length;i++){
@@ -126,13 +126,14 @@ function draw(){
 			if(segment instanceof Door) {
 				var door = segment;
 				var d_aabb = door.AABB(1.5);
-				if(!p_aabb.intersects(d_aabb)){ 
-					door.close();
-					continue;	
-				}
+				// problem with segment AABB when vertical
+				//if(!p_aabb.intersects(d_aabb)){ 
+				//	door.close();
+				//	continue;	
+				//}
 				var closest = segment.closestPointFrom(player.x, player.y);
 				var d = distanceBetween(closest.x, closest.y, player.x, player.y)
-				if(d<player.width*1.5){
+				if(d<player.width*2*1.2){
 					door.open();
 				}else{
 					door.close();

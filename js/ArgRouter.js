@@ -1,4 +1,8 @@
-GlOBAL=this;
+;var ArgRouter = function(GLOBAL){ 
+	// GLOBAL is the global scope, 
+	// used only for testing types based on the string of the cstor name with something like : 
+	// 		foo instanceof GLOBAL["Foo"]
+
 	
 	
 	
@@ -212,7 +216,7 @@ GlOBAL=this;
 	  
 	  
 		for(var old in combs){
-			////console.log("add " + old);
+			//console.log("add " + old);
 			//this.add(old, combs[old]);
 		}
 	   
@@ -260,7 +264,6 @@ GlOBAL=this;
 
 
 	ArgRouter.decorate = function(/* ctx, (sig, cb | {})+, fun_to_decorate */){
-		//console.log("call decorate")
 		var router = new ArgRouter();
 		var ctx = arguments[0] || {};
 		ctx.__merge__ = function(target){
@@ -269,19 +272,6 @@ GlOBAL=this;
 			}
 			return target;
 		}
-		
-		
-		var fun = function(){};
-		var fun_pos = arguments.length-1;
-		if( typeof arguments[fun_pos] == "function"){
-			fun = arguments[fun_pos];
-		}else if(typeof arguments[--fun_pos] == "function"){
-			fun = arguments[fun_pos];
-			
-		}else{
-			throw new Error("ArgRouter: function to decorate not found")
-		}
-		
 		for(var i=1; i<arguments.length-1; i++){
 			var arg = arguments[i];
 			if(typeof arg == "string"){
@@ -298,6 +288,7 @@ GlOBAL=this;
 				throw "not a route";
 			}
 		}
+		var fun = arguments[i] || function(){};
 		
 		// from http://stackoverflow.com/questions/5871040/how-to-dynamically-set-a-function-object-name-in-javascript-as-it-is-displayed-i
 		/**
@@ -311,18 +302,13 @@ GlOBAL=this;
 				" () { return call(this, arguments) }; };")())(Function.apply.bind(fn));
 		};   
 		
-		
-		//console.log("arg router decorate");
-		//console.log("ctx");
-		//console.log(ctx);
-		
 		var decorated = function(){
 			ctx.__this__ = this;
 			if(!router.route.call(router, ctx, arguments)) throw "No route found";
 			return fun.call(this, ctx);
 		}
 		if(fun.name){ 
-			//console.log("rename decorated to " + fun.name)
+//			console.log("rename decorated to " + fun.name)
 			decorated = renameFunction(fun.name, decorated);
 		}
 		decorated.prototype.constructor = fun;
@@ -333,3 +319,5 @@ GlOBAL=this;
 	}
 	
 	
+	return ArgRouter;
+}(this);

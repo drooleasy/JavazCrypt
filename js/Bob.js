@@ -110,7 +110,7 @@ Bob.defaults = {
 	
 	speedForward : 2,
 	speedBackward : 1,
-	speedTurn : deg2rad(3), 
+	speedTurn : deg2rad(5), 
 	
 	body : {
 		style : {
