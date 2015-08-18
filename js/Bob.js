@@ -388,16 +388,33 @@ Bob.prototype.draw = function(paper){
 
 
 
-Bob.prototype.speak = function(paper){
+Bob.prototype.speak = function(paper, player, relative_angle){
 	if(this.saying){
+			// TRANSFORMS
+//		if(relative){
+//			ctx.translate(paper.width/2,paper.height/2);	
+//			
+			ctx.translate(this.x,this.y);
+			if(relative_angle) ctx.rotate(player.angle+Math.PI/2);	
+//		}	
+
 		var msg = this.saying;
-		Bubble.draw(paper, msg, this.x, this.y, deg2rad(-45), this.width+6);
+		Bubble.draw(paper, msg, deg2rad(-45), this.width+6);
+		
+//		if(relative){	
+			if(relative_angle) ctx.rotate(-player.angle-Math.PI/2);
+			
+			ctx.translate(-this.x,-this.y);
+//			ctx.translate(paper.width/2,paper.height/2);	
+
+//		}	
+
 	}
 }
 
 Bob.prototype.collidesWithBob = function(bob){
 	var metrics = distanceAndAngle(this.x, this.y, bob.x, bob.y),
-		distance_min = this.width + bob.width;
+		distance_min = this.width + this.body.style["stroke-width"] + bob.width + bob.body.style["stroke-width"];
 	if(metrics.distance < distance_min ){ // collides
 			this.x = bob.x - Math.cos(metrics.angle) * distance_min; 
 			this.y = bob.y - Math.sin(metrics.angle) * distance_min; 
@@ -414,16 +431,17 @@ Bob.prototype.collidesWithSegment = function(segment){
 	}else{
 		
 		function checkCircle(that, x,y,r, segment){
-			
-			var closest = segment.closestPointFrom(that.x+x, that.y+y);
-			var metrics = distanceAndAngle(that.x+x, that.y+y, closest.x, closest.y);
-			if(metrics.distance < r){// collides
-				that.x = closest.x - Math.cos(metrics.angle) * r -x; 
-				that.y = closest.y - Math.sin(metrics.angle) * r -y; 
+			var thickness = segment.style["stroke-width"];
+			var closest = segment.closestPointFrom(that.x, that.y);
+			var metrics = distanceAndAngle(that.x, that.y, closest.x, closest.y);
+			var min = r + thickness;
+			if(metrics.distance  < min ){// collides
+				that.x = closest.x - Math.cos(metrics.angle) * min; 
+				that.y = closest.y - Math.sin(metrics.angle) * min; 
 			}
 		}
 		
-		checkCircle(this, 0,0,this.width, segment);
+		checkCircle(this, 0,0,this.width + this.body.style["stroke-width"], segment);
 /*		checkCircle(this, 
 			Math.cos(this.angle+this.nose.angle) * this.nose.offset,
 			Math.sin(this.angle+this.nose.angle) * this.nose.offset,

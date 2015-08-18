@@ -101,47 +101,7 @@ function draw(){
 		ctx.translate(paper.width/2,paper.height/2);	
 		if(relative_angle) ctx.rotate(-player.angle-Math.PI/2);
 		ctx.translate(-player.x,-player.y);	
-	}
-	
-	;
-	
-	// COLLISIONS
-	var p_aabb = player.AABB(1);
-	(function collision_tests(){ // iife for profiling segmentation purpose
-		player.collidesWithBob(other);
-		for(var i=0; i<all_segments.length;i++){
-			var segment = all_segments[i];
-			var s_aabb = segment.AABB(1);
-			if(!p_aabb.intersects(s_aabb)) continue;	
-			player.collidesWithSegment(segment);
-		}
-	})();
-	
-	(function doors_tests(){ // iife for profiling segmentation purpose
-	
-		// DOORS OPENING/CLOSING
-		for(i=0;i<all_segments.length;i++){
-			var segment = all_segments[i]; 
-			
-			if(segment instanceof Door) {
-				var door = segment;
-				var d_aabb = door.AABB(1.5);
-				// problem with segment AABB when vertical
-				//if(!p_aabb.intersects(d_aabb)){ 
-				//	door.close();
-				//	continue;	
-				//}
-				var closest = segment.closestPointFrom(player.x, player.y);
-				var d = distanceBetween(closest.x, closest.y, player.x, player.y)
-				if(d<player.width*2*1.2){
-					door.open();
-				}else{
-					door.close();
-				}
-			}
-		}
-	})();
-
+	}	
 	
 	// GET LAST RENDERING
 	if(renderScene.lastValidBuffer){ 
@@ -153,7 +113,7 @@ function draw(){
 
 	// DRAWS FOV	
 	if(draw_sight) player.drawSight(paper, all_segments, other);
-		
+	
 	// DRAWS OTHERS IF PERCEIVED
 	var sees_bob = player.sees(other, all_segments);
 	if(!lights_on || !draw_sight || sees_bob || player.feels(other)){
@@ -161,7 +121,7 @@ function draw(){
 	}
 	
 	// PLAYERS REACTION
-	player.speak(paper);
+	player.speak(paper, player, relative_angle);
 	
 	// OTHER ATTENTION
 	if(player.saying || other.feels(player)){
@@ -178,11 +138,18 @@ function draw(){
 	}else{
 		old_sees_player = false;
 	}
-	other.speak(paper);
+	other.speak(paper, player, relative_angle);
 	
 	// DRAWS PLAYER
 	player.draw(paper);
-	
+
+	// REVERSE TRANSFORMS
+	//if(relative){
+	//	ctx.translate(player.x,player.y);
+	//	if(relative_angle) ctx.rotate(player.angle-Math.PI/2);
+	//	ctx.translate(-paper.width/2,-paper.height/2);	
+			
+	//}	
 	ctx.restore();
 	
 	// REQUEST NEXT FRAME
@@ -191,4 +158,4 @@ function draw(){
 
 renderScene(paper, path, boulder, bobs, segments);
 window.requestAnimationFrame(draw);
-keyboardControl(player);
+keyboardControl(player, segments, other);

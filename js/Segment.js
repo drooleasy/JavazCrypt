@@ -342,11 +342,13 @@ Segment.prototype.AABB = function segmentAABB(tolerance){
 	topLeft.x += (w-w2)/2;
 	topLeft.y += (h-h2)/2;
 	
+	var thickness = this.style["line-width"];
+	
 	return new AABB(
-		topLeft.x,
-		topLeft.y,
-		w2,
-		h2
+		topLeft.x - thickness,
+		topLeft.y - thickness,
+		Math.max(w2, thickness),
+		Math.max(h2, thickness)
 	);
 	
 }

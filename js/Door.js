@@ -17,6 +17,7 @@ var Door = ArgRouter.decorate(
 		
 		this.center = 0; // -1...1
 		this.yawness = .5;
+		this.detectionDistance = 15;
 		
 	}
 );

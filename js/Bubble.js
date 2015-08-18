@@ -12,9 +12,9 @@ Bubble.style = {
 	minAnchorLength : 5
 }
 
-Bubble.draw = function (paper, msg, x, y, angle, offset) {
-	var anchor_start_x = x + Math.cos(angle) * offset,
-		anchor_start_y = y + Math.sin(angle) * offset;
+Bubble.draw = function (paper, msg, angle, offset) {
+	var anchor_start_x = Math.cos(angle) * offset,
+		anchor_start_y = Math.sin(angle) * offset;
 
 	var lines = msg.split("\n");
 	var longestLine = "";
