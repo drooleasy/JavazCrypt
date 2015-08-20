@@ -1,6 +1,6 @@
-function renderScene(paper, path, boulder, bobs, segments){
+function renderScene(paper, world){
 
-	var all_segments = segments.concat(path.segments).concat(boulder.segments);
+	var all_segments = world.allSegments();
 
 	var slowBuffer = document.createElement("canvas");
 	slowBuffer.width = paper.width;
@@ -29,7 +29,7 @@ function renderScene(paper, path, boulder, bobs, segments){
 		
 		var renderedLights = [],
 			i=0,
-			l=lights.length,
+			l=world.lights.length,
 			n=l+1;
 		
 		
@@ -51,12 +51,12 @@ function renderScene(paper, path, boulder, bobs, segments){
 			if(!nofill) ctx.fill();
 			ctx.stroke();
 
-			for(var i=0; i< segments.length;i++){
+			for(var i=0; i< all_segments.length;i++){
 				ctx.strokeStyle = "#cfc";
-				if(segments[i] instanceof Glass) ctx.strokeStyle="rgba(255,255,255, 0.3)" 
-				if(segments[i] instanceof Door) ctx.strokeStyle="#cc6" 
+				if(all_segments[i] instanceof Glass) ctx.strokeStyle="rgba(255,255,255, 0.3)" 
+				if(all_segments[i] instanceof Door) ctx.strokeStyle="#cc6" 
 				ctx.beginPath();
-				segments[i].draw(worldRenderer);
+				all_segments[i].draw(worldRenderer);
 				ctx.stroke();
 			}
 		}
@@ -98,14 +98,14 @@ function renderScene(paper, path, boulder, bobs, segments){
 			setTimeout(
 				(function(a_light){
 					return function(){
-						a_light.draw(slowBuffer, all_segments, bobs);
+						a_light.draw(slowBuffer, all_segments, world.bobs);
 						n--;
 						if(n==0){
 							conclude();
 						}
 						
 					};
-				})(lights[i]),
+				})(world.lights[i]),
 			0)
 		}
 	}

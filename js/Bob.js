@@ -249,9 +249,11 @@ Bob.prototype.drawFOV = function(ctx){
 	ctx.closePath();
 }		
 
-Bob.prototype.drawSight = function(paper, segments, bob){		
+Bob.prototype.drawSight = function(paper, world){		
 	var ctx = paper.getContext('2d');
 
+	var segments = world.allSegments();
+	
 
 	var oldCompositeOpration = ctx.globalCompositeOperation;
 
@@ -267,12 +269,16 @@ Bob.prototype.drawSight = function(paper, segments, bob){
 		seenSegments[i].castShadow(this);
 	}
 	
-	// OTHERS SHADOWS
-	var sees_bob = bob && this.sees(bob, segments);
-	if(sees_bob){
-		bob.castShadow(this);
+	for(var i=0; i<world.bobs.length;i++){
+		var bob = world.bobs[i];
+		if(bob !== this){ 
+			// OTHERS SHADOWS
+			var sees_bob = bob && this.sees(bob, world.allSegments());
+			if(sees_bob){
+				bob.castShadow(this);
+			}
+		}
 	}
-	
 
 
 	ctx.globalCompositeOperation = "source-over";
