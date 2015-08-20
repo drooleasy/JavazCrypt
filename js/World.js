@@ -15,3 +15,4 @@ World.prototype.allSegments = function allSegments(){
 		for(var i=0;i<this.boulders.length;i++) res = res.concat(this.boulders[i].segments);
 		return res;
 }
+ 
