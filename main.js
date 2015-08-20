@@ -1,6 +1,6 @@
 var paper_width = 650;
 var paper_height = 400;
-			
+ 			
 			
 var paper = document.getElementById("paper");
 paper.width = paper_width;			
