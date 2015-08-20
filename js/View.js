@@ -6,7 +6,7 @@ function View(width, height, world, paper){
 	this.height = height;
 	this.transform = new Transform();
 	Transform.mixin(this);
-	this.lights_on = true;
+	this.lights_on = false;
 	this.relative = false;
 	this.relative_angle = false;
 	this.draw_sight = false;
@@ -29,8 +29,8 @@ View.prototype.draw = function draw(){
 	ctx.fillStyle = "#000";
 	ctx.fillRect(0, 0, paper_width, paper_height);
 	
-	player.shadow.clear();	
-	player.tints.clear();	
+	world.player.shadow.clear();	
+	world.player.tints.clear();	
 	
 	ctx.save();
 
