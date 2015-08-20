@@ -1,6 +1,6 @@
-function keyboardControl(item, segments, other){
+function keyboardControl(world){
 	
-	var controlled = item;
+	var controlled = world.player;
 	
 	var keysCB = {
 		"37" : "turnLeft",
@@ -24,11 +24,14 @@ function keyboardControl(item, segments, other){
 			if(keys[parseInt(key)]) controlled[keysCB[key]]();	
 		}
 		
-		var player = item;
+		var player = controlled;
 		// COLLISIONS
 		var p_aabb = player.AABB(1);
 		(function collision_tests(){ // iife for profiling segmentation purpose
-			player.collidesWithBob(other);
+			for(var i=0;i<world.bobs.length;i++){
+				if(world.bobs[i] !== world.player) world.player.collidesWithBob(world.bobs[i]);
+			}
+			var all_segments = world.allSegments();
 			for(var i=0; i<all_segments.length;i++){
 				var segment = all_segments[i];
 				var s_aabb = segment.AABB(1);
@@ -36,6 +39,8 @@ function keyboardControl(item, segments, other){
 				player.collidesWithSegment(segment);
 			}
 		})();
+		
+		var all_segments= world.allSegments();
 		
 		(function doors_tests(){ // iife for profiling segmentation purpose
 		
@@ -51,9 +56,9 @@ function keyboardControl(item, segments, other){
 					//	door.close();
 					//	continue;	
 					//}
-					var closest = segment.closestPointFrom(player.x, player.y);
-					var d = distanceBetween(closest.x, closest.y, player.x, player.y)
-					if(d<player.width + door.detectionDistance){
+					var closest = segment.closestPointFrom(world.player.x, world.player.y);
+					var d = distanceBetween(closest.x, closest.y, world.player.x, world.player.y)
+					if(d<world.player.width + door.detectionDistance){
 						door.open();
 					}else{
 						door.close();
