@@ -5,9 +5,6 @@
 		<title>JavazCrypt</title>
 				<script type="text/javascript" src="lib/jquery-2.1.4.min.js" ></script>
 		
-		<link rel="stylesheet" href="style.css" />
-		
-		
 		<script type="text/javascript" src="./lib/ArgRouter.js" ></script>
 		<script type="text/javascript" src="./js/AABB.js" ></script>
 		<script type="text/javascript" src="./js/Point.js" ></script>
@@ -35,16 +32,65 @@
 		<script type="text/javascript" src="./js/Platform.js" ></script>
 		<script type="text/javascript" src="./js/World.js" ></script>
 		<script type="text/javascript" src="./js/View.js" ></script>
+		<style>
+			.button{
+				display:block;
+				width:100px;
+				height:2em;
+				text-align:center;
+				padding:.6em;
+				border-radius:.6em;
+				font-weight:bold;
+				float:left;clear:all;
+				border: 1px solid #fff;
+				margin-top:1em;
+			}
+			.button-on{
+				color:#333;
+				border-color:#333;
+				background-color:#CCC;
+			}
+			
+			
+			.button-off{
+				color:#CCC;
+				border-color:#CCC;
+				background-color:#333;
+			}
+			
+			
+			.button-cta{
+				margin-top:2em;
+				color:#393;
+				border-color:#393;
+				background-color:#CCF;
+			}
+				
+			a{
+				text-decoration:none;
+			}
 		
+			#paper{
+				background-color:#000;
+				width:650px;
+				float:left;
+				height:400px;
+				padding:0px;
+				margin:20px
+			}
+			
+			#controls{
+				margin-top:20px;
+				width:200px;
+				float:left;
+			}
+			:focus {
+				outline: 0;
+			}
+		</style>
 	</head>
 	<body style="background-color:#000">
-		<div id="cont">
-		<h1>JavazCrypt demo</h1>
-		<p>
-			Control Bob with arrow keys.<br/>
-			Switch settings with buttons on the right.<br/>
-			For source code, see GitHub's repo <br/>
-			at <a href="https://github.com/drooleasy/JavazCrypt">https://github.com/drooleasy/JavazCrypt</a></p>
+
 		<canvas id="paper"></canvas>
 		
 		<div id="controls">
@@ -56,6 +102,6 @@
 		<div id="dbg-info" style="width:200px;float:right"></div>
 		
 		<script type="text/javascript" src="main.js" ></script>
-		</div>
+			
 	</body>
 </html>
