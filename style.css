@@ -69,3 +69,29 @@ p a{
 	width:960px;
 	margin:0 auto;
 }
+
+:focus{
+	outline:0;	
+}
+
+h1, p{
+	text-align:center;
+	color:#CCC;
+}
+p a{
+	color:#CCC;
+	font-weight:bold;
+	text-decoration:none;
+}
+
+p a:hover{
+	color:#CCC;
+	font-weight:bold;
+	text-decoration:underline;
+}
+
+#cnt{
+	width:960px;
+	margin:0 auto;
+
+}
