@@ -58,6 +58,21 @@ var world = new World();
 
 	world.boulders.push(boulder);
 
+	var delta = 50;
+	if(false)for(var i=0; i<3; i++){
+		for(var j=0; j<3; j++){
+			var boulder = new Path(
+				i*delta + 0, j*delta + 0,
+				i*delta + 20, j*delta + 10, 
+				i*delta + 10, j*delta + 20,
+				i*delta + 10, j*delta + 10
+			);
+			boulder.close();
+
+			world.boulders.push(boulder);
+
+		}	
+	}
 
 	var door = new Door(250,250+1, 250,200-1);
 	var seg = new Segment(270,260, 270,300);
@@ -86,3 +101,45 @@ var view = new View(paper.width, paper.height, world, paper);
 view.renderScene(paper, world);
 window.requestAnimationFrame(function(){view.draw() });
 keyboardControl(world);
+
+
+view.lights_on = true;
+view.relative = true;
+view.relative_angle = true;
+
+$('#lights').on("click", function(evt){
+	//global
+	view.lights_on= !view.lights_on;
+	
+	this.innerHTML = "Lights " + (view.lights_on ? 'ON' : 'OFF');
+	this.className = "button " + (view.lights_on ? 'button-on' : 'button-off');
+	evt.preventDefault();
+	return false;
+});
+
+$('#sight').on("click", function(evt){
+	//global
+	view.draw_sight= !view.draw_sight;
+	
+	this.innerHTML = "Sight " + (view.draw_sight ? 'ON' : 'OFF');
+	this.className = "button " + (view.draw_sight ? 'button-on' : 'button-off');
+	evt.preventDefault();
+	return false;
+});
+$('#relative').on("click", function(evt){
+	//globals
+	view.relative= !view.relative;
+	view.relative_angle= !view.relative_angle;
+	
+	this.innerHTML = "Relative " + (view.relative ? 'ON' : 'OFF');
+	this.className = "button " + (view.relative ? 'button-on' : 'button-off');
+	evt.preventDefault();
+	return false;
+});
+
+$("#say").on("click", function(evt){
+	//global
+	world.player.say(paper, 'Hello...?\nSomeone\'s there?\nHeyho ?');
+	evt.preventDefault();
+	return false;
+});
