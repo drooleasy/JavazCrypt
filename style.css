@@ -51,7 +51,7 @@ a{
 }
 
 p{
-	color:#555;
+	color:#CCC;
 	text-align:center;
 }
 
@@ -62,10 +62,11 @@ h1{
 p a:visited,
 p a{
 	color:#9F9;
-	text-decoration:underline;
+	font-weight:bold;
+	text-decoration:none;
 }
 
-#cont{
+#cnt{
 	width:960px;
 	margin:0 auto;
 }
@@ -74,24 +75,6 @@ p a{
 	outline:0;	
 }
 
-h1, p{
-	text-align:center;
-	color:#CCC;
-}
-p a{
-	color:#CCC;
-	font-weight:bold;
-	text-decoration:none;
-}
-
 p a:hover{
-	color:#CCC;
-	font-weight:bold;
 	text-decoration:underline;
-}
-
-#cnt{
-	width:960px;
-	margin:0 auto;
-
 }
