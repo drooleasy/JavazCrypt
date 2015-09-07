@@ -84,10 +84,31 @@
 				width:200px;
 				float:left;
 			}
+			
+			h1,p{
+				color:#555;
+				width:80%;
+				margin:0 auto;
+			}
+			h1{
+				text-align:center;
+			}
+			p a{
+				text-decoration:underline;
+			}
+			
+			#cont{
+				width:960px;
+				margin:0 auto;
+			} 
 		</style>
 	</head>
 	<body style="background-color:#000">
-
+		<div id="cont">
+		<h1>JavazCrypt demo</h1>
+		<p>
+			Control Bob with the arrow keys. Switch settings with buttons on the left.<br/>
+			For source code, see GitHub's repo at <a href="https://github.com/drooleasy/JavazCrypt">https://github.com/drooleasy/JavazCrypt</a></p>
 		<canvas id="paper"></canvas>
 		
 		<div id="controls">
@@ -99,6 +120,6 @@
 		<div id="dbg-info" style="width:200px;float:right"></div>
 		
 		<script type="text/javascript" src="main.js" ></script>
-			
+		</div>
 	</body>
 </html>
