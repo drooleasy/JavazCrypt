@@ -1,9 +1,0 @@
-function Slope(/*x1,y1,...,x4,y4*/){
-
-Slope.prototype.inside = function(x,y){
-
-Slope.prototype.interpole = function interpole(player){
-
-Slope.prototype.check = function checkStair(player){
-
-Slope.prototype.draw = function(paper, sun){

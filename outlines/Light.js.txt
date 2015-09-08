@@ -1,5 +1,0 @@
-function Light (x, y, sightLength, sightWidth, angle){
-
-Light.prototype.moveTo = function(pos){
-
-Light.prototype.draw = function(paper, segments, bobs){		

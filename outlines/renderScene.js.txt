@@ -1,7 +1,0 @@
-function renderScene(paper, path, boulder, bobs, segments){
-	slowTempo = function slowTempo(){
-		function drawScene(ctx, nofill){
-		function conclude(){
-		setTimeout(function(){
-				(function(a_light){
-					return function(){

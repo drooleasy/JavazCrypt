@@ -1,6 +1,0 @@
-function Platform(inner, outer, up){
-	function addSlope(inner, outer, i, up){
-
-Platform.prototype.check = function(player){
-
-Platform.prototype.draw = function(paper, sun){
