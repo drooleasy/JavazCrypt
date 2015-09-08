@@ -1,1 +1,0 @@
-Bubble.draw = function (paper, msg, x, y, angle, offset) {
