@@ -1,0 +1,81 @@
+.button{
+	display:block;
+	width:100px;
+	height:2em;
+	text-align:center;
+	padding:.6em;
+	border-radius:.6em;
+	font-weight:bold;
+	float:left;
+	clear:both;
+	border: 1px solid #fff;
+	margin-top:1em;
+}
+.button-on{
+	color:#333;
+	border-color:#333;
+	background-color:#CCC;
+}
+
+
+.button-off{
+	color:#CCC;
+	border-color:#CCC;
+	background-color:#333;
+}
+
+
+.button-cta{
+	margin-top:2em;
+	color:#393;
+	border-color:#393;
+	background-color:#CCF;
+}
+	
+a{
+	text-decoration:none;
+}
+
+#paper{
+	background-color:#000;
+	width:650px;
+	float:left;
+	height:400px;
+	padding:0px;
+	margin:20px
+}
+
+#controls{
+	margin-top:20px;
+	width:200px;
+	float:left;
+}
+
+p{
+	color:#CCC;
+	text-align:center;
+}
+
+h1{
+	color:#FFF;
+	text-align:center;
+}
+p a:visited,
+p a{
+	color:#9F9;
+	font-weight:bold;
+	text-decoration:none;
+}
+
+#cnt{
+	width:960px;
+	margin:0 auto;
+}
+
+:focus{
+	outline:0;	
+}
+
+p a:hover{
+	text-decoration:underline;
+}

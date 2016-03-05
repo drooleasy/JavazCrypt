@@ -1,4 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Bob.js</title>
 
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Bob.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
 /**
  * Bob contrucor
  * @constructor
@@ -23,7 +51,7 @@ function Bob(x,y, width, angle, fov_angle, fov_distance){
 	this.width = width || Bob.defaults.width; // radius !!!
 	
 	this.sightLength = fov_distance || Bob.defaults.sightLength;
-	this.sightWidth = fov_angle && deg2rad(fov_angle) || Bob.defaults.sightWidth;
+	this.sightWidth = fov_angle &amp;&amp; deg2rad(fov_angle) || Bob.defaults.sightWidth;
 	this.sightColor= "#FFFFFF";
 	
 	this.consciousness = Bob.defaults.consciousness;
@@ -224,7 +252,7 @@ Bob.prototype.turnRight =  function turnRight(){
  */
 Bob.prototype.feels =  function inSight(other){ 
 	var d = distanceBetween(this.x, this.y, other.x, other.y); 
-	if((d - other.width) < this.width*this.consciousness) return true;
+	if((d - other.width) &lt; this.width*this.consciousness) return true;
 	return false;
 }
 /**
@@ -241,11 +269,11 @@ Bob.prototype.sees =  function inSight(other, segments){
 		width = other.width,
 		deltaAngle = Math.asin(width / distance)
 	if( relativeAngle + deltaAngle >= (-this.sightWidth/2) 
-		&& relativeAngle - deltaAngle <= this.sightWidth/2  
-		&& distance - width <= this.sightLength){
+		&amp;&amp; relativeAngle - deltaAngle &lt;= this.sightWidth/2  
+		&amp;&amp; distance - width &lt;= this.sightLength){
 			var line = new Segment(this.x,this.y,other.x,other.y);
 			if(segments)
-			for(var i=0;i<segments.length;i++){
+			for(var i=0;i&lt;segments.length;i++){
 				if(segments[i] instanceof Glass) continue;
 				if(segments[i].intersect(line)){
 					return false;
@@ -307,22 +335,22 @@ Bob.prototype.drawSight = function(paper, world){
 	var oldCompositeOpration = ctx.globalCompositeOperation;
 
 	var seenSegments = [];
-	for(var i =0; i<segments.length; i++){
+	for(var i =0; i&lt;segments.length; i++){
 		if(segments[i] instanceof Glass) segments[i].castTint(this) 
 
 		seenSegments = seenSegments.concat(segments[i].seenSegment(this, segments));
 	}
 
 	// WORLD SHADOWS
-	for(i=0;i<seenSegments.length;i++){
+	for(i=0;i&lt;seenSegments.length;i++){
 		seenSegments[i].castShadow(this);
 	}
 	
-	for(var i=0; i<world.bobs.length;i++){
+	for(var i=0; i&lt;world.bobs.length;i++){
 		var bob = world.bobs[i];
 		if(bob !== this){ 
 			// OTHERS SHADOWS
-			var sees_bob = bob && this.sees(bob, world.allSegments());
+			var sees_bob = bob &amp;&amp; this.sees(bob, world.allSegments());
 			if(sees_bob){
 				bob.castShadow(this);
 			}
@@ -494,7 +522,7 @@ Bob.prototype.speak = function(paper, player, relative_angle){
 Bob.prototype.collidesWithBob = function(bob){
 	var metrics = distanceAndAngle(this.x, this.y, bob.x, bob.y),
 		distance_min = this.width + this.body.style["stroke-width"] + bob.width + bob.body.style["stroke-width"];
-	if(metrics.distance < distance_min ){ // collides
+	if(metrics.distance &lt; distance_min ){ // collides
 			this.x = bob.x - Math.cos(metrics.angle) * distance_min; 
 			this.y = bob.y - Math.sin(metrics.angle) * distance_min; 
 	}
@@ -510,7 +538,7 @@ Bob.prototype.collidesWithSegment = function(segment){
 	// for door we test two segments
 	if(segment instanceof Door){
 		var segs = segment.subSegments();
-		for(var i=0; i<segs.length;i++){
+		for(var i=0; i&lt;segs.length;i++){
 			this.collidesWithSegment(segs[i]);
 		}
 	}else{
@@ -520,7 +548,7 @@ Bob.prototype.collidesWithSegment = function(segment){
 			var closest = segment.closestPointFrom(that.x, that.y);
 			var metrics = distanceAndAngle(that.x, that.y, closest.x, closest.y);
 			var min = r + thickness;
-			if(metrics.distance  < min ){// collides
+			if(metrics.distance  &lt; min ){// collides
 				that.x = closest.x - Math.cos(metrics.angle) * min; 
 				that.y = closest.y - Math.sin(metrics.angle) * min; 
 			}
@@ -742,3 +770,26 @@ Bob.prototype.AABB = function bobAABB(tolerance){
 	);
 	
 }
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AABB.html">AABB</a></li><li><a href="Bob.html">Bob</a></li><li><a href="Point.html">Point</a></li></ul><h3>Global</h3><ul><li><a href="global.html#angleBetween">angleBetween</a></li><li><a href="global.html#castRay">castRay</a></li><li><a href="global.html#clipAngle">clipAngle</a></li><li><a href="global.html#clipAngleNegative">clipAngleNegative</a></li><li><a href="global.html#clipAnglePositive">clipAnglePositive</a></li><li><a href="global.html#cossin">cossin</a></li><li><a href="global.html#crossProduct">crossProduct</a></li><li><a href="global.html#deg2rad">deg2rad</a></li><li><a href="global.html#distanceAndAngle">distanceAndAngle</a></li><li><a href="global.html#distanceBetween">distanceBetween</a></li><li><a href="global.html#dotProduct">dotProduct</a></li><li><a href="global.html#drawRoundedRect">drawRoundedRect</a></li><li><a href="global.html#intersection">intersection</a></li><li><a href="global.html#minus">minus</a></li><li><a href="global.html#PIPI">PIPI</a></li><li><a href="global.html#quadrant">quadrant</a></li><li><a href="global.html#rad2deg">rad2deg</a></li><li><a href="global.html#randomBiased">randomBiased</a></li><li><a href="global.html#randomDelta">randomDelta</a></li><li><a href="global.html#randomTowardCenter">randomTowardCenter</a></li><li><a href="global.html#randomTowardLeft">randomTowardLeft</a></li><li><a href="global.html#randomTowardRight">randomTowardRight</a></li><li><a href="global.html#solveP2">solveP2</a></li><li><a href="global.html#turns">turns</a></li><li><a href="global.html#union">union</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sat Mar 05 2016 20:37:34 GMT+0100 (CET)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

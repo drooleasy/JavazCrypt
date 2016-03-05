@@ -1,4 +1,9 @@
-
+/**
+ * return a random in range centered on 0, with a bias toward 0
+ * @param {number} delta the range (result goes from -range/2 to range/2)
+ * @param {number} p the bias (default to 2, 1 for no bias, the greater the numbe rthe greater the bias)
+ * @return {number} the random number between -range/2 and range/2
+ */
 function randomDelta(delta, p){
 	p = p || 2;
 	var s = Math.random() > .5 ? -1 : 1;
@@ -6,7 +11,11 @@ function randomDelta(delta, p){
 }
 
 
-
+/**
+ * return a random number between 0 and 1 with a bias toward 0
+ * @param {number} p the bias (default to 2, 1 for no bias, the greater the numbe rthe greater the bias)
+ * @return {number} the random number between 0 and 1
+ */
 function randomTowardLeft(p){ // bias : 0, .5,  1
 	p = p || 2;
 	var r = Math.random(),
@@ -16,8 +25,13 @@ function randomTowardLeft(p){ // bias : 0, .5,  1
 }
 
 
+/**
+ * return a random number between 0 and 1 with a bias toward 1
+ * @param {number} p the bias (default to 2, 1 for no bias, the greater the numbe rthe greater the bias)
+ * @return {number} the biased random number between 0 and 1
+ */
 function randomTowardRight(p){ // bias : 0, .5,  1
-	p = p || 2; 
+	p = p || 2;
 	var r = Math.random(),
 		s = -1;
 	r = Math.pow(r, p);
@@ -25,37 +39,30 @@ function randomTowardRight(p){ // bias : 0, .5,  1
 }
 
 
+/**
+ * return a random number between 0 and 1 with a bias toward .5
+ * @param {number} p the bias (default to 2, 1 for no bias, the greater the numbe rthe greater the bias)
+ * @return {number} the biased random number between 0 and 1
+ */
 function randomTowardCenter(p){ // bias : 0, .5,  1
-	p = p || 2; 
+	p = p || 2;
 	var r = Math.random(),
 		s = Math.random()>.5 ? 1 : -1;
 	r = Math.pow(r, p) / Math.pow(2,p-1);
-	
+
 	return .5 + s * r;
 }
 
+
+/**
+ * return a random number between 0 and 1 with a bias toward 0
+ * @param {number} p the bias orientation -1: to left (0), 0:centered (.5), 1: to right (1)
+ * @param {number} p the bias (default to 2, 1 for no bias, the greater the numbe rthe greater the bias)
+ * @return {number} the random number between 0 and 1
+ */
 function randomBiased(bias, p){
-	p = p || 2; 
+	p = p || 2;
 	if(bias == 0) return randomTowardCenter(p);
 	else if(bias > 0) return randomTowardRight(p);
 	else return randomTowardLeft(p);
-}
-
-
-function test(){
-
-	var n = 1000;
-	var left =0,
-		center = 0,
-		right = 0,
-		bias = 2;
-	for(var i=0; i<n; i++){
-	   left+= randomBiased(-1, bias);
-	   center+= randomBiased(0, bias);
-	   right+= randomBiased(1, bias);
-	}
-	console.log("left: " + left/n);
-	console.log("centert: "+center/n);
-	console.log("right: " + right/n);
-	
 }
