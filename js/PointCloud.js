@@ -1,3 +1,9 @@
+/**
+ * a 2D points set
+ * @constructor
+ * @param {number} x the x -coordinate of a point
+ * @param {number} y the y -coordinate of a point
+ */
 function PointCloud(/*x,y,...*/){
 		this.points=[];
 		if(arguments.length) for(var i=1;i<arguments.length;i+=2){
@@ -9,7 +15,10 @@ function PointCloud(/*x,y,...*/){
 		return this;
 	}
 	
-	
+/**
+ * compute the center of the points cloud
+ * @return {object} the center point with average x- and y- coordinates
+ */
 PointCloud.prototype.center = function(){
 	
 	var x=0,
@@ -27,7 +36,11 @@ PointCloud.prototype.center = function(){
 }
 
 
-	
+/**
+ * compute all the distances between the cloud's point and another point
+ * @param {object} from an x-y point object
+ * @return {array} array of all the distances
+ */	
 PointCloud.prototype.distances = function(from){
 	var res = [],
 		n=this.points.length;
@@ -38,6 +51,12 @@ PointCloud.prototype.distances = function(from){
 }
 
 
+/**
+ * compute all the angles between the cloud's point and another point
+ * @param {object} from an x-y point object
+ * @return {array} array of all the angles
+ */	
+
 PointCloud.prototype.angles = function(from){
 	var res = [],
 		n=this.points.length;
@@ -47,6 +66,11 @@ PointCloud.prototype.angles = function(from){
 	return res;
 }
 
+/**
+ * compute all the distances and angles between the cloud's point and another point
+ * @param {object} from an x-y point object
+ * @return {array} array of all the distances and angles
+ */	
 
 PointCloud.prototype.distancesAndAngles = function(from){
 	var res = [],
@@ -57,6 +81,10 @@ PointCloud.prototype.distancesAndAngles = function(from){
 	return res;
 }
 
+/**
+ * compute the minimal and maximal distance distance of points toward the center (and return the matching extremum points)  
+ * @return {object} with the min and max points, the center and the min_distance and the max_distance
+ */
 PointCloud.prototype.innerOuter = function(){
 	
 	var center = this.center();
@@ -100,7 +128,10 @@ PointCloud.prototype.innerOuter = function(){
 	};
 }
 
-
+/**
+ * draw this point cloud on canvas (as one path)
+ * @param {object} paper the canvas dom node
+ */
 PointCloud.prototype.plot = function(paper){
 	var ctx = paper.getContext("2d");
 	var n=this.points.length;
@@ -113,6 +144,11 @@ PointCloud.prototype.plot = function(paper){
 	ctx.fill();
 }
 
+
+/**
+ * draw this point cloud on canvas (as one path) with lines between the points
+ * @param {object} paper the canvas dom node
+ */
 PointCloud.prototype.draw = function(paper){
 	var ctx = paper.getContext("2d");
 	var n=this.points.length;	
@@ -127,6 +163,9 @@ PointCloud.prototype.draw = function(paper){
 	ctx.stroke();
 }
 
+/**
+ * sorts the points according to their angle with the center
+ */
 PointCloud.prototype.sort = function(){
 	var center = this.center();
 	this.points = this.points.sort(function(a, b){
@@ -136,7 +175,11 @@ PointCloud.prototype.sort = function(){
 	})
 }
 
-
+/**
+ * checks if a point is inside the hull of the points cloud
+ * @param {number} x the tested point x coordinate 
+ * @param {number} y the tested point y coordinate 
+ */
 PointCloud.prototype.inside = function(x,y){	
 	var metrics = this.angles({x:x,y:y});
 	var previous_angle = clipAnglePositive(metrics[this.points.length-1]);
@@ -155,6 +198,10 @@ PointCloud.prototype.inside = function(x,y){
 	
 }
 
+/**
+ * compute the points cloud AABB
+ * @return {AABB} the axialy aligned bounding box of this points cloud
+ */
 PointCloud.prototype.AABB = function(){
 
 	var topLeft = {
@@ -188,7 +235,10 @@ PointCloud.prototype.AABB = function(){
 }
 
 
-
+/**
+ * plot the center and the circle at minimal and maximal distance of it
+ * @param {object} paper the canvas dom element
+ */
 PointCloud.prototype.plotInnerOuter = function plotInnerOuter(paper){
 	var ctx = paper.getContext("2d");
 	
@@ -213,7 +263,10 @@ PointCloud.prototype.plotInnerOuter = function plotInnerOuter(paper){
 	ctx.stroke();
 }
 
-
+/**
+ * draw the aabb of this points cloud
+ * @param {object} paper the canvas dom node
+ */
 PointCloud.prototype.strokeAABB = function strokeAABB(paper){
 	var ctx = paper.getContext("2d");
 	
@@ -224,7 +277,12 @@ PointCloud.prototype.strokeAABB = function strokeAABB(paper){
 	ctx.strokeRect(AABB.x, AABB.y, AABB.w, AABB.h);
 }
 
-
+/**
+ * draw one of the cloud points
+ * @param {number} p the point index
+ * @param {object} paper the canvas dom node
+ * @param {number} r the radius of the circle to draw
+ */
 PointCloud.prototype.drawPoint = function drawPoint(p, paper, r){
 	if(p instanceof Number) p = this.points[p];
 	var ctx = paper.getContext("2d");
@@ -237,7 +295,14 @@ PointCloud.prototype.drawPoint = function drawPoint(p, paper, r){
 
 
 
-
+/**
+ * generate a random points cloud in a box
+ * @param {number} x the x coordinate of the bounding box
+ * @param {number} y the y coordinate of the bounding box
+ * @param {number} w the width of the bounding box
+ * @param {number} h the height of the bounding box
+ * @param {number} num the number of points to generate
+ */
 function randomPointCloud(x,y, w, h, num){
 	var points = [];
 	for(var i=0; i<num;i++){
@@ -249,7 +314,14 @@ function randomPointCloud(x,y, w, h, num){
 }
 
 
-
+/**
+ * generate a random points cloud in a donut
+ * @param {number} x the x coordinate of the center of the bounding circles
+ * @param {number} y the y coordinate of the center of the bounding circles
+ * @param {number} r_min the minimum distance to the center
+ * @param {number} r_max the maximum distance to the center
+ * @param {number} num the number of points to generate
+ */
 function randomPointCloudFromCenter(x,y, r_min, r_max, num){
 	var points = [];
 	for(var i=0; i<num;i++){
@@ -262,6 +334,14 @@ function randomPointCloudFromCenter(x,y, r_min, r_max, num){
 	return pointCloud;
 }
 
+/**
+ * generate a random points cloud around a circle
+ * @param {number} x the x coordinate of the center of the reference circle
+ * @param {number} y the y coordinate of the center of the reference circle
+ * @param {number} r the radius of the reference circle
+ * @param {number} delta the variation factor of points against the refernce circle 
+ * @param {number} num the number of points to generate
+ */
 function randomPointCloudFromCircle(x,y, r, delta, num){
 	var points = [];
 	for(var i=0; i<num;i++){
@@ -277,6 +357,14 @@ function randomPointCloudFromCircle(x,y, r, delta, num){
 
 
 
+/**
+ * generate a random points cloud around a donut
+ * @param {number} x the x coordinate of the center of the reference circle
+ * @param {number} y the y coordinate of the center of the reference circle
+ * @param {number} r the radius of the reference circle
+ * @param {number} delta the variation factor of points against the refernce circle 
+ * @param {number} num the number of points to generate
+ */
 function randomDonut(x,y, r, delta, num){
 	var points = [];
 	for(var i=0; i<num;i++){
@@ -307,7 +395,13 @@ function randomDonut(x,y, r, delta, num){
 }
 
 
-
+/**
+ * generate a ring of point
+ * @param {number} x the x coordinate of the center of the reference circle
+ * @param {number} y the y coordinate of the center of the reference circle
+ * @param {number} d the radius of the reference circle
+ * @param {number} num the number of points to generate
+ */
 function ring(x,y,d,num){
 	var points = [];
 	var angle = Math.PI*2/num;
@@ -320,7 +414,13 @@ function ring(x,y,d,num){
 }
 
 
-
+/**
+ * genrate a random donut (two rings with matching point at same angle from center)
+ * @param {number} x the x coordinate of the center of the reference circle
+ * @param {number} y the y coordinate of the center of the reference circle
+ * @param {number} d the radius of the reference circle
+ * @param {number} num the number of points to generate
+ */
 function randomSimpleDonut(x,y, r, delta, num){
 	var points = [];
 	for(var i=0; i<num;i++){
