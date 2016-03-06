@@ -1,4 +1,7 @@
-
+/**
+ * an aggregate for the elements of the game (bobs, paths, segments, boulder, lights, player)
+ * @constructor
+ */ 
 
 var World = function World(){
 	this.bobs = [];
@@ -9,6 +12,10 @@ var World = function World(){
 	this.player = null;
 }
 
+/**
+ * returns all the world's segments (segments, plus boulders and paths)
+ * @return {array} array of all segments
+ */
 World.prototype.allSegments = function allSegments(){
 		var res = this.segments;
 		for(var i=0;i<this.paths.length;i++) res = res.concat(this.paths[i].segments);

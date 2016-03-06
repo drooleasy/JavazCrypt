@@ -1,4 +1,10 @@
-
+/**
+ * a land platform (upward or downward
+ * @constructor
+ * @param {Path} inner the inner shape of the platform (must be same point count as outer)
+ * @param {Path} outer the outer shape of the platform (must be same point count as inner)
+ * @param {boolean} up wheter upward or downward platform (default to true : upward)
+ */
 function Platform(inner, outer, up){
 
 	this.inner = inner;
@@ -42,6 +48,10 @@ function Platform(inner, outer, up){
 	
 }
 
+/**
+ * checks if a bob is on the platform, scales the bob accordingly
+ * @param {Bob} player the bob to check
+ */ 
 Platform.prototype.check = function(player){
 	for(var i=0;i<this.slopes.length;i++){				
 		if(this.slopes[i].inside(player.x, player.y)){
@@ -50,6 +60,11 @@ Platform.prototype.check = function(player){
 	}
 }
 
+/**
+ * draws the platform
+ * @param {object} paper the canvas
+ * @param {object} sun the sun light
+ */
 Platform.prototype.draw = function(paper, sun){
 	
 	for(var i=0;i<this.slopes.length;i++){

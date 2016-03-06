@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: AABB.js</title>
+    <title>JSDoc: Source: Transform.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: AABB.js</h1>
+    <h1 class="page-title">Source: Transform.js</h1>
 
     
 
@@ -26,39 +26,92 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/**
- * Axialy Aligned Bounding Box model
- * @constructor
- * @param {number} x top-left x-coordiante
- * @param {number} y top-left y-coordiante
- * @param {number} w width
- * @param {number} h height
- */
-function AABB(x, y, w, h){
-	this.x = x;
-	this.y = y;
-	this.w = w;
-	this.h = h;
-};
+            <pre class="prettyprint source linenums"><code>;//console.log("loading transform");
+;//console.log("this");
+;//console.log(this);
+
 
 /**
- * Returns wheter an AABB intersects with another
- * @param {AABB} other the other AABB
- * @return {boolean} true is the two AABBs intersects, else false
+ * a transform coordinates utility
+ * @constructor
+ * @param {Point} p the x-y location
+ * @param {number} angle the angle in radians
+ * @param {number} scale the scale
  */
-AABB.prototype.intersects = function(other){
-	if(!other instanceof AABB) throw "argument is not an AABB";
-	var dontIntersects = (
-		this.x > other.x + other.w
-		|| this.x + this.w &lt; other.x
-		|| this.y > other.y + other.h
-		|| this.y + this.h &lt; other.y
-	);
-	return !dontIntersects;
+var Transform = ArgRouter.decorate(
+	{
+		p: null,
+		angle: 0,
+		scale: 1
+	},
+	ArgRouter.combine(
+		Point.route("p"),
+		{
+			"":function(){
+			},
+			"num":function(_angle){
+				
+				this.angle = _angle;
+				this.scale = 1;
+			},
+			"num, num":function(_angle, _scale){
+				
+				this.angle = _angle;
+				this.scale = _scale;
+			}
+		}
+	),
+	function Transform(ctx){
+		this.x = ctx.p.x;
+		this.y = ctx.p.y;
+		this.angle = ctx.angle;
+		this.scale = ctx.scale;
+	}
+);
 
-};
+/**
+ * mixin to add transform capability to another object
+ * @param {object} that the object to add tranform capabilities on
+ * @return {object} the augmented parameter object
+ */
+Transform.mixin = function(that){
+	var t = new Transform();
+	that.x = t.x;
+	that.y = t.y;
+	that.angle = t.angle;
+	that.scale = t.scale;
+	that.transform = {
+		toLocal : function(/*ctx*/){
+			Transform.prototype.toLocal.apply(that, arguments);
+		},
+		toGlobal : function(/*ctx*/){
+			Transform.prototype.toGlobal.apply(that, arguments);
+		}
+	}
+	return that;
+}
 
-//console.log("loaded AABB");
+
+/**
+ * align drawing context on this transform
+ * @param {object} ctx the 2D drawing context
+ */ 
+Transform.prototype.toLocal = function(ctx){
+	ctx.translate(this.x, this.y);
+	ctx.rotate(this.angle);
+	ctx.scale(this.scale, this.scale);
+	
+}
+/**
+ * undo the toLocal transform
+ * @param {object} ctx the 2D drawing context
+ */ 
+Transform.prototype.toGlobal = function(ctx){
+	ctx.scale(1/this.scale, 1/this.scale);
+	ctx.rotate(-this.angle);	
+	ctx.translate(-this.x, -this.y);
+	
+}
 </code></pre>
         </article>
     </section>

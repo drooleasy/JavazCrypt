@@ -1,4 +1,9 @@
-
+/**
+ * a path is a series of segments sharing an end point with their precessor/successor
+ * @constructor
+ * @param {number} x coordinate of a path point 
+ * @param {number} y coordinate of a path point
+ */ 
 function Path (/*x,y,...*/){
 	var i = 0,
 		l = arguments.length;
@@ -29,6 +34,9 @@ function Path (/*x,y,...*/){
 	this.closed = false;
 }
 
+/**
+ * closes this path (by adding a segment between end and start points)
+ */
 Path.prototype.close = function(){
 	if(!this.closed){
 		this.closed = true;
@@ -48,7 +56,11 @@ Path.prototype.close = function(){
 }
 
 
-
+/**
+ * draw this segment on canvas
+ * @param {object} paper the canvas node element
+ * @param {boolean} isBoulder true if the path is full and closed
+ */
 Path.prototype.draw = function(paper, isBoulder){
 	
 	
@@ -94,26 +106,45 @@ Path.prototype.draw = function(paper, isBoulder){
 	
 } 
 
+/**
+ * transform a segment of the path into a Door
+ * @param {number} i the index of the segment to transform
+ */
 Path.prototype.makeDoor = function(i){
 
 	var old = this.segments[i];
 	this.segments[i] = new Door(old.a.x, old.a.y, old.b.x, old.b.y); 
 }
 
+/**
+ * transform a segment of the path into a Glass
+ * @param {number} i the index of the segment to transform
+ */
 Path.prototype.makeGlass = function(i){
 
 	var old = this.segments[i];
 	this.segments[i] = new Glass(old.a.x, old.a.y, old.b.x, old.b.y); 
 }
 
+/**
+ * void stub
+ */
 Path.prototype.drawShadow = function(player){
 	
 } 
 
+/**
+ * void stub
+ */
 Path.prototype.isSeenByBob = function(bob){
 	
 } 
 
+/**
+ * compute the seen segment of each part of the path
+ * @param {Bob} bob the looking bob
+ * @return {array} the seen sub-segments of the path 
+ */
 Path.prototype.seenSegments = function(bob){
 	var i=0,
 		l=this.segments.length,
@@ -126,6 +157,9 @@ Path.prototype.seenSegments = function(bob){
 	return res;
 } 
 
+/**
+ * reverse this path point order
+ */
 Path.prototype.inversed = function(){
 	var tmp = this.segments;
 	this.points = this.points.reverse();

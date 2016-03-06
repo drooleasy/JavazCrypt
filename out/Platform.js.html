@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: AABB.js</title>
+    <title>JSDoc: Source: Platform.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: AABB.js</h1>
+    <h1 class="page-title">Source: Platform.js</h1>
 
     
 
@@ -27,38 +27,78 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * Axialy Aligned Bounding Box model
+ * a land platform (upward or downward
  * @constructor
- * @param {number} x top-left x-coordiante
- * @param {number} y top-left y-coordiante
- * @param {number} w width
- * @param {number} h height
+ * @param {Path} inner the inner shape of the platform (must be same point count as outer)
+ * @param {Path} outer the outer shape of the platform (must be same point count as inner)
+ * @param {boolean} up wheter upward or downward platform (default to true : upward)
  */
-function AABB(x, y, w, h){
-	this.x = x;
-	this.y = y;
-	this.w = w;
-	this.h = h;
-};
+function Platform(inner, outer, up){
+
+	this.inner = inner;
+	this.outer = outer;
+	
+	this.slopes = [];
+		
+	this.up = !!up;
+			
+	
+	
+	function addSlope(inner, outer, i, up){
+		var arr = [];
+		
+		var j = i+1;
+		if(j>=inner.points.length) j = 0; 
+		arr.push(inner.points[i].x);
+		arr.push(inner.points[i].y);
+		
+		
+		arr.push(outer.points[i].x);
+		arr.push(outer.points[i].y);
+		
+		
+		arr.push(outer.points[j].x);
+		arr.push(outer.points[j].y);
+		
+		
+		arr.push(inner.points[j].x);
+		arr.push(inner.points[j].y);
+		
+		var res =  Slope.apply(new Slope(), arr);
+		res.up = up
+		return res;
+	}
+	
+	for(var i=0;i&lt;num_points;i++){
+		this.slopes.push(addSlope(inner,outer, i, this.up));
+	}
+
+	
+}
 
 /**
- * Returns wheter an AABB intersects with another
- * @param {AABB} other the other AABB
- * @return {boolean} true is the two AABBs intersects, else false
+ * checks if a bob is on the platform, scales the bob accordingly
+ * @param {Bob} player the bob to check
+ */ 
+Platform.prototype.check = function(player){
+	for(var i=0;i&lt;this.slopes.length;i++){				
+		if(this.slopes[i].inside(player.x, player.y)){
+			this.slopes[i].check(player);
+		}
+	}
+}
+
+/**
+ * draws the platform
+ * @param {object} paper the canvas
+ * @param {object} sun the sun light
  */
-AABB.prototype.intersects = function(other){
-	if(!other instanceof AABB) throw "argument is not an AABB";
-	var dontIntersects = (
-		this.x > other.x + other.w
-		|| this.x + this.w &lt; other.x
-		|| this.y > other.y + other.h
-		|| this.y + this.h &lt; other.y
-	);
-	return !dontIntersects;
-
-};
-
-//console.log("loaded AABB");
+Platform.prototype.draw = function(paper, sun){
+	
+	for(var i=0;i&lt;this.slopes.length;i++){
+			this.slopes[i].draw(paper, sun);
+	}
+}
 </code></pre>
         </article>
     </section>

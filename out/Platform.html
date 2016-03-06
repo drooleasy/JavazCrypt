@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Glass</title>
+    <title>JSDoc: Class: Platform</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: Glass</h1>
+    <h1 class="page-title">Class: Platform</h1>
 
     
 
@@ -28,7 +28,7 @@
 
 <header>
     
-        <h2>Glass</h2>
+        <h2>Platform</h2>
         
     
 </header>
@@ -40,14 +40,14 @@
 
     
 
-    <h4 class="name" id="Glass"><span class="type-signature"></span>new Glass<span class="signature">(a, b)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Platform"><span class="type-signature"></span>new Platform<span class="signature">(inner, outer, up)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    a glass Segment. Lights passes thorugh it
+    a land platform (upward or downward
 </div>
 
 
@@ -83,13 +83,13 @@
 
         <tr>
             
-                <td class="name"><code>a</code></td>
+                <td class="name"><code>inner</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type"><a href="Path.html">Path</a></span>
 
 
             
@@ -99,20 +99,20 @@
 
             
 
-            <td class="description last">a Point or two int</td>
+            <td class="description last">the inner shape of the platform (must be same point count as outer)</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>b</code></td>
+                <td class="name"><code>outer</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type"><a href="Path.html">Path</a></span>
 
 
             
@@ -122,7 +122,30 @@
 
             
 
-            <td class="description last">a Point or two int</td>
+            <td class="description last">the outer shape of the platform (must be same point count as inner)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>up</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">wheter upward or downward platform (default to true : upward)</td>
         </tr>
 
     
@@ -163,7 +186,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Glass.js.html">Glass.js</a>, <a href="Glass.js.html#line7">line 7</a>
+        <a href="Platform.js.html">Platform.js</a>, <a href="Platform.js.html#line8">line 8</a>
     </li></ul></dd>
     
 
@@ -212,14 +235,14 @@
 
     
 
-    <h4 class="name" id="castTint"><span class="type-signature"></span>castTint<span class="signature">(bob_or_light)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="check"><span class="type-signature"></span>check<span class="signature">(player)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    titend segments. cast tinted light
+    checks if a bob is on the platform, scales the bob accordingly
 </div>
 
 
@@ -255,138 +278,7 @@
 
         <tr>
             
-                <td class="name"><code>bob_or_light</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">a light source</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Glass.js.html">Glass.js</a>, <a href="Glass.js.html#line45">line 45</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="seenSegment"><span class="type-signature"></span>seenSegment<span class="signature">(bob, segements)</span><span class="type-signature"> &rarr; {array}</span></h4>
-
-    
-
-
-
-<div class="description">
-    calculate portion of the segment seen by bob
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>bob</code></td>
+                <td class="name"><code>player</code></td>
             
 
             <td class="type">
@@ -402,30 +294,7 @@
 
             
 
-            <td class="description last">the stalking bob</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>segements</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">segments</td>
+            <td class="description last">the bob to check</td>
         </tr>
 
     
@@ -466,7 +335,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Glass.js.html">Glass.js</a>, <a href="Glass.js.html#line118">line 118</a>
+        <a href="Platform.js.html">Platform.js</a>, <a href="Platform.js.html#line55">line 55</a>
     </li></ul></dd>
     
 
@@ -489,28 +358,160 @@
 
 
 
-<h5>Returns:</h5>
+
+
 
         
-<div class="param-desc">
-    the seen segments (as Glass object)
+            
+
+    
+
+    <h4 class="name" id="draw"><span class="type-signature"></span>draw<span class="signature">(paper, sun)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    draws the platform
 </div>
 
 
 
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
         
-<span class="param-type">array</span>
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>paper</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
 
 
-    </dd>
-</dl>
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the canvas</td>
+        </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>sun</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the sun light</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Platform.js.html">Platform.js</a>, <a href="Platform.js.html#line68">line 68</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -536,7 +537,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sun Mar 06 2016 18:00:07 GMT+0100 (CET)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sun Mar 06 2016 18:00:08 GMT+0100 (CET)
 </footer>
 
 <script> prettyPrint(); </script>

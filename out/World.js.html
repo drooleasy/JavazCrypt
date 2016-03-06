@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: AABB.js</title>
+    <title>JSDoc: Source: World.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: AABB.js</h1>
+    <h1 class="page-title">Source: World.js</h1>
 
     
 
@@ -27,38 +27,30 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * Axialy Aligned Bounding Box model
+ * an aggregate for the elements of the game (bobs, paths, segments, boulder, lights, player)
  * @constructor
- * @param {number} x top-left x-coordiante
- * @param {number} y top-left y-coordiante
- * @param {number} w width
- * @param {number} h height
- */
-function AABB(x, y, w, h){
-	this.x = x;
-	this.y = y;
-	this.w = w;
-	this.h = h;
-};
+ */ 
+
+var World = function World(){
+	this.bobs = [];
+	this.paths = [];
+	this.segments = [];
+	this.boulders = [];
+	this.lights = [];
+	this.player = null;
+}
 
 /**
- * Returns wheter an AABB intersects with another
- * @param {AABB} other the other AABB
- * @return {boolean} true is the two AABBs intersects, else false
+ * returns all the world's segments (segments, plus boulders and paths)
+ * @return {array} array of all segments
  */
-AABB.prototype.intersects = function(other){
-	if(!other instanceof AABB) throw "argument is not an AABB";
-	var dontIntersects = (
-		this.x > other.x + other.w
-		|| this.x + this.w &lt; other.x
-		|| this.y > other.y + other.h
-		|| this.y + this.h &lt; other.y
-	);
-	return !dontIntersects;
-
-};
-
-//console.log("loaded AABB");
+World.prototype.allSegments = function allSegments(){
+		var res = this.segments;
+		for(var i=0;i&lt;this.paths.length;i++) res = res.concat(this.paths[i].segments);
+		for(var i=0;i&lt;this.boulders.length;i++) res = res.concat(this.boulders[i].segments);
+		return res;
+}
+ 
 </code></pre>
         </article>
     </section>

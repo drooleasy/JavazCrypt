@@ -1,4 +1,32 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Slope.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Slope.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * a Slope is a rectangular shape making the side of a platform
  * @constructor
  * @param {number} x1 the x coordiante of the 1st point
@@ -15,18 +43,18 @@ function Slope(/*x1,y1,...,x4,y4*/){
 	//this.pointCloud.sort();
 	
 	var points = [];
-	for(var i=0; i<arguments.length; i+=2){
+	for(var i=0; i&lt;arguments.length; i+=2){
 		points.push({
 			x: arguments[i],
 			y: arguments[i+1]
 		})
 	}
-	this.sides = arguments.length && [
+	this.sides = arguments.length &amp;&amp; [
 		new Segment(points[0].x,points[0].y, points[1].x,points[1].y ),
 		new Segment(points[3].x,points[3].y, points[2].x, points[2].y)
 	] || null;
-	this.start = arguments.length && new Segment(points[0].x,points[0].y,points[3].x,points[3].y) || null;
-	this.reach = arguments.length && new Segment(points[1].x,points[1].y,points[2].x,points[2].y) || null;
+	this.start = arguments.length &amp;&amp; new Segment(points[0].x,points[0].y,points[3].x,points[3].y) || null;
+	this.reach = arguments.length &amp;&amp; new Segment(points[1].x,points[1].y,points[2].x,points[2].y) || null;
 
 
 	this.up = true;
@@ -77,7 +105,7 @@ Slope.prototype.draw = function(paper, sun){
 	var sin = Math.sin(angle_relative);
 
 	if(this.up){
-		if(sin<=0) l = 50 +  Math.floor(-sin * 155);
+		if(sin&lt;=0) l = 50 +  Math.floor(-sin * 155);
 		else l = 50 - Math.floor(sin * 50);
 	}else{
 		if(sin>0) l = 50 +  Math.floor(sin * 155);
@@ -95,7 +123,7 @@ Slope.prototype.draw = function(paper, sun){
 
 	n = 10;
 	
-	for(i=0;i<n;i++){
+	for(i=0;i&lt;n;i++){
 			var l = Math.floor(i*256/n),
 				t = 1-i/n;
 			l=128;
@@ -124,7 +152,7 @@ Slope.prototype.draw = function(paper, sun){
 			
 			
 			ctx.strokeStyle = "#FF0";
-			for(var i=0; i< this.sides.length; i++){
+			for(var i=0; i&lt; this.sides.length; i++){
 				this.sides[i].draw(paper);
 			}
 			
@@ -211,10 +239,33 @@ Slope.prototype.check = function checkStair(player){
 		// WTF ?
 		var cp = this.reach.closestPointFrom(player.x,player.y);
 		var d = distanceBetween(cp.x, cp.y, player.x, player.y);
-		if(d<player.width){
+		if(d&lt;player.width){
 			//this.onReach.call(this, player);
 		}
 		
 	}
 	
 }
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AABB.html">AABB</a></li><li><a href="Bob.html">Bob</a></li><li><a href="Door.html">Door</a></li><li><a href="Glass.html">Glass</a></li><li><a href="Handle.html">Handle</a></li><li><a href="Interval.html">Interval</a></li><li><a href="Path.html">Path</a></li><li><a href="Platform.html">Platform</a></li><li><a href="Point.html">Point</a></li><li><a href="Slope.html">Slope</a></li><li><a href="Stair.html">Stair</a></li><li><a href="Transform.html">Transform</a></li><li><a href="View.html">View</a></li><li><a href="World.html">World</a></li></ul><h3>Global</h3><ul><li><a href="global.html#angleBetween">angleBetween</a></li><li><a href="global.html#Bubble">Bubble</a></li><li><a href="global.html#castRay">castRay</a></li><li><a href="global.html#clipAngle">clipAngle</a></li><li><a href="global.html#clipAngleNegative">clipAngleNegative</a></li><li><a href="global.html#clipAnglePositive">clipAnglePositive</a></li><li><a href="global.html#cossin">cossin</a></li><li><a href="global.html#crossProduct">crossProduct</a></li><li><a href="global.html#deg2rad">deg2rad</a></li><li><a href="global.html#distanceAndAngle">distanceAndAngle</a></li><li><a href="global.html#distanceBetween">distanceBetween</a></li><li><a href="global.html#div">div</a></li><li><a href="global.html#dotProduct">dotProduct</a></li><li><a href="global.html#drawRoundedRect">drawRoundedRect</a></li><li><a href="global.html#intersection">intersection</a></li><li><a href="global.html#keyboardControl">keyboardControl</a></li><li><a href="global.html#kombin">kombin</a></li><li><a href="global.html#Light">Light</a></li><li><a href="global.html#minus">minus</a></li><li><a href="global.html#PIPI">PIPI</a></li><li><a href="global.html#quadrant">quadrant</a></li><li><a href="global.html#rad2deg">rad2deg</a></li><li><a href="global.html#randomBiased">randomBiased</a></li><li><a href="global.html#randomDelta">randomDelta</a></li><li><a href="global.html#randomTowardCenter">randomTowardCenter</a></li><li><a href="global.html#randomTowardLeft">randomTowardLeft</a></li><li><a href="global.html#randomTowardRight">randomTowardRight</a></li><li><a href="global.html#rect">rect</a></li><li><a href="global.html#solveP2">solveP2</a></li><li><a href="global.html#turns">turns</a></li><li><a href="global.html#union">union</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sun Mar 06 2016 18:00:07 GMT+0100 (CET)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

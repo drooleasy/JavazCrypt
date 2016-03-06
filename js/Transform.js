@@ -3,7 +3,13 @@
 ;//console.log(this);
 
 
-
+/**
+ * a transform coordinates utility
+ * @constructor
+ * @param {Point} p the x-y location
+ * @param {number} angle the angle in radians
+ * @param {number} scale the scale
+ */
 var Transform = ArgRouter.decorate(
 	{
 		p: null,
@@ -35,7 +41,11 @@ var Transform = ArgRouter.decorate(
 	}
 );
 
-
+/**
+ * mixin to add transform capability to another object
+ * @param {object} that the object to add tranform capabilities on
+ * @return {object} the augmented parameter object
+ */
 Transform.mixin = function(that){
 	var t = new Transform();
 	that.x = t.x;
@@ -54,12 +64,20 @@ Transform.mixin = function(that){
 }
 
 
+/**
+ * align drawing context on this transform
+ * @param {object} ctx the 2D drawing context
+ */ 
 Transform.prototype.toLocal = function(ctx){
 	ctx.translate(this.x, this.y);
 	ctx.rotate(this.angle);
 	ctx.scale(this.scale, this.scale);
 	
 }
+/**
+ * undo the toLocal transform
+ * @param {object} ctx the 2D drawing context
+ */ 
 Transform.prototype.toGlobal = function(ctx){
 	ctx.scale(1/this.scale, 1/this.scale);
 	ctx.rotate(-this.angle);	

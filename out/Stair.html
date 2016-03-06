@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Glass</title>
+    <title>JSDoc: Class: Stair</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: Glass</h1>
+    <h1 class="page-title">Class: Stair</h1>
 
     
 
@@ -28,7 +28,7 @@
 
 <header>
     
-        <h2>Glass</h2>
+        <h2>Stair</h2>
         
     
 </header>
@@ -40,14 +40,14 @@
 
     
 
-    <h4 class="name" id="Glass"><span class="type-signature"></span>new Glass<span class="signature">(a, b)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Stair"><span class="type-signature"></span>new Stair<span class="signature">(x, y, w, h, steps, angle, onReach)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    a glass Segment. Lights passes thorugh it
+    a Stair
 </div>
 
 
@@ -83,13 +83,13 @@
 
         <tr>
             
-                <td class="name"><code>a</code></td>
+                <td class="name"><code>x</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type">number</span>
 
 
             
@@ -99,20 +99,20 @@
 
             
 
-            <td class="description last">a Point or two int</td>
+            <td class="description last">the x coordinate of the stair (top-left corner)</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>b</code></td>
+                <td class="name"><code>y</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type">number</span>
 
 
             
@@ -122,7 +122,122 @@
 
             
 
-            <td class="description last">a Point or two int</td>
+            <td class="description last">the y coordinate of the stair (top-left corner)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>w</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the width of the stair</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>h</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the height of the stair</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>steps</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the number of steps of the stair</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>angle</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the angle of the stair (in radians)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>onReach</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">a function to be called when when a bob reaches the top/bottom of the stair</td>
         </tr>
 
     
@@ -163,7 +278,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Glass.js.html">Glass.js</a>, <a href="Glass.js.html#line7">line 7</a>
+        <a href="Stair.js.html">Stair.js</a>, <a href="Stair.js.html#line48">line 48</a>
     </li></ul></dd>
     
 
@@ -212,14 +327,14 @@
 
     
 
-    <h4 class="name" id="castTint"><span class="type-signature"></span>castTint<span class="signature">(bob_or_light)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="check"><span class="type-signature"></span>check<span class="signature">(player)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    titend segments. cast tinted light
+    checks if a bob is on the stair and scale him accordingly and call onReach if necessary
 </div>
 
 
@@ -255,7 +370,7 @@
 
         <tr>
             
-                <td class="name"><code>bob_or_light</code></td>
+                <td class="name"><code>player</code></td>
             
 
             <td class="type">
@@ -271,7 +386,7 @@
 
             
 
-            <td class="description last">a light source</td>
+            <td class="description last">the bob to check</td>
         </tr>
 
     
@@ -312,7 +427,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Glass.js.html">Glass.js</a>, <a href="Glass.js.html#line45">line 45</a>
+        <a href="Stair.js.html">Stair.js</a>, <a href="Stair.js.html#line253">line 253</a>
     </li></ul></dd>
     
 
@@ -343,14 +458,14 @@
 
     
 
-    <h4 class="name" id="seenSegment"><span class="type-signature"></span>seenSegment<span class="signature">(bob, segements)</span><span class="type-signature"> &rarr; {array}</span></h4>
+    <h4 class="name" id="draw"><span class="type-signature"></span>draw<span class="signature">(paper)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    calculate portion of the segment seen by bob
+    draw the stair on canvas
 </div>
 
 
@@ -386,13 +501,13 @@
 
         <tr>
             
-                <td class="name"><code>bob</code></td>
+                <td class="name"><code>paper</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="Bob.html">Bob</a></span>
+<span class="param-type">object</span>
 
 
             
@@ -402,30 +517,7 @@
 
             
 
-            <td class="description last">the stalking bob</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>segements</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">segments</td>
+            <td class="description last">the canvas dom node</td>
         </tr>
 
     
@@ -466,7 +558,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Glass.js.html">Glass.js</a>, <a href="Glass.js.html#line118">line 118</a>
+        <a href="Stair.js.html">Stair.js</a>, <a href="Stair.js.html#line129">line 129</a>
     </li></ul></dd>
     
 
@@ -489,28 +581,88 @@
 
 
 
-<h5>Returns:</h5>
+
+
 
         
-<div class="param-desc">
-    the seen segments (as Glass object)
+            
+
+    
+
+    <h4 class="name" id="inverse"><span class="type-signature"></span>inverse<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    reverse the stair direction in place (making an upstair downstair and vice-versa)
 </div>
 
 
 
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">array</span>
 
 
-    </dd>
-</dl>
+
+
+
+
+
+
+
+
+<dl class="details">
 
     
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Stair.js.html">Stair.js</a>, <a href="Stair.js.html#line303">line 303</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -536,7 +688,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sun Mar 06 2016 18:00:07 GMT+0100 (CET)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sun Mar 06 2016 18:00:08 GMT+0100 (CET)
 </footer>
 
 <script> prettyPrint(); </script>
