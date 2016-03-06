@@ -1,3 +1,8 @@
+/**
+ * render a world on canvas and set up rendering timeouts
+ * @param {object} paper a canvas dom element
+ * @param {World} the world object
+ */
 function renderScene(paper, world){
 
 	var all_segments = world.allSegments();

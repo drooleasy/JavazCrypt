@@ -1,3 +1,7 @@
+/**
+ * a shadow is an area of the world to darken
+ * @constructor
+ */
 function Shadow(){
 	this.paths = [];
 	this.style = {
@@ -9,11 +13,18 @@ function Shadow(){
 	this.element = null;
 }
 
+/**
+ * resets the shadow's paths
+ */
 Shadow.prototype.clear = function (paper){
 	this.paths = [];
 }
 
 
+/**
+ * draw each shadow's path
+ * @param {object} paper the canvas dom node to draw on
+ */
 Shadow.prototype.draw = function (paper){
 	
 
@@ -23,6 +34,11 @@ Shadow.prototype.draw = function (paper){
 	
 }
 
+/**
+ * draw one shadow path (a cone)
+ * @param {object} paper the canvas dom node to draw on
+ * @param {object} coneData the shadow's cone
+ */
 Shadow.prototype.drawCone = function (paper, coneData){
 	var ctx = paper.getContext('2d');
 
@@ -53,6 +69,4 @@ Shadow.prototype.drawCone = function (paper, coneData){
 	}
 //	ctx.stroke();
 	ctx.fill();
-
-	
 }

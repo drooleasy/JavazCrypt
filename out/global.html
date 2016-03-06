@@ -451,7 +451,7 @@
 
     
 
-    <h4 class="name" id="castRay"><span class="type-signature"></span>castRay<span class="signature">(ox, oy, tx, ty, limit)</span><span class="type-signature"> &rarr; {Segment}</span></h4>
+    <h4 class="name" id="castRay"><span class="type-signature"></span>castRay<span class="signature">(ox, oy, tx, ty, limit)</span><span class="type-signature"> &rarr; {<a href="Segment.html">Segment</a>}</span></h4>
 
     
 
@@ -681,7 +681,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Segment</span>
+<span class="param-type"><a href="Segment.html">Segment</a></span>
 
 
     </dd>
@@ -4148,6 +4148,1098 @@
 
     
 
+    <h4 class="name" id="randomDonut"><span class="type-signature"></span>randomDonut<span class="signature">(x, y, r, delta, num)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    generate a random points cloud around a donut
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the x coordinate of the center of the reference circle</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the y coordinate of the center of the reference circle</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>r</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the radius of the reference circle</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>delta</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the variation factor of points against the refernce circle</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>num</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the number of points to generate</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="PointCloud.js.html">PointCloud.js</a>, <a href="PointCloud.js.html#line368">line 368</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="randomPointCloud"><span class="type-signature"></span>randomPointCloud<span class="signature">(x, y, w, h, num)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    generate a random points cloud in a box
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the x coordinate of the bounding box</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the y coordinate of the bounding box</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>w</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the width of the bounding box</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>h</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the height of the bounding box</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>num</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the number of points to generate</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="PointCloud.js.html">PointCloud.js</a>, <a href="PointCloud.js.html#line306">line 306</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="randomPointCloudFromCenter"><span class="type-signature"></span>randomPointCloudFromCenter<span class="signature">(x, y, r_min, r_max, num)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    generate a random points cloud in a donut
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the x coordinate of the center of the bounding circles</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the y coordinate of the center of the bounding circles</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>r_min</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the minimum distance to the center</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>r_max</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the maximum distance to the center</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>num</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the number of points to generate</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="PointCloud.js.html">PointCloud.js</a>, <a href="PointCloud.js.html#line325">line 325</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="randomPointCloudFromCircle"><span class="type-signature"></span>randomPointCloudFromCircle<span class="signature">(x, y, r, delta, num)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    generate a random points cloud around a circle
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the x coordinate of the center of the reference circle</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the y coordinate of the center of the reference circle</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>r</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the radius of the reference circle</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>delta</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the variation factor of points against the refernce circle</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>num</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the number of points to generate</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="PointCloud.js.html">PointCloud.js</a>, <a href="PointCloud.js.html#line345">line 345</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="randomSimpleDonut"><span class="type-signature"></span>randomSimpleDonut<span class="signature">(x, y, d, num)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    genrate a random donut (two rings with matching point at same angle from center)
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the x coordinate of the center of the reference circle</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the y coordinate of the center of the reference circle</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>d</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the radius of the reference circle</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>num</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the number of points to generate</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="PointCloud.js.html">PointCloud.js</a>, <a href="PointCloud.js.html#line424">line 424</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
     <h4 class="name" id="randomTowardCenter"><span class="type-signature"></span>randomTowardCenter<span class="signature">(p)</span><span class="type-signature"> &rarr; {number}</span></h4>
 
     
@@ -4607,6 +5699,206 @@
 
     
 
+    <h4 class="name" id="Rect"><span class="type-signature"></span>Rect<span class="signature">(x, y, w, h)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    a rectangle
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">x coordinate of the rectangle</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">y coordinate of the rectangle</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>w</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">width of the rectangle</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>h</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">height of the rectangle</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Rect.js.html">Rect.js</a>, <a href="Rect.js.html#line9">line 9</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
     <h4 class="name" id="rect"><span class="type-signature"></span>rect<span class="signature">(x, y, w, h, angle)</span><span class="type-signature"> &rarr; {array}</span></h4>
 
     
@@ -4844,6 +6136,360 @@
 </dl>
 
     
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="renderScene"><span class="type-signature"></span>renderScene<span class="signature">(paper, the)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    render a world on canvas and set up rendering timeouts
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>paper</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">a canvas dom element</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>the</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="World.html">World</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">world object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="renderScene.js.html">renderScene.js</a>, <a href="renderScene.js.html#line6">line 6</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="ring"><span class="type-signature"></span>ring<span class="signature">(x, y, d, num)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    generate a ring of point
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the x coordinate of the center of the reference circle</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the y coordinate of the center of the reference circle</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>d</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the radius of the reference circle</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>num</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the number of points to generate</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="PointCloud.js.html">PointCloud.js</a>, <a href="PointCloud.js.html#line405">line 405</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -5437,13 +7083,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AABB.html">AABB</a></li><li><a href="Bob.html">Bob</a></li><li><a href="Door.html">Door</a></li><li><a href="Glass.html">Glass</a></li><li><a href="Handle.html">Handle</a></li><li><a href="Interval.html">Interval</a></li><li><a href="Path.html">Path</a></li><li><a href="Platform.html">Platform</a></li><li><a href="Point.html">Point</a></li><li><a href="Slope.html">Slope</a></li><li><a href="Stair.html">Stair</a></li><li><a href="Transform.html">Transform</a></li><li><a href="View.html">View</a></li><li><a href="World.html">World</a></li></ul><h3>Global</h3><ul><li><a href="global.html#angleBetween">angleBetween</a></li><li><a href="global.html#Bubble">Bubble</a></li><li><a href="global.html#castRay">castRay</a></li><li><a href="global.html#clipAngle">clipAngle</a></li><li><a href="global.html#clipAngleNegative">clipAngleNegative</a></li><li><a href="global.html#clipAnglePositive">clipAnglePositive</a></li><li><a href="global.html#cossin">cossin</a></li><li><a href="global.html#crossProduct">crossProduct</a></li><li><a href="global.html#deg2rad">deg2rad</a></li><li><a href="global.html#distanceAndAngle">distanceAndAngle</a></li><li><a href="global.html#distanceBetween">distanceBetween</a></li><li><a href="global.html#div">div</a></li><li><a href="global.html#dotProduct">dotProduct</a></li><li><a href="global.html#drawRoundedRect">drawRoundedRect</a></li><li><a href="global.html#intersection">intersection</a></li><li><a href="global.html#keyboardControl">keyboardControl</a></li><li><a href="global.html#kombin">kombin</a></li><li><a href="global.html#Light">Light</a></li><li><a href="global.html#minus">minus</a></li><li><a href="global.html#PIPI">PIPI</a></li><li><a href="global.html#quadrant">quadrant</a></li><li><a href="global.html#rad2deg">rad2deg</a></li><li><a href="global.html#randomBiased">randomBiased</a></li><li><a href="global.html#randomDelta">randomDelta</a></li><li><a href="global.html#randomTowardCenter">randomTowardCenter</a></li><li><a href="global.html#randomTowardLeft">randomTowardLeft</a></li><li><a href="global.html#randomTowardRight">randomTowardRight</a></li><li><a href="global.html#rect">rect</a></li><li><a href="global.html#solveP2">solveP2</a></li><li><a href="global.html#turns">turns</a></li><li><a href="global.html#union">union</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AABB.html">AABB</a></li><li><a href="Bob.html">Bob</a></li><li><a href="Door.html">Door</a></li><li><a href="Glass.html">Glass</a></li><li><a href="Handle.html">Handle</a></li><li><a href="Interval.html">Interval</a></li><li><a href="Path.html">Path</a></li><li><a href="Platform.html">Platform</a></li><li><a href="Point.html">Point</a></li><li><a href="PointCloud.html">PointCloud</a></li><li><a href="Segment.html">Segment</a></li><li><a href="Shadow.html">Shadow</a></li><li><a href="Slope.html">Slope</a></li><li><a href="Stair.html">Stair</a></li><li><a href="Transform.html">Transform</a></li><li><a href="View.html">View</a></li><li><a href="World.html">World</a></li></ul><h3>Global</h3><ul><li><a href="global.html#angleBetween">angleBetween</a></li><li><a href="global.html#Bubble">Bubble</a></li><li><a href="global.html#castRay">castRay</a></li><li><a href="global.html#clipAngle">clipAngle</a></li><li><a href="global.html#clipAngleNegative">clipAngleNegative</a></li><li><a href="global.html#clipAnglePositive">clipAnglePositive</a></li><li><a href="global.html#cossin">cossin</a></li><li><a href="global.html#crossProduct">crossProduct</a></li><li><a href="global.html#deg2rad">deg2rad</a></li><li><a href="global.html#distanceAndAngle">distanceAndAngle</a></li><li><a href="global.html#distanceBetween">distanceBetween</a></li><li><a href="global.html#div">div</a></li><li><a href="global.html#dotProduct">dotProduct</a></li><li><a href="global.html#drawRoundedRect">drawRoundedRect</a></li><li><a href="global.html#intersection">intersection</a></li><li><a href="global.html#keyboardControl">keyboardControl</a></li><li><a href="global.html#kombin">kombin</a></li><li><a href="global.html#Light">Light</a></li><li><a href="global.html#minus">minus</a></li><li><a href="global.html#PIPI">PIPI</a></li><li><a href="global.html#quadrant">quadrant</a></li><li><a href="global.html#rad2deg">rad2deg</a></li><li><a href="global.html#randomBiased">randomBiased</a></li><li><a href="global.html#randomDelta">randomDelta</a></li><li><a href="global.html#randomDonut">randomDonut</a></li><li><a href="global.html#randomPointCloud">randomPointCloud</a></li><li><a href="global.html#randomPointCloudFromCenter">randomPointCloudFromCenter</a></li><li><a href="global.html#randomPointCloudFromCircle">randomPointCloudFromCircle</a></li><li><a href="global.html#randomSimpleDonut">randomSimpleDonut</a></li><li><a href="global.html#randomTowardCenter">randomTowardCenter</a></li><li><a href="global.html#randomTowardLeft">randomTowardLeft</a></li><li><a href="global.html#randomTowardRight">randomTowardRight</a></li><li><a href="global.html#Rect">Rect</a></li><li><a href="global.html#rect">rect</a></li><li><a href="global.html#renderScene">renderScene</a></li><li><a href="global.html#ring">ring</a></li><li><a href="global.html#solveP2">solveP2</a></li><li><a href="global.html#turns">turns</a></li><li><a href="global.html#union">union</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sun Mar 06 2016 18:00:07 GMT+0100 (CET)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sun Mar 06 2016 19:20:45 GMT+0100 (CET)
 </footer>
 
 <script> prettyPrint(); </script>

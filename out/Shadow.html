@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Glass</title>
+    <title>JSDoc: Class: Shadow</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: Glass</h1>
+    <h1 class="page-title">Class: Shadow</h1>
 
     
 
@@ -28,7 +28,7 @@
 
 <header>
     
-        <h2>Glass</h2>
+        <h2>Shadow</h2>
         
     
 </header>
@@ -40,14 +40,14 @@
 
     
 
-    <h4 class="name" id="Glass"><span class="type-signature"></span>new Glass<span class="signature">(a, b)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Shadow"><span class="type-signature"></span>new Shadow<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    a glass Segment. Lights passes thorugh it
+    a shadow is an area of the world to darken
 </div>
 
 
@@ -56,78 +56,6 @@
 
 
 
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>a</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">a Point or two int</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>b</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">a Point or two int</td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -163,7 +91,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Glass.js.html">Glass.js</a>, <a href="Glass.js.html#line7">line 7</a>
+        <a href="Shadow.js.html">Shadow.js</a>, <a href="Shadow.js.html#line5">line 5</a>
     </li></ul></dd>
     
 
@@ -212,14 +140,96 @@
 
     
 
-    <h4 class="name" id="castTint"><span class="type-signature"></span>castTint<span class="signature">(bob_or_light)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="clear"><span class="type-signature"></span>clear<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    titend segments. cast tinted light
+    resets the shadow's paths
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Shadow.js.html">Shadow.js</a>, <a href="Shadow.js.html#line19">line 19</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="draw"><span class="type-signature"></span>draw<span class="signature">(paper)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    draw each shadow's path
 </div>
 
 
@@ -255,7 +265,7 @@
 
         <tr>
             
-                <td class="name"><code>bob_or_light</code></td>
+                <td class="name"><code>paper</code></td>
             
 
             <td class="type">
@@ -271,7 +281,7 @@
 
             
 
-            <td class="description last">a light source</td>
+            <td class="description last">the canvas dom node to draw on</td>
         </tr>
 
     
@@ -312,7 +322,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Glass.js.html">Glass.js</a>, <a href="Glass.js.html#line45">line 45</a>
+        <a href="Shadow.js.html">Shadow.js</a>, <a href="Shadow.js.html#line28">line 28</a>
     </li></ul></dd>
     
 
@@ -343,14 +353,14 @@
 
     
 
-    <h4 class="name" id="seenSegment"><span class="type-signature"></span>seenSegment<span class="signature">(bob, segements)</span><span class="type-signature"> &rarr; {array}</span></h4>
+    <h4 class="name" id="drawCone"><span class="type-signature"></span>drawCone<span class="signature">(paper, coneData)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    calculate portion of the segment seen by bob
+    draw one shadow path (a cone)
 </div>
 
 
@@ -386,13 +396,13 @@
 
         <tr>
             
-                <td class="name"><code>bob</code></td>
+                <td class="name"><code>paper</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="Bob.html">Bob</a></span>
+<span class="param-type">object</span>
 
 
             
@@ -402,20 +412,20 @@
 
             
 
-            <td class="description last">the stalking bob</td>
+            <td class="description last">the canvas dom node to draw on</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>segements</code></td>
+                <td class="name"><code>coneData</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">array</span>
+<span class="param-type">object</span>
 
 
             
@@ -425,7 +435,7 @@
 
             
 
-            <td class="description last">segments</td>
+            <td class="description last">the shadow's cone</td>
         </tr>
 
     
@@ -466,7 +476,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Glass.js.html">Glass.js</a>, <a href="Glass.js.html#line118">line 118</a>
+        <a href="Shadow.js.html">Shadow.js</a>, <a href="Shadow.js.html#line42">line 42</a>
     </li></ul></dd>
     
 
@@ -489,28 +499,6 @@
 
 
 
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    the seen segments (as Glass object)
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">array</span>
-
-
-    </dd>
-</dl>
-
-    
 
 
 

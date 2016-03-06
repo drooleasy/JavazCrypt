@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Door</title>
+    <title>JSDoc: Class: PointCloud</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: Door</h1>
+    <h1 class="page-title">Class: PointCloud</h1>
 
     
 
@@ -28,7 +28,7 @@
 
 <header>
     
-        <h2>Door</h2>
+        <h2>PointCloud</h2>
         
     
 </header>
@@ -40,465 +40,14 @@
 
     
 
-    <h4 class="name" id="Door"><span class="type-signature"></span>new Door<span class="signature">(a, the)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="PointCloud"><span class="type-signature"></span>new PointCloud<span class="signature">(x, y)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    A door is comprised of two segments. It can be opened or closed
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>a</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">extremity point or array of int or two int</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>the</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">other extremity point or array of int or two int</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Door.js.html">Door.js</a>, <a href="Door.js.html#line7">line 7</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    </div>
-
-    
-
-    
-
-    
-
-     
-
-    
-
-    
-        <h3 class="subsection-title">Members</h3>
-
-        
-            
-<h4 class="name" id=".speed"><span class="type-signature">(static) </span>speed<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    door quickness top open/close
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Door.js.html">Door.js</a>, <a href="Door.js.html#line54">line 54</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            
-
-    
-
-    <h4 class="name" id="castShadow"><span class="type-signature"></span>castShadow<span class="signature">(the)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    casts door's two segment shadows
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>the</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Bob or the Light to cast shadow from</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Door.js.html">Door.js</a>, <a href="Door.js.html#line190">line 190</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="close"><span class="type-signature"></span>close<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    launches animation for closing the door
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Door.js.html">Door.js</a>, <a href="Door.js.html#line74">line 74</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="closestPointFrom"><span class="type-signature"></span>closestPointFrom<span class="signature">(x, y)</span><span class="type-signature"> &rarr; {object}</span></h4>
-
-    
-
-
-
-<div class="description">
-    calculate the closest point on a door segments from a given point
+    a 2D points set
 </div>
 
 
@@ -550,7 +99,7 @@
 
             
 
-            <td class="description last">the point x coordinate</td>
+            <td class="description last">the x -coordinate of a point</td>
         </tr>
 
     
@@ -573,7 +122,7 @@
 
             
 
-            <td class="description last">the point y coordinate</td>
+            <td class="description last">the y -coordinate of a point</td>
         </tr>
 
     
@@ -614,7 +163,107 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Door.js.html">Door.js</a>, <a href="Door.js.html#line91">line 91</a>
+        <a href="PointCloud.js.html">PointCloud.js</a>, <a href="PointCloud.js.html#line7">line 7</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="AABB"><span class="type-signature"></span>AABB<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="AABB.html">AABB</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    compute the points cloud AABB
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="PointCloud.js.html">PointCloud.js</a>, <a href="PointCloud.js.html#line205">line 205</a>
     </li></ul></dd>
     
 
@@ -641,7 +290,264 @@
 
         
 <div class="param-desc">
-    the x and y position on the door
+    the axialy aligned bounding box of this points cloud
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="AABB.html">AABB</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="angles"><span class="type-signature"></span>angles<span class="signature">(from)</span><span class="type-signature"> &rarr; {array}</span></h4>
+
+    
+
+
+
+<div class="description">
+    compute all the angles between the cloud's point and another point
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>from</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">an x-y point object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="PointCloud.js.html">PointCloud.js</a>, <a href="PointCloud.js.html#line60">line 60</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    array of all the angles
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">array</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="center"><span class="type-signature"></span>center<span class="signature">()</span><span class="type-signature"> &rarr; {object}</span></h4>
+
+    
+
+
+
+<div class="description">
+    compute the center of the points cloud
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="PointCloud.js.html">PointCloud.js</a>, <a href="PointCloud.js.html#line22">line 22</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the center point with average x- and y- coordinates
 </div>
 
 
@@ -667,6 +573,312 @@
 
     
 
+    <h4 class="name" id="distances"><span class="type-signature"></span>distances<span class="signature">(from)</span><span class="type-signature"> &rarr; {array}</span></h4>
+
+    
+
+
+
+<div class="description">
+    compute all the distances between the cloud's point and another point
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>from</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">an x-y point object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="PointCloud.js.html">PointCloud.js</a>, <a href="PointCloud.js.html#line44">line 44</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    array of all the distances
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">array</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="distancesAndAngles"><span class="type-signature"></span>distancesAndAngles<span class="signature">(from)</span><span class="type-signature"> &rarr; {array}</span></h4>
+
+    
+
+
+
+<div class="description">
+    compute all the distances and angles between the cloud's point and another point
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>from</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">an x-y point object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="PointCloud.js.html">PointCloud.js</a>, <a href="PointCloud.js.html#line75">line 75</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    array of all the distances and angles
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">array</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
     <h4 class="name" id="draw"><span class="type-signature"></span>draw<span class="signature">(paper)</span><span class="type-signature"></span></h4>
 
     
@@ -674,7 +886,7 @@
 
 
 <div class="description">
-    draws the two segments of a door on canvas
+    draw this point cloud on canvas (as one path) with lines between the points
 </div>
 
 
@@ -716,7 +928,7 @@
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">object</span>
 
 
             
@@ -726,7 +938,7 @@
 
             
 
-            <td class="description last">canvas dom element</td>
+            <td class="description last">the canvas dom node</td>
         </tr>
 
     
@@ -767,7 +979,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Door.js.html">Door.js</a>, <a href="Door.js.html#line175">line 175</a>
+        <a href="PointCloud.js.html">PointCloud.js</a>, <a href="PointCloud.js.html#line152">line 152</a>
     </li></ul></dd>
     
 
@@ -798,14 +1010,14 @@
 
     
 
-    <h4 class="name" id="intersect"><span class="type-signature"></span>intersect<span class="signature">(other)</span><span class="type-signature"> &rarr; {<a href="Segment.html">Segment</a>}</span></h4>
+    <h4 class="name" id="drawPoint"><span class="type-signature"></span>drawPoint<span class="signature">(p, paper, r)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    computes door intersection with a segment
+    draw one of the cloud points
 </div>
 
 
@@ -841,13 +1053,13 @@
 
         <tr>
             
-                <td class="name"><code>other</code></td>
+                <td class="name"><code>p</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="Segment.html">Segment</a></span>
+<span class="param-type">number</span>
 
 
             
@@ -857,7 +1069,53 @@
 
             
 
-            <td class="description last">the other segment</td>
+            <td class="description last">the point index</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>paper</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the canvas dom node</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>r</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the radius of the circle to draw</td>
         </tr>
 
     
@@ -898,7 +1156,89 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Door.js.html">Door.js</a>, <a href="Door.js.html#line41">line 41</a>
+        <a href="PointCloud.js.html">PointCloud.js</a>, <a href="PointCloud.js.html#line286">line 286</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="innerOuter"><span class="type-signature"></span>innerOuter<span class="signature">()</span><span class="type-signature"> &rarr; {object}</span></h4>
+
+    
+
+
+
+<div class="description">
+    compute the minimal and maximal distance distance of points toward the center (and return the matching extremum points)
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="PointCloud.js.html">PointCloud.js</a>, <a href="PointCloud.js.html#line88">line 88</a>
     </li></ul></dd>
     
 
@@ -925,7 +1265,7 @@
 
         
 <div class="param-desc">
-    the first segments intersection with a door's segment - or null
+    with the min and max points, the center and the min_distance and the max_distance
 </div>
 
 
@@ -936,7 +1276,7 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="Segment.html">Segment</a></span>
+<span class="param-type">object</span>
 
 
     </dd>
@@ -951,14 +1291,14 @@
 
     
 
-    <h4 class="name" id="isSeenByBob"><span class="type-signature"></span>isSeenByBob<span class="signature">(bob)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    <h4 class="name" id="inside"><span class="type-signature"></span>inside<span class="signature">(x, y)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    checks if door's segments are seen by a bob
+    checks if a point is inside the hull of the points cloud
 </div>
 
 
@@ -994,13 +1334,13 @@
 
         <tr>
             
-                <td class="name"><code>bob</code></td>
+                <td class="name"><code>x</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="Bob.html">Bob</a></span>
+<span class="param-type">number</span>
 
 
             
@@ -1010,7 +1350,30 @@
 
             
 
-            <td class="description last">the lurking bob</td>
+            <td class="description last">the tested point x coordinate</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the tested point y coordinate</td>
         </tr>
 
     
@@ -1051,111 +1414,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Door.js.html">Door.js</a>, <a href="Door.js.html#line122">line 122</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    true if at least one segment is seen
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">boolean</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="open"><span class="type-signature"></span>open<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    launches animation for opening the door
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Door.js.html">Door.js</a>, <a href="Door.js.html#line59">line 59</a>
+        <a href="PointCloud.js.html">PointCloud.js</a>, <a href="PointCloud.js.html#line183">line 183</a>
     </li></ul></dd>
     
 
@@ -1186,14 +1445,14 @@
 
     
 
-    <h4 class="name" id="seenSegment"><span class="type-signature"></span>seenSegment<span class="signature">(bob)</span><span class="type-signature"> &rarr; {array}</span></h4>
+    <h4 class="name" id="plot"><span class="type-signature"></span>plot<span class="signature">(paper)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    calculate the sub segments of the door that are seen by a bob
+    draw this point cloud on canvas (as one path)
 </div>
 
 
@@ -1229,13 +1488,13 @@
 
         <tr>
             
-                <td class="name"><code>bob</code></td>
+                <td class="name"><code>paper</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="Bob.html">Bob</a></span>
+<span class="param-type">object</span>
 
 
             
@@ -1245,7 +1504,7 @@
 
             
 
-            <td class="description last">the stalking bob</td>
+            <td class="description last">the canvas dom node</td>
         </tr>
 
     
@@ -1286,7 +1545,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Door.js.html">Door.js</a>, <a href="Door.js.html#line134">line 134</a>
+        <a href="PointCloud.js.html">PointCloud.js</a>, <a href="PointCloud.js.html#line135">line 135</a>
     </li></ul></dd>
     
 
@@ -1309,28 +1568,6 @@
 
 
 
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    the arrays of seen subsegments
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">array</span>
-
-
-    </dd>
-</dl>
-
-    
 
 
 
@@ -1339,14 +1576,145 @@
 
     
 
-    <h4 class="name" id="subSegments"><span class="type-signature"></span>subSegments<span class="signature">()</span><span class="type-signature"> &rarr; {array}</span></h4>
+    <h4 class="name" id="plotInnerOuter"><span class="type-signature"></span>plotInnerOuter<span class="signature">(paper)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    calculate the two segments repreasenting the door
+    plot the center and the circle at minimal and maximal distance of it
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>paper</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the canvas dom element</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="PointCloud.js.html">PointCloud.js</a>, <a href="PointCloud.js.html#line242">line 242</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="sort"><span class="type-signature"></span>sort<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    sorts the points according to their angle with the center
 </div>
 
 
@@ -1390,7 +1758,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Door.js.html">Door.js</a>, <a href="Door.js.html#line145">line 145</a>
+        <a href="PointCloud.js.html">PointCloud.js</a>, <a href="PointCloud.js.html#line169">line 169</a>
     </li></ul></dd>
     
 
@@ -1413,28 +1781,137 @@
 
 
 
-<h5>Returns:</h5>
+
+
 
         
-<div class="param-desc">
-    the two segments repreasenting the door
+            
+
+    
+
+    <h4 class="name" id="strokeAABB"><span class="type-signature"></span>strokeAABB<span class="signature">(paper)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    draw the aabb of this points cloud
 </div>
 
 
 
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
         
-<span class="param-type">array</span>
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>paper</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
 
 
-    </dd>
-</dl>
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the canvas dom node</td>
+        </tr>
 
     
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="PointCloud.js.html">PointCloud.js</a>, <a href="PointCloud.js.html#line270">line 270</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

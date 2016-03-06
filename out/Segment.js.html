@@ -1,4 +1,32 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Segment.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Segment.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * a segment (for a wall, a boulde side....)
  * @constructor
  * @param {Point} a the start of the sgement
@@ -66,12 +94,12 @@ Segment.prototype.closestPointFrom = ArgRouter.decorate(
 			var seg_v = {x:(seg.b.x - seg.a.x), y:(seg.b.y - seg.a.y)},
 				pt_v = {x:(circ_pos.x - seg.a.x), y:(circ_pos.y - seg.a.y)},
 				seg_v_len = Math.sqrt(seg_v.x*seg_v.x + seg_v.y*seg_v.y);
-			if(seg_v_len < 0){
+			if(seg_v_len &lt; 0){
 				throw new Error("Invalid segment length");
 			}
 			var seg_v_unit = {x:(seg_v.x / seg_v_len), y:(seg_v.y / seg_v_len)},
 				proj = pt_v.x * seg_v_unit.x + pt_v.y * seg_v_unit.y; // dot product
-			if(proj <= 0){
+			if(proj &lt;= 0){
 				return {x: seg.a.x, y:seg.a.y};
 			}
 			if(proj >= seg_v_len){
@@ -127,7 +155,7 @@ Segment.prototype.seenSegment = function(bob, segments){
 	var angle_a, angle_b, angle_inter, angle_inter_1, angle_inter_2, left, rigth;
 
 	
-	if(sees_a && sees_b){
+	if(sees_a &amp;&amp; sees_b){
 		res =  [this.clone()];
 	}else{
 
@@ -140,7 +168,7 @@ Segment.prototype.seenSegment = function(bob, segments){
 		var intersects = [];
 		if(intersect_1) intersects.push(intersect_1);
 		if(intersect_2) intersects.push(intersect_2);
-		for(i=0;i<intersect_cone.length;i++){
+		for(i=0;i&lt;intersect_cone.length;i++){
 			intersects.push(intersect_cone[i]);
 		}
 		
@@ -151,9 +179,9 @@ Segment.prototype.seenSegment = function(bob, segments){
 			left = intersects[0];
 			right = intersects[0];
 
-			for(i=1;i<intersects.length;i++){
+			for(i=1;i&lt;intersects.length;i++){
 				var angle_inter = clipAngle(angleBetween(bob.x,bob.y, intersects[i].x, intersects[i].y) - bob.angle);
-				if(angle_inter < angle_inter_min){
+				if(angle_inter &lt; angle_inter_min){
 					angle_inter_min = angle_inter;
 					right = intersects[i];
 				}
@@ -236,15 +264,15 @@ Segment.prototype.intersect = function (other){
 	var _u = crossProduct(diff, this_v);
 	var u = _u / x;
 	
-	if(x==0 && _u == 0){ // colinear
+	if(x==0 &amp;&amp; _u == 0){ // colinear
 		return null; // !!!
 	}
 	
-	if(x==0 && _u != 0){ // parallel
+	if(x==0 &amp;&amp; _u != 0){ // parallel
 		return null;
 	}
 	
-	if(x!=0 && 0<=t && t<=1 && 0<=u && u<=1){ // secant
+	if(x!=0 &amp;&amp; 0&lt;=t &amp;&amp; t&lt;=1 &amp;&amp; 0&lt;=u &amp;&amp; u&lt;=1){ // secant
 		return {
 				x:(this.a.x + t * this_v.x),
 				y:(this.a.y + t * this_v.y)
@@ -279,13 +307,13 @@ Segment.prototype.intersectWithCircle = function(cx,cy,cr){
 	
 	if(res.length == 0) return sol;
 	
-	if(0<=res[0] && res[0]<=1){
+	if(0&lt;=res[0] &amp;&amp; res[0]&lt;=1){
 		sol.push({
 			x: (this.a.x + res[0] * vx),
 			y: (this.a.y + res[0] * vy)
 		});
 	}
-	if(0<=res[1] && res[1]<=1){
+	if(0&lt;=res[1] &amp;&amp; res[1]&lt;=1){
 		sol.push({
 			x: (this.a.x + res[1] * vx),
 			y: (this.a.y + res[1] * vy)
@@ -310,14 +338,14 @@ Segment.prototype.intersectWithCone = function(cx,cy,cr, angle, fov_angle){
 	if(possibles == null) return [];
 	var i=0;
 	var intersects = [];
-	for(;i<possibles.length;i++){
+	for(;i&lt;possibles.length;i++){
 		
 		
 		var angle_points = angleBetween(cx, cy, possibles[i].x, possibles[i].y);
 		
 		var angle_relative = clipAngle(angle_points - angle);
 		
-		if((-fov_angle/2) <= angle_relative && angle_relative <= fov_angle/2){
+		if((-fov_angle/2) &lt;= angle_relative &amp;&amp; angle_relative &lt;= fov_angle/2){
 			intersects.push(possibles[i]);
 		}
 	}
@@ -420,3 +448,26 @@ Segment.prototype.AABB = function segmentAABB(tolerance){
 	);
 	
 }
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AABB.html">AABB</a></li><li><a href="Bob.html">Bob</a></li><li><a href="Door.html">Door</a></li><li><a href="Glass.html">Glass</a></li><li><a href="Handle.html">Handle</a></li><li><a href="Interval.html">Interval</a></li><li><a href="Path.html">Path</a></li><li><a href="Platform.html">Platform</a></li><li><a href="Point.html">Point</a></li><li><a href="PointCloud.html">PointCloud</a></li><li><a href="Segment.html">Segment</a></li><li><a href="Shadow.html">Shadow</a></li><li><a href="Slope.html">Slope</a></li><li><a href="Stair.html">Stair</a></li><li><a href="Transform.html">Transform</a></li><li><a href="View.html">View</a></li><li><a href="World.html">World</a></li></ul><h3>Global</h3><ul><li><a href="global.html#angleBetween">angleBetween</a></li><li><a href="global.html#Bubble">Bubble</a></li><li><a href="global.html#castRay">castRay</a></li><li><a href="global.html#clipAngle">clipAngle</a></li><li><a href="global.html#clipAngleNegative">clipAngleNegative</a></li><li><a href="global.html#clipAnglePositive">clipAnglePositive</a></li><li><a href="global.html#cossin">cossin</a></li><li><a href="global.html#crossProduct">crossProduct</a></li><li><a href="global.html#deg2rad">deg2rad</a></li><li><a href="global.html#distanceAndAngle">distanceAndAngle</a></li><li><a href="global.html#distanceBetween">distanceBetween</a></li><li><a href="global.html#div">div</a></li><li><a href="global.html#dotProduct">dotProduct</a></li><li><a href="global.html#drawRoundedRect">drawRoundedRect</a></li><li><a href="global.html#intersection">intersection</a></li><li><a href="global.html#keyboardControl">keyboardControl</a></li><li><a href="global.html#kombin">kombin</a></li><li><a href="global.html#Light">Light</a></li><li><a href="global.html#minus">minus</a></li><li><a href="global.html#PIPI">PIPI</a></li><li><a href="global.html#quadrant">quadrant</a></li><li><a href="global.html#rad2deg">rad2deg</a></li><li><a href="global.html#randomBiased">randomBiased</a></li><li><a href="global.html#randomDelta">randomDelta</a></li><li><a href="global.html#randomDonut">randomDonut</a></li><li><a href="global.html#randomPointCloud">randomPointCloud</a></li><li><a href="global.html#randomPointCloudFromCenter">randomPointCloudFromCenter</a></li><li><a href="global.html#randomPointCloudFromCircle">randomPointCloudFromCircle</a></li><li><a href="global.html#randomSimpleDonut">randomSimpleDonut</a></li><li><a href="global.html#randomTowardCenter">randomTowardCenter</a></li><li><a href="global.html#randomTowardLeft">randomTowardLeft</a></li><li><a href="global.html#randomTowardRight">randomTowardRight</a></li><li><a href="global.html#Rect">Rect</a></li><li><a href="global.html#rect">rect</a></li><li><a href="global.html#renderScene">renderScene</a></li><li><a href="global.html#ring">ring</a></li><li><a href="global.html#solveP2">solveP2</a></li><li><a href="global.html#turns">turns</a></li><li><a href="global.html#union">union</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sun Mar 06 2016 19:20:45 GMT+0100 (CET)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
