@@ -1,4 +1,6 @@
-
+/**
+ * WTF ?
+ */
 function kombin(){
   var combs = {};
   var cbs = {};

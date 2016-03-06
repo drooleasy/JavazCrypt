@@ -1,4 +1,9 @@
-
+/**
+ * a glass Segment. Lights passes thorugh it
+ * @constructor
+ * @param {object} a a Point or two int
+ * @param {object} b a Point or two int
+ */
 var Glass = ArgRouter.decorate(
 	{},
 	ArgRouter.combine(
@@ -33,6 +38,10 @@ Glass.prototype.castShadow = function castGlassShadow(bob_or_light){
 }
 
 
+/**
+ * titend segments. cast tinted light
+ * @param {object} bob_or_light a light source
+ */
 Glass.prototype.castTint = function castSegmentShadow(bob_or_light){
 	var metrics_a = distanceAndAngle(bob_or_light.x, bob_or_light.y, this.a.x, this.a.y),
 		metrics_b = distanceAndAngle(bob_or_light.x, bob_or_light.y, this.b.x, this.b.y);
@@ -100,7 +109,12 @@ Glass.prototype.castTint = function castSegmentShadow(bob_or_light){
 }
 
 
-
+/**
+ * calculate portion of the segment seen by bob
+ * @param {Bob} bob the stalking bob
+ * @param {array} segements segments
+ * @return {array} the seen segments (as Glass object)
+ */
 Glass.prototype.seenSegment = function(bob, segments){
 	var segments = Segment.prototype.seenSegment.apply(this, arguments);
 	for(var i=0; i<segments.length; i++){

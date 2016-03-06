@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: AABB</title>
+    <title>JSDoc: Class: Glass</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: AABB</h1>
+    <h1 class="page-title">Class: Glass</h1>
 
     
 
@@ -28,7 +28,7 @@
 
 <header>
     
-        <h2>AABB</h2>
+        <h2>Glass</h2>
         
     
 </header>
@@ -40,14 +40,14 @@
 
     
 
-    <h4 class="name" id="AABB"><span class="type-signature"></span>new AABB<span class="signature">(x, y, w, h)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Glass"><span class="type-signature"></span>new Glass<span class="signature">(a, b)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    Axialy Aligned Bounding Box model
+    a glass Segment. Lights passes thorugh it
 </div>
 
 
@@ -83,13 +83,13 @@
 
         <tr>
             
-                <td class="name"><code>x</code></td>
+                <td class="name"><code>a</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">object</span>
 
 
             
@@ -99,20 +99,20 @@
 
             
 
-            <td class="description last">top-left x-coordiante</td>
+            <td class="description last">a Point or two int</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>y</code></td>
+                <td class="name"><code>b</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">object</span>
 
 
             
@@ -122,53 +122,7 @@
 
             
 
-            <td class="description last">top-left y-coordiante</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>w</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">width</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>h</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">height</td>
+            <td class="description last">a Point or two int</td>
         </tr>
 
     
@@ -209,7 +163,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="AABB.js.html">AABB.js</a>, <a href="AABB.js.html#line9">line 9</a>
+        <a href="Glass.js.html">Glass.js</a>, <a href="Glass.js.html#line7">line 7</a>
     </li></ul></dd>
     
 
@@ -258,14 +212,14 @@
 
     
 
-    <h4 class="name" id="intersects"><span class="type-signature"></span>intersects<span class="signature">(other)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    <h4 class="name" id="castTint"><span class="type-signature"></span>castTint<span class="signature">(bob_or_light)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    Returns wheter an AABB intersects with another
+    titend segments. cast tinted light
 </div>
 
 
@@ -301,13 +255,13 @@
 
         <tr>
             
-                <td class="name"><code>other</code></td>
+                <td class="name"><code>bob_or_light</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="AABB.html">AABB</a></span>
+<span class="param-type">object</span>
 
 
             
@@ -317,7 +271,7 @@
 
             
 
-            <td class="description last">the other AABB</td>
+            <td class="description last">a light source</td>
         </tr>
 
     
@@ -358,7 +312,161 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="AABB.js.html">AABB.js</a>, <a href="AABB.js.html#line21">line 21</a>
+        <a href="Glass.js.html">Glass.js</a>, <a href="Glass.js.html#line45">line 45</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="seenSegment"><span class="type-signature"></span>seenSegment<span class="signature">(bob, segements)</span><span class="type-signature"> &rarr; {array}</span></h4>
+
+    
+
+
+
+<div class="description">
+    calculate portion of the segment seen by bob
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>bob</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Bob.html">Bob</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the stalking bob</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>segements</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">segments</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Glass.js.html">Glass.js</a>, <a href="Glass.js.html#line118">line 118</a>
     </li></ul></dd>
     
 
@@ -385,7 +493,7 @@
 
         
 <div class="param-desc">
-    true is the two AABBs intersects, else false
+    the seen segments (as Glass object)
 </div>
 
 
@@ -396,7 +504,7 @@
     </dt>
     <dd>
         
-<span class="param-type">boolean</span>
+<span class="param-type">array</span>
 
 
     </dd>

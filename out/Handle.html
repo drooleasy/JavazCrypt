@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: AABB</title>
+    <title>JSDoc: Class: Handle</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: AABB</h1>
+    <h1 class="page-title">Class: Handle</h1>
 
     
 
@@ -28,7 +28,7 @@
 
 <header>
     
-        <h2>AABB</h2>
+        <h2>Handle</h2>
         
     
 </header>
@@ -40,14 +40,14 @@
 
     
 
-    <h4 class="name" id="AABB"><span class="type-signature"></span>new AABB<span class="signature">(x, y, w, h)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Handle"><span class="type-signature"></span>new Handle<span class="signature">(x, y, r, onMove)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    Axialy Aligned Bounding Box model
+    an interactive (movable) point on the canvas
 </div>
 
 
@@ -99,7 +99,7 @@
 
             
 
-            <td class="description last">top-left x-coordiante</td>
+            <td class="description last">the x position</td>
         </tr>
 
     
@@ -122,14 +122,14 @@
 
             
 
-            <td class="description last">top-left y-coordiante</td>
+            <td class="description last">the y position</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>w</code></td>
+                <td class="name"><code>r</code></td>
             
 
             <td class="type">
@@ -145,20 +145,20 @@
 
             
 
-            <td class="description last">width</td>
+            <td class="description last">the radius of the handle</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>h</code></td>
+                <td class="name"><code>onMove</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">function</span>
 
 
             
@@ -168,7 +168,7 @@
 
             
 
-            <td class="description last">height</td>
+            <td class="description last">a callback</td>
         </tr>
 
     
@@ -209,7 +209,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="AABB.js.html">AABB.js</a>, <a href="AABB.js.html#line9">line 9</a>
+        <a href="Handle.js.html">Handle.js</a>, <a href="Handle.js.html#line9">line 9</a>
     </li></ul></dd>
     
 
@@ -258,14 +258,14 @@
 
     
 
-    <h4 class="name" id="intersects"><span class="type-signature"></span>intersects<span class="signature">(other)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    <h4 class="name" id="draw"><span class="type-signature"></span>draw<span class="signature">(paper)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    Returns wheter an AABB intersects with another
+    draws the handle on canvas
 </div>
 
 
@@ -301,13 +301,13 @@
 
         <tr>
             
-                <td class="name"><code>other</code></td>
+                <td class="name"><code>paper</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="AABB.html">AABB</a></span>
+<span class="param-type">object</span>
 
 
             
@@ -317,7 +317,7 @@
 
             
 
-            <td class="description last">the other AABB</td>
+            <td class="description last">the canvas dom node</td>
         </tr>
 
     
@@ -358,7 +358,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="AABB.js.html">AABB.js</a>, <a href="AABB.js.html#line21">line 21</a>
+        <a href="Handle.js.html">Handle.js</a>, <a href="Handle.js.html#line37">line 37</a>
     </li></ul></dd>
     
 
@@ -381,28 +381,6 @@
 
 
 
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    true is the two AABBs intersects, else false
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">boolean</span>
-
-
-    </dd>
-</dl>
-
-    
 
 
 

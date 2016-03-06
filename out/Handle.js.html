@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: AABB.js</title>
+    <title>JSDoc: Source: Handle.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: AABB.js</h1>
+    <h1 class="page-title">Source: Handle.js</h1>
 
     
 
@@ -27,38 +27,73 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * Axialy Aligned Bounding Box model
+ * an interactive (movable) point on the canvas
  * @constructor
- * @param {number} x top-left x-coordiante
- * @param {number} y top-left y-coordiante
- * @param {number} w width
- * @param {number} h height
+ * @param {number} x the x position
+ * @param {number} y the y position
+ * @param {number} r the radius of the handle
+ * @param {function} onMove a callback
  */
-function AABB(x, y, w, h){
-	this.x = x;
-	this.y = y;
-	this.w = w;
-	this.h = h;
-};
+function Handle(x,y,r, onMove){
+	this.x=x;
+	this.y=y;
+	this.r=r;
+	this.styles={
+		"fill":"#fff",
+		"stroke":"fff",
+		"text":"#fff"
+	};
+	
+	this.onMove = onMove;
+	
+	this.onMouseOver = function(){
+		this.styles.fill = "#f33";
+		this.styles.text = "#f33";
+	}
+	
+	this.onMouseOut = function(){
+		this.styles.fill = "#fff";
+		this.styles.text = "#fff";
+	}
+	this.label = "";
+}
 
 /**
- * Returns wheter an AABB intersects with another
- * @param {AABB} other the other AABB
- * @return {boolean} true is the two AABBs intersects, else false
+ * draws the handle on canvas
+ * @param {object} paper the canvas dom node
  */
-AABB.prototype.intersects = function(other){
-	if(!other instanceof AABB) throw "argument is not an AABB";
-	var dontIntersects = (
-		this.x > other.x + other.w
-		|| this.x + this.w &lt; other.x
-		|| this.y > other.y + other.h
-		|| this.y + this.h &lt; other.y
-	);
-	return !dontIntersects;
+Handle.prototype.draw = function(paper){
+	var ctx = paper.getContext("2d");
+	ctx.fillStyle = this.styles.fill;
+	ctx.strokeStyle = this.styles.stroke;
+	ctx.beginPath();
 
-};
+	ctx.arc(this.x, this.y, this.r, 0, PIPI);
+	ctx.fill();
+	ctx.stroke();
+	
+	if(this.label){
 
-//console.log("loaded AABB");
+		var text_x = this.x + this.r + 8;
+		var text_y = this.y + 4;
+		ctx.fillStyle = "rgba(0,0,0,0.5)";
+		
+		ctx.strokeStyle = this.styles.text;
+		ctx.lineWidth = 1; 
+		ctx.beginPath();
+		ctx.arc(text_x+3, text_y-4, 7, 0, PIPI);
+		ctx.fill();
+		ctx.stroke();
+
+		ctx.fillStyle = this.styles.text; 
+		ctx.fillText(
+			this.label,
+			text_x, 
+			text_y
+		);
+		
+	}
+}
 </code></pre>
         </article>
     </section>

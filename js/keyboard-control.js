@@ -1,3 +1,7 @@
+/**
+ * set keyboard control for the world
+ * @param {World} world the world to be controlled
+ */
 function keyboardControl(world){
 	
 	var controlled = world.player;

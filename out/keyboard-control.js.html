@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: AABB.js</title>
+    <title>JSDoc: Source: keyboard-control.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: AABB.js</h1>
+    <h1 class="page-title">Source: keyboard-control.js</h1>
 
     
 
@@ -27,38 +27,82 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * Axialy Aligned Bounding Box model
- * @constructor
- * @param {number} x top-left x-coordiante
- * @param {number} y top-left y-coordiante
- * @param {number} w width
- * @param {number} h height
+ * set keyboard control for the world
+ * @param {World} world the world to be controlled
  */
-function AABB(x, y, w, h){
-	this.x = x;
-	this.y = y;
-	this.w = w;
-	this.h = h;
-};
+function keyboardControl(world){
+	
+	var controlled = world.player;
+	
+	var keysCB = {
+		"37" : "turnLeft",
+		"39" : "turnRight",
+		"38" : "moveForward",
+		"40" : "moveBackward"
+	};
+	
+	var keys = {};
+	$("body").keydown(function(evt){
+		keys[evt.which] = true
+	});
+	$("body").keyup(function(evt){
+		delete keys[evt.which];
+	});
 
-/**
- * Returns wheter an AABB intersects with another
- * @param {AABB} other the other AABB
- * @return {boolean} true is the two AABBs intersects, else false
- */
-AABB.prototype.intersects = function(other){
-	if(!other instanceof AABB) throw "argument is not an AABB";
-	var dontIntersects = (
-		this.x > other.x + other.w
-		|| this.x + this.w &lt; other.x
-		|| this.y > other.y + other.h
-		|| this.y + this.h &lt; other.y
-	);
-	return !dontIntersects;
+	
 
-};
+	setInterval(function(){				
+		for(key in keysCB){
+			if(keys[parseInt(key)]) controlled[keysCB[key]]();	
+		}
+		
+		var player = controlled;
+		// COLLISIONS
+		var p_aabb = player.AABB(1);
+		(function collision_tests(){ // iife for profiling segmentation purpose
+			for(var i=0;i&lt;world.bobs.length;i++){
+				if(world.bobs[i] !== world.player) world.player.collidesWithBob(world.bobs[i]);
+			}
+			var all_segments = world.allSegments();
+			for(var i=0; i&lt;all_segments.length;i++){
+				var segment = all_segments[i];
+				var s_aabb = segment.AABB(1);
+				if(!p_aabb.intersects(s_aabb)) continue;	
+				player.collidesWithSegment(segment);
+			}
+		})();
+		
+		var all_segments= world.allSegments();
+		
+		(function doors_tests(){ // iife for profiling segmentation purpose
+		
+			// DOORS OPENING/CLOSING
+			for(i=0;i&lt;all_segments.length;i++){
+				var segment = all_segments[i]; 
+				
+				if(segment instanceof Door) {
+					var door = segment;
+					var d_aabb = door.AABB(1.5);
+					// problem with segment AABB when vertical
+					//if(!p_aabb.intersects(d_aabb)){ 
+					//	door.close();
+					//	continue;	
+					//}
+					var closest = segment.closestPointFrom(world.player.x, world.player.y);
+					var d = distanceBetween(closest.x, closest.y, world.player.x, world.player.y)
+					if(d&lt;world.player.width + door.detectionDistance){
+						door.open();
+					}else{
+						door.close();
+					}
+				}
+			}
+		})();
 
-//console.log("loaded AABB");
+		
+	}, 1000/60);
+}
+
 </code></pre>
         </article>
     </section>

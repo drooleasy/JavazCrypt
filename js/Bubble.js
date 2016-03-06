@@ -1,6 +1,12 @@
+
+/**
+ * Static object to draw speech bubble
+ */
 Bubble = {};
 
-
+/**
+ * bubble's styles
+ */
 Bubble.style = {
 	"margin": 5,
 	"padding": 3,
@@ -12,6 +18,13 @@ Bubble.style = {
 	minAnchorLength : 5
 }
 
+/**
+ * draws a bublle on canvas, it must be transformed to trageted position
+ * @param {object} paper the canvas
+ * @param {string} msg the message to draw
+ * @param {number} angle the angle at wicth to draw the bubble
+ * @param {number} offset the offset to draw the Bubble away
+ */
 Bubble.draw = function (paper, msg, angle, offset) {
 	var anchor_start_x = Math.cos(angle) * offset,
 		anchor_start_y = Math.sin(angle) * offset;

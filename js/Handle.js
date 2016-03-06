@@ -1,4 +1,11 @@
-
+/**
+ * an interactive (movable) point on the canvas
+ * @constructor
+ * @param {number} x the x position
+ * @param {number} y the y position
+ * @param {number} r the radius of the handle
+ * @param {function} onMove a callback
+ */
 function Handle(x,y,r, onMove){
 	this.x=x;
 	this.y=y;
@@ -23,7 +30,10 @@ function Handle(x,y,r, onMove){
 	this.label = "";
 }
 
-
+/**
+ * draws the handle on canvas
+ * @param {object} paper the canvas dom node
+ */
 Handle.prototype.draw = function(paper){
 	var ctx = paper.getContext("2d");
 	ctx.fillStyle = this.styles.fill;

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: AABB.js</title>
+    <title>JSDoc: Source: Bubble.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: AABB.js</h1>
+    <h1 class="page-title">Source: Bubble.js</h1>
 
     
 
@@ -26,39 +26,95 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/**
- * Axialy Aligned Bounding Box model
- * @constructor
- * @param {number} x top-left x-coordiante
- * @param {number} y top-left y-coordiante
- * @param {number} w width
- * @param {number} h height
+            <pre class="prettyprint source linenums"><code>
+/**
+ * Static object to draw speech bubble
  */
-function AABB(x, y, w, h){
-	this.x = x;
-	this.y = y;
-	this.w = w;
-	this.h = h;
-};
+Bubble = {};
 
 /**
- * Returns wheter an AABB intersects with another
- * @param {AABB} other the other AABB
- * @return {boolean} true is the two AABBs intersects, else false
+ * bubble's styles
  */
-AABB.prototype.intersects = function(other){
-	if(!other instanceof AABB) throw "argument is not an AABB";
-	var dontIntersects = (
-		this.x > other.x + other.w
-		|| this.x + this.w &lt; other.x
-		|| this.y > other.y + other.h
-		|| this.y + this.h &lt; other.y
+Bubble.style = {
+	"margin": 5,
+	"padding": 3,
+	"line-height": 11,
+	"fill": "#FFF",
+	"stroke": "#FFF",
+	"stroke-width": 1,
+	"text-fill": "#000",
+	minAnchorLength : 5
+}
+
+/**
+ * draws a bublle on canvas, it must be transformed to trageted position
+ * @param {object} paper the canvas
+ * @param {string} msg the message to draw
+ * @param {number} angle the angle at wicth to draw the bubble
+ * @param {number} offset the offset to draw the Bubble away
+ */
+Bubble.draw = function (paper, msg, angle, offset) {
+	var anchor_start_x = Math.cos(angle) * offset,
+		anchor_start_y = Math.sin(angle) * offset;
+
+	var lines = msg.split("\n");
+	var longestLine = "";
+	for(var i=0;i&lt;lines.length;i++){
+		if(lines[i].length > longestLine.length) longestLine = lines[i];
+	} 
+	
+	var margin = Bubble.style.margin;		
+	var padding = Bubble.style.padding;		
+	
+	var content_height = 2*Bubble.style.padding + Bubble.style["line-height"] * lines.length;
+	
+	var metrics = ctx.measureText(longestLine);
+
+	var bubble_width = metrics.width + 2*margin + 2*padding;
+	var bubble_height = content_height + 2*margin + 2*padding;
+
+	var min_anchor = Bubble.style.minAnchorLength,
+		maxLength = Math.max(bubble_width, bubble_height),
+		bubble_center_x = anchor_start_x + Math.cos(angle)*(min_anchor + maxLength/2),
+		bubble_center_y = anchor_start_y + Math.sin(angle)*(min_anchor + maxLength/2),
+		bubble_x = bubble_center_x - bubble_width/2,
+		bubble_y = bubble_center_y - bubble_height/2;
+
+	var text_x = bubble_x + margin + padding;
+	var text_y = bubble_y + margin + padding + Bubble.style["line-height"];
+
+
+
+	ctx.fillStyle   = Bubble.style["fill"];
+	ctx.strokeStyle = Bubble.style["stroke"];
+	ctx.lineWidth   = Bubble.style["stroke-width"];
+	ctx.fontColor   = Bubble.style["font-color"];
+	
+	var anchor = new Segment(
+		bubble_center_x,
+		bubble_center_y,
+		anchor_start_x,
+		anchor_start_y
 	);
-	return !dontIntersects;
+	
+	anchor.draw(paper);
 
-};
+	drawRoundedRect(ctx, bubble_x, bubble_y, bubble_width, bubble_height);
 
-//console.log("loaded AABB");
+	ctx.fill();
+	ctx.stroke();
+
+	
+	ctx.fillStyle = Bubble.style["text-fill"]; 
+	for(var i=0; i&lt;lines.length;i++){
+		ctx.fillText(
+			lines[i],
+			text_x, 
+			text_y + i * Bubble.style["line-height"]
+		);
+	}
+}
+
 </code></pre>
         </article>
     </section>
