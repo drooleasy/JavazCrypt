@@ -40,7 +40,7 @@
 
     
 
-    <h4 class="name" id="Point"><span class="type-signature"></span>new Point<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Point"><span class="type-signature"></span>new Point<span class="signature">(x, y)</span><span class="type-signature"></span></h4>
 
     
 
@@ -48,507 +48,6 @@
 
 <div class="description">
     Model for 2D point and vectors
-can take 0 parameter (for 0,0)
-or an array of length 2 for x and y
-or an object with x and y-properties
-or two numbers for x and y
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Point.js.html">Point.js</a>, <a href="Point.js.html#line10">line 10</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    </div>
-
-    
-
-    
-
-    
-
-     
-
-    
-
-    
-        <h3 class="subsection-title">Members</h3>
-
-        
-            
-<h4 class="name" id="angle"><span class="type-signature"></span>angle<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    compute the angle with another point
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Point.js.html">Point.js</a>, <a href="Point.js.html#line149">line 149</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="cross"><span class="type-signature"></span>cross<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    compute the cross product of the point with another point
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Point.js.html">Point.js</a>, <a href="Point.js.html#line114">line 114</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="distance"><span class="type-signature"></span>distance<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    compute the distance with another point
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Point.js.html">Point.js</a>, <a href="Point.js.html#line166">line 166</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="distanceAndAngle"><span class="type-signature"></span>distanceAndAngle<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    compute distance and angle betwwen the point and another
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Point.js.html">Point.js</a>, <a href="Point.js.html#line129">line 129</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="dot"><span class="type-signature"></span>dot<span class="type-signature"></span></h4>
-
-
-
-
-<div class="description">
-    compute the dot product of the point with another point
-</div>
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Point.js.html">Point.js</a>, <a href="Point.js.html#line100">line 100</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            
-
-    
-
-    <h4 class="name" id=".clipAngle"><span class="type-signature">(static) </span>clipAngle<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    return an angle cliped betwwen -PI and +PI
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Point.js.html">Point.js</a>, <a href="Point.js.html#line278">line 278</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id=".route"><span class="type-signature">(static) </span>route<span class="signature">(key)</span><span class="type-signature"> &rarr; {object}</span></h4>
-
-    
-
-
-
-<div class="description">
-    return an ArgRouter router for a Point
-defined by either no arg, an x-/y-object, two numbers or an array
 </div>
 
 
@@ -584,13 +83,13 @@ defined by either no arg, an x-/y-object, two numbers or an array
 
         <tr>
             
-                <td class="name"><code>key</code></td>
+                <td class="name"><code>x</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">number</span>
 
 
             
@@ -600,7 +99,30 @@ defined by either no arg, an x-/y-object, two numbers or an array
 
             
 
-            <td class="description last">the key to witch assign the point in the ArgRouter context</td>
+            <td class="description last">the x coordinate</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the y coordinate</td>
         </tr>
 
     
@@ -641,7 +163,156 @@ defined by either no arg, an x-/y-object, two numbers or an array
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Point.js.html">Point.js</a>, <a href="Point.js.html#line44">line 44</a>
+        <a href="Point.js.html">Point.js</a>, <a href="Point.js.html#line8">line 8</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id=".clipAngle"><span class="type-signature">(static) </span>clipAngle<span class="signature">(the)</span><span class="type-signature"> &rarr; {number}</span></h4>
+
+    
+
+
+
+<div class="description">
+    return an angle cliped betwwen -PI and +PI
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>the</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">number to clip in radians</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Point.js.html">Point.js</a>, <a href="Point.js.html#line184">line 184</a>
     </li></ul></dd>
     
 
@@ -668,7 +339,7 @@ defined by either no arg, an x-/y-object, two numbers or an array
 
         
 <div class="param-desc">
-    a Point route
+    the cliped number
 </div>
 
 
@@ -679,7 +350,7 @@ defined by either no arg, an x-/y-object, two numbers or an array
     </dt>
     <dd>
         
-<span class="param-type">object</span>
+<span class="param-type">number</span>
 
 
     </dd>
@@ -694,7 +365,7 @@ defined by either no arg, an x-/y-object, two numbers or an array
 
     
 
-    <h4 class="name" id=".unit"><span class="type-signature">(static) </span>unit<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".unit"><span class="type-signature">(static) </span>unit<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Point.html">Point</a>}</span></h4>
 
     
 
@@ -745,7 +416,7 @@ defined by either no arg, an x-/y-object, two numbers or an array
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Point.js.html">Point.js</a>, <a href="Point.js.html#line264">line 264</a>
+        <a href="Point.js.html">Point.js</a>, <a href="Point.js.html#line167">line 167</a>
     </li></ul></dd>
     
 
@@ -768,6 +439,28 @@ defined by either no arg, an x-/y-object, two numbers or an array
 
 
 
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the 1,0 point
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Point.html">Point</a></span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -776,7 +469,7 @@ defined by either no arg, an x-/y-object, two numbers or an array
 
     
 
-    <h4 class="name" id=".zero"><span class="type-signature">(static) </span>zero<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".zero"><span class="type-signature">(static) </span>zero<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Point.html">Point</a>}</span></h4>
 
     
 
@@ -827,7 +520,7 @@ defined by either no arg, an x-/y-object, two numbers or an array
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Point.js.html">Point.js</a>, <a href="Point.js.html#line271">line 271</a>
+        <a href="Point.js.html">Point.js</a>, <a href="Point.js.html#line175">line 175</a>
     </li></ul></dd>
     
 
@@ -850,6 +543,204 @@ defined by either no arg, an x-/y-object, two numbers or an array
 
 
 
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the 0,0 point
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Point.html">Point</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="angle"><span class="type-signature"></span>angle<span class="signature">(x, y)</span><span class="type-signature"> &rarr; {number}</span></h4>
+
+    
+
+
+
+<div class="description">
+    compute the angle with another point
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the x coordinate of the other point</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the y coordinate of the other point</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Point.js.html">Point.js</a>, <a href="Point.js.html#line90">line 90</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the angle
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -909,7 +800,7 @@ defined by either no arg, an x-/y-object, two numbers or an array
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Point.js.html">Point.js</a>, <a href="Point.js.html#line81">line 81</a>
+        <a href="Point.js.html">Point.js</a>, <a href="Point.js.html#line33">line 33</a>
     </li></ul></dd>
     
 
@@ -1013,7 +904,7 @@ defined by either no arg, an x-/y-object, two numbers or an array
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Point.js.html">Point.js</a>, <a href="Point.js.html#line73">line 73</a>
+        <a href="Point.js.html">Point.js</a>, <a href="Point.js.html#line25">line 25</a>
     </li></ul></dd>
     
 
@@ -1036,6 +927,710 @@ defined by either no arg, an x-/y-object, two numbers or an array
 
 
 
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="cross"><span class="type-signature"></span>cross<span class="signature">(x, y)</span><span class="type-signature"> &rarr; {number}</span></h4>
+
+    
+
+
+
+<div class="description">
+    compute the cross product of the point with another point
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the x coordinate of the other point</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the y coordinate of the other point</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Point.js.html">Point.js</a>, <a href="Point.js.html#line64">line 64</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the cross product
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="distance"><span class="type-signature"></span>distance<span class="signature">(x, y)</span><span class="type-signature"> &rarr; {number}</span></h4>
+
+    
+
+
+
+<div class="description">
+    compute the distance with another point
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the x coordinate of the other point</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the y coordinate of the other point</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Point.js.html">Point.js</a>, <a href="Point.js.html#line103">line 103</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the distance
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="distanceAndAngle"><span class="type-signature"></span>distanceAndAngle<span class="signature">(x, y)</span><span class="type-signature"> &rarr; {object}</span></h4>
+
+    
+
+
+
+<div class="description">
+    compute distance and angle betwwen the point and another
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the x coordinate of the other point</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the y coordinate of the other point</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Point.js.html">Point.js</a>, <a href="Point.js.html#line74">line 74</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    with distanceand angle properties
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="dot"><span class="type-signature"></span>dot<span class="signature">(x, y)</span><span class="type-signature"> &rarr; {number}</span></h4>
+
+    
+
+
+
+<div class="description">
+    compute the dot product of the point with another point
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the x coordinate of the other point</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the y coordinate of the other point</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Point.js.html">Point.js</a>, <a href="Point.js.html#line54">line 54</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the dot product
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -1144,7 +1739,7 @@ defined by either no arg, an x-/y-object, two numbers or an array
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Point.js.html">Point.js</a>, <a href="Point.js.html#line90">line 90</a>
+        <a href="Point.js.html">Point.js</a>, <a href="Point.js.html#line42">line 42</a>
     </li></ul></dd>
     
 
@@ -1183,6 +1778,427 @@ defined by either no arg, an x-/y-object, two numbers or an array
     <dd>
         
 <span class="param-type">Array</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="rotate"><span class="type-signature"></span>rotate<span class="signature">(angle, distance, from_x, from_y)</span><span class="type-signature"> &rarr; {<a href="Point.html">Point</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    rotates a point from an origin
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>angle</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the angle to rotate</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>distance</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the distance to rotate</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>from_x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the x origin of rotation</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>from_y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the y origin of rotation</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Point.js.html">Point.js</a>, <a href="Point.js.html#line153">line 153</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the rotated point
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Point.html">Point</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="scale"><span class="type-signature"></span>scale<span class="signature">(amount, from_x, from_y)</span><span class="type-signature"> &rarr; {<a href="Point.html">Point</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    scales a point from an origin
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>amount</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">amount of scale (1 leaves point unchanged)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>from_x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the x origin of scale</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>from_y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the y origin of scale</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Point.js.html">Point.js</a>, <a href="Point.js.html#line136">line 136</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the scaled point
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Point.html">Point</a></span>
 
 
     </dd>
@@ -1248,7 +2264,7 @@ defined by either no arg, an x-/y-object, two numbers or an array
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Point.js.html">Point.js</a>, <a href="Point.js.html#line65">line 65</a>
+        <a href="Point.js.html">Point.js</a>, <a href="Point.js.html#line17">line 17</a>
     </li></ul></dd>
     
 
@@ -1275,6 +2291,182 @@ defined by either no arg, an x-/y-object, two numbers or an array
 
 
         
+            
+
+    
+
+    <h4 class="name" id="translate"><span class="type-signature"></span>translate<span class="signature">(x, y)</span><span class="type-signature"> &rarr; {<a href="Point.html">Point</a>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    translates a point
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the x distance to translate by</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the y distance to translate by</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Point.js.html">Point.js</a>, <a href="Point.js.html#line120">line 120</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    this point, translated
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Point.html">Point</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
     
 
     
@@ -1296,7 +2488,7 @@ defined by either no arg, an x-/y-object, two numbers or an array
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sun Mar 06 2016 19:20:46 GMT+0100 (CET)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sun Mar 06 2016 20:49:48 GMT+0100 (CET)
 </footer>
 
 <script> prettyPrint(); </script>

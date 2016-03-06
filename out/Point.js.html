@@ -29,62 +29,14 @@
             <pre class="prettyprint source linenums"><code>;//console.log("loading point");
 /**
  * Model for 2D point and vectors
- * can take 0 parameter (for 0,0)
- * or an array of length 2 for x and y
- * or an object with x and y-properties
- * or two numbers for x and y
  * @constructor
+ * @param {number} x the x coordinate
+ * @param {number} y the y coordinate
  */
-var Point = ArgRouter.decorate(
-	{},
-
-	"", function(){
-		this.x = 0;
-		this.y = 0;
-	},
-	"arr", function(arr){
-		this.x = arr[0];
-		this.y = arr[1];
-	},
-	"obj.x.y", function(point){
-		this.x = point.x;
-		this.y = point.y;
-	},
-	"num, num", function(arr){
-		this.x = parseFloat(arguments[0] || 0);
-		this.y = parseFloat(arguments[1] || 0);
-	},
-	function Point(ctx){
-		//console.log("ctx");
-		//console.log(ctx);
-		ctx.__merge__(this);
-
-	}
-);
-
-//console.log(!!Point);
-/**
- * return an ArgRouter router for a Point
- * defined by either no arg, an x-/y-object, two numbers or an array
- * @param {string} key the key to witch assign the point in the ArgRouter context
- * @return {object} a Point route
- */
-Point.route = function(key){
-	return {
-		"":function(){
-			this[key] = new Point(0,0);
-		},
-		"obj.x.y": function(pseudopoint){
-			this[key] = pseudopoint.clone();
-		},
-		"num, num": function(x,y){
-			this[key] = new Point(parseFloat(x),parseFloat(y));
-		},
-		"arr":function(arr){
-			this[key] = new Point(parseFloat(arr[0]), parseFloat(arr[1]));
-		}
-	}
-}
+var Point = function Point(x, y){
+	this.x = x;
+	this.y = y;
+};
 
 
 /**
@@ -123,164 +75,114 @@ Point.prototype.pushOn = function(arr){
 
 /**
  * compute the dot product of the point with another point
- * @return {number}         the dot product
+ * @param {number} x the x coordinate of the other point
+ * @param {number} y the y coordinate of the other point
+ * @return {number} the dot product
  */
-Point.prototype.dot = ArgRouter.decorate(
-	{
-		from : new Point(0,0)
-	},
-	ArgRouter.combine(Point.route("from")),
-	function dot(ctx){
-		return this.x * ctx.from.x + this.y * ctx.from.y
-	}
-);
+Point.prototype.dot = function dot(x,y){
+	return this.x * x + this.y * y
+};
 
 /**
  * compute the cross product of the point with another point
+ * @param {number} x the x coordinate of the other point
+ * @param {number} y the y coordinate of the other point
  * @return {number}         the cross product
  */
-Point.prototype.cross = ArgRouter.decorate(
-	{
-		from : new Point(0,0)
-	},
-	ArgRouter.combine(Point.route("from")),
-	function cross(ctx){
-		return this.x * ctx.from.y - this.y * ctx.from.x;
-
-	}
-);
+Point.prototype.cross = function cross(x, y){
+	return this.x * y - this.y * x;
+};
 
 /**
  * compute distance and angle betwwen the point and another
+ * @param {number} x the x coordinate of the other point
+ * @param {number} y the y coordinate of the other point
  * @return {object}         with distanceand angle properties
  */
-Point.prototype.distanceAndAngle =  ArgRouter.decorate(
-	{
-		from : new Point(0,0)
-	},
-	ArgRouter.combine(Point.route("from")),
-	function distanceAndAngle(ctx){
-		var dx = ctx.from.x - this.x,
-			dy = ctx.from.y - this.y,
-			distance = Math.sqrt(dx*dx+dy*dy),
-			angle = Point.clipAngle(Math.atan2(dy,dx));
-		return {
-			distance : distance,
-			angle : angle
-		};
-	}
-);
+Point.prototype.distanceAndAngle =  function distanceAndAngle(x, y){
+	var dx = x - this.x,
+		dy = y - this.y,
+		distance = Math.sqrt(dx*dx+dy*dy),
+		angle = Point.clipAngle(Math.atan2(dy,dx));
+	return {
+		distance : distance,
+		angle : angle
+	};
+};
 /**
  * compute the angle with another point
+ * @param {number} x the x coordinate of the other point
+ * @param {number} y the y coordinate of the other point
  * @return {number}         the angle
  */
-Point.prototype.angle =  ArgRouter.decorate(
-	{
-		from : new Point(0,0)
-	},
-	ArgRouter.combine(Point.route("from")),
-	function angle(ctx){
-		var dx = ctx.from.x - this.x,
-			dy = ctx.from.y - this.y;
-		return Point.clipAngle(Math.atan2(dy,dx));
+Point.prototype.angle = function angle(x, y){
+	var dx = x - this.x,
+		dy = y - this.y;
+	return Point.clipAngle(Math.atan2(dy,dx));
 
-	}
-);
+};
 /**
  * compute the distance with another point
+ * @param {number} x the x coordinate of the other point
+ * @param {number} y the y coordinate of the other point
  * @return {number}         the distance
  */
 
-Point.prototype.distance = ArgRouter.decorate(
-	{
-		from : new Point(0,0)
-	},
-	ArgRouter.combine(Point.route("from")),
-	function distance(ctx){
-		var dx = ctx.from.x - this.x,
-			dy = ctx.from.y - this.y;
-		return Math.sqrt(dx*dx+dy*dy);
+Point.prototype.distance = function distance(x, y){
+	var dx = ctx.from.x - this.x,
+		dy = ctx.from.y - this.y;
+	return Math.sqrt(dx*dx+dy*dy);
 
-	}
-);
+};
 
 
 
 
 
-
-Point.prototype.translate = ArgRouter.decorate(
-	{
-		by : new Point(0,0),
-		from : this
-	},
-	ArgRouter.combine(
-		Point.route("by"),
-		Point.route("from")
-	),
-	function translate (ctx){
-		this.x = ctx.from.x + ctx.by.x;
-		this.y = ctx.from.y + ctx.by.y;
-		return this;
-	}
-);
+/**
+ * translates a point
+ * @param {number} x the x distance to translate by
+ * @param {number} y the y distance to translate by
+ * @return {Point} this point, translated
+ */
+Point.prototype.translate = function translate (ctx){
+	this.x = this.x + x;
+	this.y = this.y + y;
+	return this;
+};
 
 
 
-Point.prototype.scale = ArgRouter.decorate(
-	{
-		amount : 1,
-		from : new Point(0,0)
-	},
-	ArgRouter.combine(
-		{
-			"":function(){},
-			"num": function(_amount){
-				this.amount = _amount;
-			}
-		},
-		Point.route("from")
-	),
-	function  scale(ctx){
+/**
+ * scales a point from an origin
+ * @param {number} amount amount of scale (1 leaves point unchanged) 
+ * @param {number} from_x the x origin of scale
+ * @param {number} from_y the y origin of scale
+ * @return {Point} the scaled point
+ */
 
-		var metrics = this.distanceAndAngle(ctx.from.x, ctx.from.y);
+Point.prototype.scale = function  scale(amount, from_x, from_y){
 
-		this.x = ctx.from.x + Math.cos(metrics.angle) * metrics.distance * ctx.amount;
-		this.y = ctx.from.y + Math.cos(metrics.angle) * metrics.distance * ctx.amount;
-		return this;
-	}
-);
+	var metrics = this.distanceAndAngle(from_x, from_y);
 
+	this.x = ctx.from.x + Math.cos(metrics.angle) * metrics.distance * amount;
+	this.y = ctx.from.y + Math.cos(metrics.angle) * metrics.distance * amount;
+	return this;
+};
 
-Point.prototype.rotate = ArgRouter.decorate(
-	{
-		angle : null,
-		distance : null,
-		from : new Point(0,0)
-	},
-	ArgRouter.combine(
-		{
-			"": function(){
-				this.angle = 0;
-				this.distance = this.__this__.distance();
-			},
-			"num": function(_angle){
-				this.angle = _angle;
-				this.distance = this.__this__.distance();
-			},
-			"num, num": function(_angle, _distance){
-				this.angle = _angle;
-				this.distance = _distance;
-			}
-		},
-		Point.route("from")
-	),
-	function rotate(ctx){
-		this.x = ctx.from.x + Math.cos(ctx.angle) * ctx.distance;
-		this.y = ctx.from.x + Math.sin(ctx.angle) * ctx.distance;
-		return this;
-	}
-);
+/**
+ * rotates a point from an origin
+ * @param {number} angle the angle to rotate
+ * @param {number} distance the distance to rotate 
+ * @param {number} from_x the x origin of rotation
+ * @param {number} from_y the y origin of rotation
+ * @return {Point} the rotated point
+ */
+Point.prototype.rotate =  function rotate(angle, distance, from_x, from_y){
+	this.x = from_x + Math.cos(angle) * distance;
+	this.y = from_x + Math.sin(angle) * distance;
+	return this;
+};
 
 
 
@@ -288,6 +190,7 @@ Point.prototype.rotate = ArgRouter.decorate(
 
 /**
  * return the [1,0] point
+ * @return {Point} the 1,0 point
  */
 Point.unit = function(){
 	return new Point(1,0);
@@ -295,6 +198,7 @@ Point.unit = function(){
 
 /**
  * return the [0,0] point
+ * @return {Point} the 0,0 point
  */
 Point.zero = function(){
 	return new Point(0,0);
@@ -302,6 +206,8 @@ Point.zero = function(){
 
 /**
  * return an angle cliped betwwen -PI and +PI
+ * @param {number} the number to clip in radians
+ * @return {number} the cliped number
  */
 Point.clipAngle = function(angle){
 	var pipi =  2*Math.PI;
@@ -328,7 +234,7 @@ Point.clipAngle = function(angle){
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sun Mar 06 2016 19:20:45 GMT+0100 (CET)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sun Mar 06 2016 20:49:47 GMT+0100 (CET)
 </footer>
 
 <script> prettyPrint(); </script>

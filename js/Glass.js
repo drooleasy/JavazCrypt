@@ -1,29 +1,33 @@
 /**
  * a glass Segment. Lights passes thorugh it
  * @constructor
- * @param {object} a a Point or two int
- * @param {object} b a Point or two int
+ * @param {number} ax first extremity x cordinate
+ * @param {number} ay first extremity y cordinate
+ * @param {number} bx second extremity x cordinate
+ * @param {number} by second extremity y cordinate
  */
-var Glass = ArgRouter.decorate(
-	{},
-	ArgRouter.combine(
-		Point.route("a"),
-		Point.route("b")
-	),
-	function Glass(ctx){
-		ctx.__merge__(this);
-		this.shadow = null;
-		this.style = {
-			"fill":"#000",
-			"stroke":"#000000",
-			"stroke-width":2,
-			"stroke-linecap":"round"
-		};
-		this.openess = 0;
-		
-		this.center = -1; // -1...1
-	}
-);
+var Glass = function Glass(ax, ay, bx, by){
+	this.a = {
+		x:ax,
+		y:ay
+	};
+	
+	this.b = {
+		x:bx,
+		y:by
+	};
+
+	this.shadow = null;
+	this.style = {
+		"fill":"#000",
+		"stroke":"#000000",
+		"stroke-width":2,
+		"stroke-linecap":"round"
+	};
+	this.openess = 0;
+	
+	this.center = -1; // -1...1
+};
 
 
 

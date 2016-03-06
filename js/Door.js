@@ -1,32 +1,35 @@
 /**
  * A door is comprised of two segments. It can be opened or closed
  * @constructor
- * @param {object} a extremity point or array of int or two int
- * @param {object} the other extremity point or array of int or two int
+ * @param {number} ax first extremity x cordinate
+ * @param {number} ay first extremity y cordinate
+ * @param {number} bx second extremity x cordinate
+ * @param {number} by second extremity y cordinate
  */
-var Door = ArgRouter.decorate(
-	{},
-	ArgRouter.combine(
-		Point.route("a"), 
-		Point.route("b")
-	),
-	function Door(ctx){
-		ctx.__merge__(this);
-		this.shadow = null;
-		this.style = {
-			"fill":"#000",
-			"stroke":"#000000",
-			"stroke-width":2,
-			"stroke-linecap":"round"
-		};
-		this.openess = 0;
-		
-		this.center = 0; // -1...1
-		this.yawness = .5;
-		this.detectionDistance = 15;
-		
-	}
-);
+var Door = function Door(ax, ay, bx, by){
+	
+	this.a = {
+		x:ax,
+		y:ay
+	};
+	
+	this.b = {
+		x:bx,
+		y:by
+	};
+	this.shadow = null;
+	this.style = {
+		"fill":"#000",
+		"stroke":"#000000",
+		"stroke-width":2,
+		"stroke-linecap":"round"
+	};
+	this.openess = 0;
+	
+	this.center = 0; // -1...1
+	this.yawness = .5;
+	this.detectionDistance = 15;
+};
 
 // OO plumbing
 Door.prototype = new Segment();

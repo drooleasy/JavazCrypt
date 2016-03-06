@@ -6,40 +6,17 @@
 /**
  * a transform coordinates utility
  * @constructor
- * @param {Point} p the x-y location
+ * @param {number} x the x location
+ * @param {number} y the y location
  * @param {number} angle the angle in radians
  * @param {number} scale the scale
  */
-var Transform = ArgRouter.decorate(
-	{
-		p: null,
-		angle: 0,
-		scale: 1
-	},
-	ArgRouter.combine(
-		Point.route("p"),
-		{
-			"":function(){
-			},
-			"num":function(_angle){
-				
-				this.angle = _angle;
-				this.scale = 1;
-			},
-			"num, num":function(_angle, _scale){
-				
-				this.angle = _angle;
-				this.scale = _scale;
-			}
-		}
-	),
-	function Transform(ctx){
-		this.x = ctx.p.x;
-		this.y = ctx.p.y;
-		this.angle = ctx.angle;
-		this.scale = ctx.scale;
-	}
-);
+var Transform = function Transform(x, y, angle, scale){
+	this.x = x;
+	this.y = y;
+	this.angle = angle;
+	this.scale = scale;
+};
 
 /**
  * mixin to add transform capability to another object
