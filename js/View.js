@@ -18,8 +18,8 @@ function View(width, height, world, paper){
 	this.relative = false;
 	this.relative_angle = false;
 	this.draw_sight = false;
-	
-	
+
+
 	this.lastValidBuffer = document.createElement("canvas");
 	this.lastValidBuffer.width=paper.width;
 	this.lastValidBuffer.height=paper.height;
@@ -36,33 +36,35 @@ View.prototype.draw = function draw(){
 	var ctx = paper.getContext("2d");
 
 
+	// erase paper
 	ctx.fillStyle = "#000";
 	ctx.fillRect(0, 0, paper_width, paper_height);
-	
-	world.player.shadow.clear();	
-	world.player.tints.clear();	
-	
+
+	// empty shadows and tints
+	world.player.shadow.clear();
+	world.player.tints.clear();
+
 	ctx.save();
 
 	// TRANSFORMS
 	if(this.relative){
-	
-		ctx.translate(paper.width/2,paper.height/2);	
+
+		ctx.translate(paper.width/2,paper.height/2);
 		if(this.relative_angle) ctx.rotate(-this.world.player.angle-Math.PI/2);
-		ctx.translate(-this.world.player.x,-this.world.player.y);	
-	}	
-	
-	// GET LAST RENDERING
-	if(this.lastValidBuffer){ 
-		var oldCompo = ctx.globalCompositeOperation;
-		paper.getContext("2d").drawImage(this.lastValidBuffer,0,0);	
-		ctx.globalCompositeOperation = oldCompo;
-		
+		ctx.translate(-this.world.player.x,-this.world.player.y);
 	}
 
-	// DRAWS FOV	
+	// GET LAST RENDERING
+	if(this.lastValidBuffer){
+		var oldCompo = ctx.globalCompositeOperation;
+		paper.getContext("2d").drawImage(this.lastValidBuffer,0,0);
+		ctx.globalCompositeOperation = oldCompo;
+
+	}
+
+	// DRAWS FOV
 	if(this.draw_sight) this.world.player.drawSight(this.paper, this.world);
-	
+
 	// DRAWS OTHERS IF PERCEIVED
 	for(var i=0; i< this.world.bobs.length; i++){
 		var other = this.world.bobs[i];
@@ -75,12 +77,12 @@ View.prototype.draw = function draw(){
 	}
 	// PLAYERS REACTION
 	this.world.player.speak(this.paper, this.world.player, this.relative_angle);
-	
+
 	// OTHER ATTENTION
 	for(var i=0; i< this.world.bobs.length; i++){
 		var other = this.world.bobs[i];
 		if(other !== this.world.player){
-	
+
 			if(this.world.player.saying || other.feels(this.world.player)){
 				var a = clipAngle(
 					clipAnglePositive(angleBetween(other.x, other.y, this.world.player.x, this.world.player.y)) - clipAnglePositive(other.angle)
@@ -98,7 +100,7 @@ View.prototype.draw = function draw(){
 			other.speak(this.paper, this.world.player, this.relative_angle);
 		}
 	}
-	
+
 	// DRAWS PLAYER
 	this.world.player.draw(this.paper);
 
@@ -106,11 +108,11 @@ View.prototype.draw = function draw(){
 	//if(relative){
 	//	ctx.translate(player.x,player.y);
 	//	if(relative_angle) ctx.rotate(player.angle-Math.PI/2);
-	//	ctx.translate(-paper.width/2,-paper.height/2);	
-			
-	//}	
+	//	ctx.translate(-paper.width/2,-paper.height/2);
+
+	//}
 	ctx.restore();
-	
+
 	// REQUEST NEXT FRAME
 	var that = this;
 	window.requestAnimationFrame(function(){that.draw()});
@@ -119,7 +121,7 @@ View.prototype.draw = function draw(){
 /**
  * renders the world on canvas using a slow tempo for light and shadow rendering
  * @param {object} paper the canvas dom element
- * @param {World} world the world to render  
+ * @param {World} world the world to render
  */
 View.prototype.renderScene = function renderScene(paper, world){
 
@@ -134,31 +136,33 @@ View.prototype.renderScene = function renderScene(paper, world){
 	worldRenderer.height = paper.height;
 
 
-	var slowTempoDelay = 1000/30;
+	var slowTempoDelay = 1000/12;
 
 	var that = this;
-		
+
 
 
 	slowTempo = function slowTempo(){
 		var ctx = slowBuffer.getContext("2d");
-		
+
+		// erase
 		ctx.fillStyle="#000";
 		ctx.fillRect(0,0,slowBuffer.width,slowBuffer.height);
 
-		
+
 		var renderedLights = [],
 			i=0,
 			l=world.lights.length,
 			n=l+1;
-		
-		
+
+		// draw fully illuminated scene
 		function drawScene(ctx, nofill){
 			// DRAWS SCENE
 			ctx.fillStyle = "#333";
 			ctx.strokeStyle = "#cfc";
 			if(nofill) ctx.fillStyle = "rgba(0,0,0,0)";
 			ctx.lineWidth = 4;
+			// paths
 			for(var i=0;i<that.world.paths.length;i++){
 				ctx.beginPath();
 				that.world.paths[i].draw(worldRenderer, false);
@@ -166,27 +170,30 @@ View.prototype.renderScene = function renderScene(paper, world){
 				ctx.stroke();
 			}
 			ctx.fillStyle = "#000";
+			// boulders
 			for(var i=0;i<that.world.boulders.length;i++){
-
-
 				ctx.beginPath();
 				that.world.boulders[i].draw(worldRenderer, true);
 				if(!nofill) ctx.fill();
 				ctx.stroke();
 			}
+			// segment (door, glass)
 			for(var i=0; i< that.world.segments.length;i++){
 				ctx.strokeStyle = "#cfc";
-				if(world.segments[i] instanceof Glass) ctx.strokeStyle="rgba(255,255,255, 0.3)" 
-				if(world.segments[i] instanceof Door) ctx.strokeStyle="#cc6" 
+				if(world.segments[i] instanceof Glass) ctx.strokeStyle="rgba(255,255,255, 0.3)"
+				if(world.segments[i] instanceof Door) ctx.strokeStyle="#cc6"
 				ctx.beginPath();
 				that.world.segments[i].draw(worldRenderer);
 				ctx.stroke();
 			}
-		}
-		
+		}// en draw scene
+
 		function conclude(){
-			
+
+			// lights and shadow
 			var ctx = slowBuffer.getContext("2d");
+
+			// fully illuminated world
 			var wctx = worldRenderer.getContext("2d");
 
 
@@ -195,7 +202,7 @@ View.prototype.renderScene = function renderScene(paper, world){
 				wctx.globalCompositeOperation = "luminosity";
 				wctx.drawImage(slowBuffer,0,0);
 
-				// re draw wall 
+				// re draw wall
 				wctx.globalCompositeOperation = "source-over";
 				drawScene(wctx, true);
 
@@ -203,40 +210,44 @@ View.prototype.renderScene = function renderScene(paper, world){
 			that.lastValidBuffer.getContext("2d").putImageData(wctx.getImageData(0,0,worldRenderer.width, worldRenderer.height), 0, 0);
 			setTimeout(slowTempo, slowTempoDelay);
 		}
-		
-		
+
+
 		setTimeout(function(){
 			var ctx = worldRenderer.getContext("2d");
 			ctx.globalCompositeOperation = "source-over";
-			
+
+			// erase fully illuminated
 			ctx.fillStyle="#393";
 			ctx.fillRect(0,0,worldRenderer.width,worldRenderer.height);
+
+			// redraws it
 			drawScene(ctx);
 
+			// virtual light task
 			n--;
-			if(n==0){
+			if(n==0){ // if no more task merge world and lights
 				conclude();
 			}
 		},0);
-		
+
+
+		//draw lights
 		for(i=0;i<l;i++){
-			setTimeout(
+			setTimeout( // dont freeze ui
 				(function(a_light){
 					return function(){
 						a_light.draw(slowBuffer, world.allSegments(), world.bobs);
-						n--;
-						if(n==0){
+						n--; // task done
+						if(n==0){ // if no more lights to compute, merge world and lights
 							conclude();
 						}
-						
+
 					};
 				})(world.lights[i]),
 			0)
 		}
-	}
+	} // end slow temp
 
 
 	setTimeout(slowTempo, slowTempoDelay);
 }
-
-

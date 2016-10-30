@@ -1,0 +1,15 @@
+full light render
+
+view aabb
+	intersecting segments and bobs
+
+	bob.draw
+	segment.draw
+
+view aabb
+	lights aabb
+	-> extend view aabb to include intersecting lights
+
+segement aabb with (extended) view
+calculate light shadow
+render light mask

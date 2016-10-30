@@ -1,18 +1,18 @@
 var paper_width = 650;
 var paper_height = 400;
- 			
-			
+
+
 var paper = document.getElementById("paper");
-paper.width = paper_width;			
+paper.width = paper_width;
 paper.height = paper_height;
 
 var ctx = paper.getContext("2d");
 
 var world = new World();
-	
-	
-	
-(function initWorld(){	
+
+
+
+(function initWorld(){
 
 	var player = new Bob(225, 200, 10, 0);
 	player.sightWidth=deg2rad(120);
@@ -27,18 +27,18 @@ var world = new World();
 
 
 	var path = new Path(
-		500, 100, 
-		500, 300, 
-		400, 300, 
-		350, 300, 
+		500, 100,
+		500, 300,
+		400, 300,
+		350, 300,
 		100, 300,
 		100, 200,
 		100, 150,
-		100, 100, 
+		100, 100,
 		250, 200,
 		350, 175,
 		450, 125
-		
+
 	);
 	path.close();
 
@@ -51,7 +51,7 @@ var world = new World();
 
 	var boulder = new Path(
 		250, 250,
-		240, 265, 
+		240, 265,
 		270, 260
 	);
 	boulder.close();
@@ -59,11 +59,11 @@ var world = new World();
 	world.boulders.push(boulder);
 
 	var delta = 50;
-	if(false)for(var i=0; i<3; i++){
+  for(var i=0; i<3; i++){
 		for(var j=0; j<3; j++){
 			var boulder = new Path(
 				i*delta + 0, j*delta + 0,
-				i*delta + 20, j*delta + 10, 
+				i*delta + 20, j*delta + 10,
 				i*delta + 10, j*delta + 20,
 				i*delta + 10, j*delta + 10
 			);
@@ -71,7 +71,7 @@ var world = new World();
 
 			world.boulders.push(boulder);
 
-		}	
+		}
 	}
 
 	var door = new Door(250,250+1, 250,200-1);
@@ -110,7 +110,7 @@ view.relative_angle = true;
 $('#lights').on("click", function(evt){
 	//global
 	view.lights_on= !view.lights_on;
-	
+
 	this.innerHTML = "Lights " + (view.lights_on ? 'ON' : 'OFF');
 	this.className = "button " + (view.lights_on ? 'button-on' : 'button-off');
 	evt.preventDefault();
@@ -120,7 +120,7 @@ $('#lights').on("click", function(evt){
 $('#sight').on("click", function(evt){
 	//global
 	view.draw_sight= !view.draw_sight;
-	
+
 	this.innerHTML = "Sight " + (view.draw_sight ? 'ON' : 'OFF');
 	this.className = "button " + (view.draw_sight ? 'button-on' : 'button-off');
 	evt.preventDefault();
@@ -130,7 +130,7 @@ $('#relative').on("click", function(evt){
 	//globals
 	view.relative= !view.relative;
 	view.relative_angle= !view.relative_angle;
-	
+
 	this.innerHTML = "Relative " + (view.relative ? 'ON' : 'OFF');
 	this.className = "button " + (view.relative ? 'button-on' : 'button-off');
 	evt.preventDefault();

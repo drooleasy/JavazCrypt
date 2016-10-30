@@ -26,12 +26,12 @@ Shadow.prototype.clear = function (paper){
  * @param {object} paper the canvas dom node to draw on
  */
 Shadow.prototype.draw = function (paper){
-	
 
-	for(var i = 0; i<this.paths.length;i++){ 
+
+	for(var i = 0; i<this.paths.length;i++){
 		this.drawCone(paper, this.paths[i])
 	}
-	
+
 }
 
 /**
@@ -45,24 +45,24 @@ Shadow.prototype.drawCone = function (paper, coneData){
 	ctx.strokeStyle = this.style.stroke;
 	ctx.fillStyle = this.style.fill;
 	ctx.beginPath();
-		
-	
+
+
 	if(coneData.type && coneData.type=="over"){
-	
+
 		ctx.arc(coneData.x, coneData.y, coneData.radius, 0, 2*Math.PI)
-		
-	}else{ 
+
+	}else{
 		ctx.moveTo(coneData.ray_1.a.x, coneData.ray_1.a.y);
-	
+
 		ctx.lineTo(coneData.ray_1.b.x, coneData.ray_1.b.y);
-		
-		
+
+
 		ctx.arc(coneData.x, coneData.y, coneData.radius, coneData.angle_1, coneData.angle_2);
 		ctx.lineTo(coneData.ray_2.a.x, coneData.ray_2.a.y)
-		
+
 		if(coneData.bob){
 			ctx.arcTo(coneData.bob.x1,coneData.bob.y1,coneData.bob.x2,coneData.bob.y2,coneData.bob.r);
-				
+
 		}else{
 			ctx.lineTo(coneData.ray_1.a.x, coneData.ray_1.a.y)
 		}

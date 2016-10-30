@@ -583,7 +583,7 @@ Interval.circleDegreeNegative = function(){
  */
 
 Interval.prototype.iterate = function(cb, inc_abs){
-	inc_abs = Math.abs(inc_abs) || 1;
+	inc_abs = Math.abs(inc_abs) || 1;
 	if(this.isAscending()){
 		var f = Math.ceil(this.from());
 		var t = Math.floor(this.to());
