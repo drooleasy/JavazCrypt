@@ -29,7 +29,7 @@ var Segment = function Segment(ax, ay, bx, by){
  * @return {Segement} the swaped version of this segment
  */
 Segment.prototype.inversed = function(){
-	return new Segment(this.b, this.a);
+	return new Segment(this.b.x, this.b.y, this.a.x, this.a.y);
 };
 
 /**
@@ -54,7 +54,7 @@ Segment.prototype.toString = function toString(){
  * @param {number} y y coordinate of the exterior point
  * @return {object} the x-y closest point on this segment
  */
-Segment.prototype.closestPointFrom = function(x, y){	
+Segment.prototype.closestPointFrom = function(x, y){
 	function closest_point_on_seg(seg, circ_pos){
 		var seg_v = {x:(seg.b.x - seg.a.x), y:(seg.b.y - seg.a.y)},
 			pt_v = {x:(circ_pos.x - seg.a.x), y:(circ_pos.y - seg.a.y)},
@@ -83,17 +83,17 @@ Segment.prototype.closestPointFrom = function(x, y){
  * checks if this segment is seen by a bob
  * @param {Bob} bob the watching bob
  * @param {array} segments other segments that may go between bob and this segment
- * @return {boolean} true if this segment is at least partially seen 
+ * @return {boolean} true if this segment is at least partially seen
  */
 Segment.prototype.isSeenByBob = function(bob, segments){
-	
-	if(	
+
+	if(
 		bob.sees({x:this.a.x, y:this.a.y, width:1}, segments)
 		||
 		bob.sees({x:this.b.x, y:this.b.y, width:1}, segments)
 	) return true;
 	var fov = bob.fovSegments(),
-		intersect_1 = this.intersect(fov.left),	
+		intersect_1 = this.intersect(fov.left),
 		intersect_2 = this.intersect(fov.right),
 		intersect_cone = this.intersectWithCone(bob.x, bob.y, bob.sightLength, bob.angle, bob.sightWidth);
 	return intersect_1 != null || intersect_2 != null || intersect_cone.length > 0;
@@ -111,21 +111,21 @@ Segment.prototype.seenSegment = function(bob, segments){
 		res = [];
 
 	var a = {x:this.a.x, y:this.a.y, width:2};
-	if(bob.sees(a, []) || bob.feels(a)) sees_a = true; 
-	
+	if(bob.sees(a, []) || bob.feels(a)) sees_a = true;
+
 	var b = {x:this.b.x, y:this.b.y, width:2}
 	if(bob.sees(b, []) || bob.feels(b)) sees_b = true;
 
 	var angle_a, angle_b, angle_inter, angle_inter_1, angle_inter_2, left, rigth;
 
-	
+
 	if(sees_a && sees_b){
 		res =  [this.clone()];
 	}else{
 
-		
+
 		var fov = bob.fovSegments(),
-			intersect_1 = this.intersect(fov.left),	
+			intersect_1 = this.intersect(fov.left),
 			intersect_2 = this.intersect(fov.right),
 			intersect_cone = this.intersectWithCone(bob.x, bob.y, bob.sightLength, bob.angle, bob.sightWidth);
 
@@ -135,8 +135,8 @@ Segment.prototype.seenSegment = function(bob, segments){
 		for(i=0;i<intersect_cone.length;i++){
 			intersects.push(intersect_cone[i]);
 		}
-		
-			
+
+
 		if(intersects.length > 1){
 			angle_inter_min = clipAngle(angleBetween(bob.x,bob.y, intersects[0].x, intersects[0].y) - bob.angle);
 			angle_inter_max = angle_inter_min;
@@ -152,11 +152,11 @@ Segment.prototype.seenSegment = function(bob, segments){
 				if(angle_inter > angle_inter_max){
 					angle_inter_max = angle_inter;
 					left = intersects[i];
-				}	
+				}
 			}
 			res = [new Segment(left.x, left.y, right.x, right.y)];
 		}else if(intersects.length==1){
-		
+
 			var inter = intersects[0];
 
 			if(sees_a){
@@ -164,16 +164,16 @@ Segment.prototype.seenSegment = function(bob, segments){
 			}else if(sees_b){
 				res =  [new Segment(this.b.x, this.b.y, inter.x, inter.y)];
 			}else{
-				res = [new Segment(inter.x, inter.y, this.b.x, this.b.y)];		
+				res = [new Segment(inter.x, inter.y, this.b.x, this.b.y)];
 			}
 		}
-		
+
 		var intersect_conscious = this.intersectWithCircle(bob.x, bob.y, bob.width*bob.consciousness);
-		
+
 		if(intersect_conscious.length==2){
 			res.push(new Segment(intersect_conscious[0].x, intersect_conscious[0].y, intersect_conscious[1].x, intersect_conscious[1].y));
 		}
-		
+
 		if(intersect_conscious.length==1){
 			inter = intersect_conscious[0];
 			if(sees_a){
@@ -181,10 +181,10 @@ Segment.prototype.seenSegment = function(bob, segments){
 			}else if(sees_b){
 				res.push(new Segment(this.b.x, this.b.y, inter.x, inter.y));
 			}else{
-				res.push(new Segment(inter.x, inter.y, this.b.x, this.b.y));		
+				res.push(new Segment(inter.x, inter.y, this.b.x, this.b.y));
 			}
 		}
-		
+
 	}
 	return res;
 }
@@ -193,7 +193,7 @@ Segment.prototype.seenSegment = function(bob, segments){
  * draw this segement on canvas
  * @param {object} paper the canvas dom node
  * @param {boolean} dontStroke wether to begin and close the segment path (default to false)
- */ 
+ */
 Segment.prototype.draw = function(paper, dontStroke){
 	var ctx = paper.getContext("2d");
 	if(!dontStroke) ctx.beginPath();
@@ -227,15 +227,15 @@ Segment.prototype.intersect = function (other){
 	var t = crossProduct(diff, other_v) / x;
 	var _u = crossProduct(diff, this_v);
 	var u = _u / x;
-	
+
 	if(x==0 && _u == 0){ // colinear
 		return null; // !!!
 	}
-	
+
 	if(x==0 && _u != 0){ // parallel
 		return null;
 	}
-	
+
 	if(x!=0 && 0<=t && t<=1 && 0<=u && u<=1){ // secant
 		return {
 				x:(this.a.x + t * this_v.x),
@@ -251,7 +251,7 @@ Segment.prototype.intersect = function (other){
  * @param {number} cx the circle's center x
  * @param {number} cy the circle's center y
  * @param {number} cr the circle's radius
- * @return {array} an array of the 0, 1 or 2 intersection points 
+ * @return {array} an array of the 0, 1 or 2 intersection points
  */
 Segment.prototype.intersectWithCircle = function(cx,cy,cr){
 	var v = minus(this.b,this.a),
@@ -259,18 +259,18 @@ Segment.prototype.intersectWithCircle = function(cx,cy,cr){
 		vy = v.y,
 		ox = this.a.x,
 		oy = this.a.y;
-		
+
 	var res = solveP2(
 		(vx*vx+vy*vy),
 		(2*ox*vx - 2*vx*cx + 2*oy*vy - 2*vy*cy),
 		(ox*ox + oy*oy - 2*ox*cx -2*oy*cy + cx*cx + cy*cy - cr*cr)
-		
+
 	);
-	
+
 	var sol = [];
-	
+
 	if(res.length == 0) return sol;
-	
+
 	if(0<=res[0] && res[0]<=1){
 		sol.push({
 			x: (this.a.x + res[0] * vx),
@@ -283,9 +283,9 @@ Segment.prototype.intersectWithCircle = function(cx,cy,cr){
 			y: (this.a.y + res[1] * vy)
 		});
 	}
-	
+
 	return sol;
-	
+
 }
 
 /**
@@ -296,19 +296,19 @@ Segment.prototype.intersectWithCircle = function(cx,cy,cr){
  * @param {number} angle the cone's angle
  * @param {number} fov_angle the cone aperture
  * @return {array} the intersection points (or an empty array)
- */ 
+ */
 Segment.prototype.intersectWithCone = function(cx,cy,cr, angle, fov_angle){
 	var possibles = this.intersectWithCircle(cx,cy,cr);
 	if(possibles == null) return [];
 	var i=0;
 	var intersects = [];
 	for(;i<possibles.length;i++){
-		
-		
+
+
 		var angle_points = angleBetween(cx, cy, possibles[i].x, possibles[i].y);
-		
+
 		var angle_relative = clipAngle(angle_points - angle);
-		
+
 		if((-fov_angle/2) <= angle_relative && angle_relative <= fov_angle/2){
 			intersects.push(possibles[i]);
 		}
@@ -324,7 +324,7 @@ Segment.prototype.castShadow = function castSegmentShadow(bob_or_light){
 	var metrics_a = distanceAndAngle(bob_or_light.x, bob_or_light.y, this.a.x, this.a.y),
 		metrics_b = distanceAndAngle(bob_or_light.x, bob_or_light.y, this.b.x, this.b.y);
 
-	
+
 	var angle_a = metrics_a.angle - bob_or_light.angle,
 		angle_b = metrics_b.angle - bob_or_light.angle;
 
@@ -333,13 +333,13 @@ Segment.prototype.castShadow = function castSegmentShadow(bob_or_light){
 
 	angle_a = clipAnglePositive(angle_a);
 	angle_b = clipAnglePositive(angle_b);
-	
-	
+
+
 	var mn = Math.min(angle_a, angle_b);
 	var mx = Math.max(angle_a, angle_b);
-	
-	
-	
+
+
+
 	var left,
 		right;
 	if(mn==angle_a){
@@ -351,7 +351,7 @@ Segment.prototype.castShadow = function castSegmentShadow(bob_or_light){
 	}
 
 
-	var diff = clipAnglePositive(mx-mn);	
+	var diff = clipAnglePositive(mx-mn);
 	var tmp;
 	if(diff > Math.PI){
 		tmp = left;
@@ -359,14 +359,14 @@ Segment.prototype.castShadow = function castSegmentShadow(bob_or_light){
 		right = tmp;
 	}
 
-	
+
 	var ray_1 = castRay(bob_or_light.x, bob_or_light.y, left.x, left.y, bob_or_light.sightLength);
 	var ray_2 = castRay(bob_or_light.x, bob_or_light.y, right.x, right.y, bob_or_light.sightLength);
-	
+
 	var angle_1 = angleBetween(bob_or_light.x, bob_or_light.y, ray_1.a.x, ray_1.a.y),
 		angle_2 = angleBetween(bob_or_light.x, bob_or_light.y, ray_2.a.x, ray_2.a.y);
-	
-	
+
+
 	var coneData = {
 			x:bob_or_light.x,
 			y:bob_or_light.y,
@@ -377,7 +377,7 @@ Segment.prototype.castShadow = function castSegmentShadow(bob_or_light){
 			radius : bob_or_light.sightLength
 		}
 
-	
+
 	bob_or_light.shadow.paths.push(coneData);
 
 }
@@ -395,20 +395,20 @@ Segment.prototype.AABB = function segmentAABB(tolerance){
 	}
 	var w = Math.abs(this.a.x - this.b.x)
 	var h = Math.abs(this.a.y - this.b.y)
-	
+
 	var w2 = w*tolerance;
 	var h2 = h*tolerance;
-	
+
 	topLeft.x += (w-w2)/2;
 	topLeft.y += (h-h2)/2;
-	
+
 	var thickness = this.style["line-width"];
-	
+
 	return new AABB(
 		topLeft.x - thickness,
 		topLeft.y - thickness,
 		Math.max(w2, thickness),
 		Math.max(h2, thickness)
 	);
-	
+
 }

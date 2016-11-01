@@ -82,22 +82,243 @@ Light.prototype.moveTo = function(pos){
 Light.prototype.draw = function(paper, segments, bobs){
 
 
-	this.renderer.width = paper.width;
-	this.renderer.height = paper.height;
 
-	var ctx = this.renderer.getContext('2d');
-
-	this.x = this._x + randomDelta(this.positionVariation);
-	this.y = this._y + randomDelta(this.positionVariation);
-
-	var that = this;
+	var ctx = paper.getContext('2d');
 
 
-	this.shadow.clear();
+
+  var reachableSegments = this.getReachableSegments(segments);
 
 
-	var l_aabb = this.AABB();
+/*
+	for(var i=0; i<reachableSegments.length; i++){
+		var seg = reachableSegments[i].segment;
+		ctx.beginPath();
+
+		ctx.moveTo(seg.a.x, seg.a.y);
+		ctx.lineTo(seg.b.x, seg.b.y);
+		ctx.stroke();
+
+	}
+*/
+
+var cliping = [];
+
+
+if(reachableSegments.length){
+
+	for(var i=0; i< reachableSegments.length; i++){
+
+
+		var reachableSegment = reachableSegments[i],
+				segment = reachableSegment.segment,
+				metric_a = reachableSegment.metric_a,
+				metric_b = reachableSegment.metric_b;
+
+
+
+		/*
+		$('#hud').html(
+			'a : ' + clipAnglePositive(metric_a.angle).toFixed(2)
+			+'<br/>b : ' + clipAnglePositive(metric_b.angle).toFixed(2)
+			+'<br/>diff : ' + clipAnglePositive(metric_b.angle - metric_a.angle).toFixed(2)
+		)
+		*/
+		// dot the start point
+		/*ctx.fillStyle = '#0F0'
+		ctx.beginPath();
+		ctx.arc(reachableSegments[0].segment.a.x, reachableSegments[0].segment.a.y, 10, 0, 2*Math.PI);
+		ctx.closePath();
+		ctx.fill();
+		*/
+
+		cliping.push({
+			type:"segment",
+			x1: segment.a.x,
+			y1: segment.a.y,
+			x2: segment.b.x,
+			y2: segment.b.y
+
+		});
+
+
+
+
+		if(i+1<reachableSegments.length){ // next segment
+			var nextReachable = reachableSegments[i+1],
+					nextSegment = nextReachable.segment,
+					next_metric_a = nextReachable.metric_a,
+					next_metric_b = nextReachable.metric_b;
+
+			if(nextSegment.a.x == segment.b.x && nextSegment.a.y == segment.a.y){
+
+			}
+
+
+		}else{
+
+
+			var first = {
+				x: cliping[0].x1,
+				y: cliping[0].y1,
+				angle: angleBetween(this.x, this.y, cliping[0].x1, cliping[0].y1)
+			};
+
+			if( segment.b.x != first.x || segment.b.y != first.y){
+
+
+
+				// path to perimeter
+				var ray = castRay(
+					this.x, this.y,
+					segment.b.x, segment.b.y,
+					this.sightLength
+				).inversed();
+
+				cliping.push({
+					type:"segment",
+					x1: ray.a.x,
+					y1: ray.a.y,
+					x2: ray.b.x,
+					y2: ray.b.y
+
+				});
+
+
+				// perimeter
+
+				cliping.push({
+					type:"arc",
+					from: metric_b.angle,
+					to: first.angle,
+				})
+
+				// closing
+				// path from perimeter
+				ray = castRay(
+					this.x, this.y,
+					first.x, first.y,
+					this.sightLength
+				);
+
+				cliping.push({
+					type:"segment",
+					x1: ray.b.x,
+					y1: ray.b.y,
+					x2: ray.a.x,
+					y2: ray.a.y
+
+				});
+
+			}
+
+			/*
+
+			a.x == -1.b.x && a.y == -1.b.y
+				seg
+
+			else a.angle < -1.b.angle
+				a.distance < -1.b.distance
+						intersect
+						seg
+						seg
+				else
+						intersect
+						seg
+						seg
+
+			else
+					inter circle
+					seg
+					arc
+					seg
+					seg
+			 */
+
+
+
+			//cliping.push({type:"arc", from:reachableSegments[0].metric_b.angle, to:2*Math.PI});
+			}
+		}// end for
+	}else{
+		cliping.push({type:"arc", from:0, to:2*Math.PI});
+	}
+
+	// draw
+	ctx.strokeStyle='#FF0';
+	ctx.beginPath();
+	for(var i=0; i<cliping.length;i++){
+		var path = cliping[i];
+		if(path.type == "arc"){
+				ctx.arc(this.x, this.y, this.sightLength, path.from, path.to);
+		}else if(path.type == "segment"){
+				ctx.moveTo(path.x1, path.y1);
+				ctx.lineTo(path.x2, path.y2);
+		}
+
+	}
+	ctx.stroke();
+	if(reachableSegments.length){
+			for(var i=0; i< reachableSegments.length; i++){
+
+
+				var reachableSegment = reachableSegments[i];
+
+				drawReachableSegment(ctx, reachableSegment, i==0);
+			}
+		}
+}
+
+
+function randomColor(){
+	var res = "rgb(";
+	for(var i=0; i<3;i++){
+		if(i>0) res += ",";
+		res += Math.floor(Math.random()*256);
+	}
+	res += ")";
+	return res;
+}
+
+function drawReachableSegment(ctx, reachableSegment, markClosest){
+
+	var segment = reachableSegment.segment;
+	var angle = angleBetween(segment.a.x, segment.a.y, segment.b.x, segment.b.y);
+	ctx.strokeStyle = randomColor();
+	ctx.fillStyle = ctx.strokeStyle;
+
+	ctx.beginPath();
+	ctx.moveTo(segment.a.x, segment.a.y);
+	ctx.lineTo(segment.b.x, segment.b.y);
+	ctx.stroke();
+
+	ctx.beginPath();
+	ctx.lineTo(
+		segment.b.x + Math.cos(angle+Math.PI*3.2/4) * 10,
+		segment.b.y  + Math.sin(angle+Math.PI*3.2/4) * 10
+	);
+	ctx.lineTo(
+		segment.b.x + Math.cos(angle-Math.PI*3.2/4) * 10,
+		segment.b.y  + Math.sin(angle-Math.PI*3.2/4) * 10
+	);
+	ctx.lineTo(segment.b.x, segment.b.y);
+	ctx.fill();
+
+	if(markClosest){
+		ctx.beginPath();
+		ctx.arc(reachableSegment.closest.x, reachableSegment.closest.y, 10, 0, 2*Math.PI);
+		ctx.closePath();
+		ctx.fill();
+	}
+}
+
+
+Light.prototype.getReachableSegments = function(segments){
+  var res = [];
+			treated = []
+  var l_aabb = this.AABB();
 	// WORLD SHADOWS
+	var lightPoint = new Point(this.x, this.y);
 	if(segments){
 		for(i=0;i<segments.length;i++){
 
@@ -107,93 +328,179 @@ Light.prototype.draw = function(paper, segments, bobs){
 				continue;
 			}
 
-			segment.castShadow(this);
-		}
-	}
 
-	// OTHERS SHADOWS
-	if(bobs) for(i=0;i<bobs.length;i++){
-		var bob = bobs[i];
-		if(bob.light !== this){
-			var d = distanceBetween(this.x, this.y, bob.x, bob.y);
 
-			if(
-				d > bob.width
-			){
-				var sees_bob = bob && d < this.sightLength+bob.width;
-				if(sees_bob){
-					bob.castShadow(this);
+
+			var closest = segment.closestPointFrom(this.x, this.y),
+					metric_closest = distanceAndAngle(this.x, this.y, closest.x, closest.y);
+
+			if(distanceBetween(this.x, this.y, closest.x, closest.y) < this.sightLength){
+				var clipedSegment, metric_a, metric_b;
+				var intersections = segment.intersectWithCircle(this.x, this.y, this.sightLength);
+				if(intersections.length == 2){
+
+					clipedSegment = new Segment(intersections[0].x, intersections[0].y, intersections[1].x, intersections[1].y);
+					metric_a = distanceAndAngle(this.x, this.y, clipedSegment.a.x, clipedSegment.a.y);
+					metric_b = distanceAndAngle(this.x, this.y, clipedSegment.b.x, clipedSegment.b.y);
+
+				}else if(intersections.length  == 1){
+
+					var intersectionPoint = intersections[0];
+					metric_a = distanceAndAngle(this.x, this.y, segment.a.x, segment.a.y);
+					metric_b = distanceAndAngle(this.x, this.y, segment.b.x, segment.b.y);
+
+					if(metric_a.distance > this.sightLength){
+						clipedSegment = new Segment(intersectionPoint.x, intersectionPoint.y, segment.b.x, segment.b.y);
+						metric_a = distanceAndAngle(this.x, this.y, clipedSegment.a.x, clipedSegment.a.y);
+					}else {
+						clipedSegment = new Segment(segment.a.x, segment.a.y, intersectionPoint.x, intersectionPoint.y);
+						metric_b = distanceAndAngle(this.x, this.y, clipedSegment.b.x, clipedSegment.b.y);
+					}
+
+				}else {
+
+					clipedSegment = segment;
+					metric_a = distanceAndAngle(this.x, this.y, segment.a.x, segment.a.y);
+					metric_b = distanceAndAngle(this.x, this.y, segment.b.x, segment.b.y);
+
 				}
-			}else{
-				bob.castOverShadow(this);
+
+/*
+				var orientedSegment;
+
+				var angular_difference = clipAnglePositive(metric_b.angle) - clipAnglePositive(metric_a.angle);
+
+				if(
+						clipAnglePositive(angular_difference) > Math.PI
+				){
+					orientedSegment = clipedSegment.inversed();
+					var tmp = metric_a;
+					metric_a = metric_b;
+					metric_b = tmp;
+				}else {
+					orientedSegment = clipedSegment.clone();
+				}
+*/
+
+
+				if(closest.x == clipedSegment.a.x && closest.y == clipedSegment.a.y){
+					treated.push({
+						segment:clipedSegment,
+						metric_a: metric_a,
+						metric_b: metric_b,
+						closest:closest,
+						metric_closest: metric_closest
+					});
+				}else if(closest.x == clipedSegment.b.x && closest.y == clipedSegment.b.y){
+					treated.push({
+						segment:clipedSegment.inversed(),
+						metric_a: metric_b,
+						metric_b: metric_a,
+						closest:closest,
+						metric_closest: metric_closest
+					});
+
+				}else{
+					treated.push({
+						segment: new Segment(closest.x, closest.y, clipedSegment.a.x, clipedSegment.a.y),
+						metric_a: metric_closest,
+						metric_b: metric_a,
+						closest:closest,
+						metric_closest: metric_closest
+					});
+					treated.push({
+						segment: new Segment(closest.x, closest.y, clipedSegment.b.x, clipedSegment.b.y),
+						metric_a: metric_closest,
+						metric_b: metric_b,
+						closest:closest,
+						metric_closest: metric_closest
+					});
+
+
+				}
 			}
 		}
 	}
 
+		treated = treated.sort(function(s1, s2){
+			return  s1.metric_closest.distance -s2.metric_closest.distance;
+		})
 
 
+		var filtered = [];
+		while(treated.length){
+			var first = treated.splice(0,1)[0];
+			filtered.push(first);
+			// looks for intersepted segments
+			var first_length = distanceBetween(first.segment.a.x, first.segment.a.y, first.segment.b.x, first.segment.b.y);
 
-	var oldCompositeOperation = ctx.globalCompositeOperation;
+			var toRemove = [];
+			for(var i=0; i<treated.length; i++){
+				var other = treated[i];
+				var other_length = distanceBetween(other.segment.a.x, other.segment.a.y, other.segment.b.x, other.segment.b.y);
+				var bigger, smaller, is_frist_bigger
+				if(first_length > other_length){
+					bigger = first;
+					smaller = other;
+					is_first_bigger = true;
+				}else{
+					bigger = other;
+					smaller = first;
+					is_first_bigger = false;
+				}
 
+				var tmp;
+				var bigger_span = clipAnglePositive(bigger.metric_b.angle - bigger.metric_a.angle);
+				if(bigger_span > Math.PI) {
+					bigger.segment = bigger.segment.inversed();
+					tmp = bigger.metric_a;
+					bigger.metric_a = bigger.metric_b;
+					bigger.metric_b = tmp;
+					bigger_span -= Math.PI;
+				}
 
+				var smaller_span = clipAnglePositive(smaller.metric_b.angle - smaller.metric_a.angle);
+				if(smaller_span > Math.PI) {
+					smaller.segment = smaller.segment.inversed();
+					tmp = smaller.metric_a;
+					smaller.metric_a = smaller.metric_b;
+					smaller.metric_b = tmp;
+					smaller_span -= Math.PI;
+				}
 
-	ctx.beginPath();
-	ctx.fillStyle="#000";
-	ctx.fillRect(0,0, ctx.width, ctx.height);
-	ctx.closePath();
+				var relative_span_a = clipAnglePositive(smaller.metric_a.angle - bigger.metric_a.angle);
+				var relative_span_b = clipAnglePositive(smaller.metric_b.angle - bigger.metric_a.angle);
 
+				if(relative_span_a < bigger_span && relative_span_b < bigger_span){
+					if(is_first_bigger){
+						// remove other
+						toRemove.push(i);
+					}
+				}
 
-	// CLIPPING
-	ctx.save();
-	ctx.beginPath();
-	ctx.arc(this.x, this.y, this.sightLength, 0, this.sightWidth);
-	ctx.clip()
+			}
 
-	// DRAWS SHADOWS
-	ctx.fillStyle="#000";
-	ctx.globalCompositeOperation = "source-over";
-	this.shadow.draw(this.renderer);
-	ctx.fill();
+			if(toRemove.length){
+				for(var i=0; i<toRemove.length; i++){
+					treated.splice(toRemove[i], 1);
+				}
+			}
 
+			// resort treated
+			treated = treated.sort(function(s1, s2){
+				return  s1.metric_closest.distance -s2.metric_closest.distance;
+			})
 
-	// draw lumens
-	ctx.globalCompositeOperation = "darken";
-	var grd=ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.sightLength);
-	grd.addColorStop(0, this.lightColor);
-	grd.addColorStop(this.startDecay + randomDelta(this.decayVariation), this.lightColor);
-	grd.addColorStop(1, this.shadowColor);
-	ctx.fillStyle = grd;
-	ctx.lineWidth = this.lineWidth;
-	ctx.beginPath();
-	ctx.fillRect(0,0,this.renderer.width,this.renderer.height);
+		}
 
-	ctx.globalCompositeOperation = "source-over";
-
-	// light border hack
-	ctx.strokeStyle="#000";
-	ctx.lineWidth = "6"
-	ctx.beginPath();
-	ctx.arc(this.x, this.y, this.sightLength, 0, this.sightWidth);
-	ctx.closePath();
-	ctx.stroke();
-
-	// draws light bulb
-	ctx.globalCompositeoperation="source-over";
-	ctx.fillStyle="#999";
-	ctx.beginPath();
-	ctx.arc(this.x, this.y, 2+Math.random()*2-1, 0, Math.PI*2)
-	ctx.fill();
-	ctx.globalCompositeOperation = oldCompositeOperation;
-
-
-	ctx.restore();
-
-	var pctx = paper.getContext("2d");
-	oldCompositeOperation = pctx.globalCompositeOperation;
-	pctx.globalCompositeOperation = "lighten";
-	pctx.drawImage(this.renderer,0,0);
-	pctx.globalCompositeOperation = oldCompositeOperation;
-
+/*
+		for(var i=0; i<res.length; i++){
+			console.log(clipAnglePositive(res[i].metric_a.angle));
+		}
+		debugger;
+	*/
+	res = filtered;
+  return res;
 
 }
 

@@ -27,28 +27,19 @@ var world = new World();
 
 
 	var path = new Path(
-		500, 100,
-		500, 300,
-		400, 300,
-		350, 300,
-		100, 300,
 		100, 200,
 		100, 150,
-		100, 100,
-		250, 200,
-		350, 175,
-		450, 125
-
+		200, 150
 	);
 	path.close();
 
-	path.makeDoor(path.segments.length-2);
-	path.makeGlass(2);
-	path.makeGlass(5);
+//	path.makeDoor(path.segments.length-2);
+//	path.makeGlass(2);
+//	path.makeGlass(5);
 
 
 	world.paths.push(path);
-
+/*
 	var boulder = new Path(
 		250, 250,
 		240, 265,
@@ -73,21 +64,21 @@ var world = new World();
 
 		}
 	}
+*/
+//	var door = new Door(250,250+1, 250,200-1);
+//	var seg = new Segment(270,260, 270,300);
 
-	var door = new Door(250,250+1, 250,200-1);
-	var seg = new Segment(270,260, 270,300);
+//	world.segments.push(door);
+//	world.segments.push(seg);
 
-	world.segments.push(door);
-	world.segments.push(seg);
-
-	var licht = new Light(350, 270, 100, 2*Math.PI, Math.PI);
-	var licht2 = new Light(150, 200, 150, 2*Math.PI, Math.PI);
+//	var licht = new Light(350, 270, 100, 2*Math.PI, Math.PI);
+	var licht2 = new Light(150, 200, 100, 2*Math.PI, Math.PI);
 	//var licht3 = new Light(253, 230, 100, 2*Math.PI, Math.PI);
 
 
 //	world.lights.push(other.light);
 //	world.lights.push(player.light);
-	world.lights.push(licht);
+//	world.lights.push(licht);
 	world.lights.push(licht2);
 	//lights.push(licht3);
 
@@ -103,8 +94,16 @@ window.requestAnimationFrame(function(){view.draw() });
 keyboardControl(world);
 
 
+document.getElementById("paper").addEventListener("mousemove", function(evt){
+	var bounds = evt.target.getBoundingClientRect();
+	world.lights[0].x = evt.clientX - bounds.x;
+	world.lights[0].y = evt.clientY - bounds.y;
+
+})
+
+
 view.lights_on = true;
-view.relative = true;
+view.relative = false;
 view.relative_angle = true;
 
 $('#lights').on("click", function(evt){

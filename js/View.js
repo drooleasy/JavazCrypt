@@ -204,7 +204,7 @@ View.prototype.renderScene = function renderScene(paper, world){
 
 				// re draw wall
 				wctx.globalCompositeOperation = "source-over";
-				drawScene(wctx, true);
+				//drawScene(wctx, true);
 
 			}
 			that.lastValidBuffer.getContext("2d").putImageData(wctx.getImageData(0,0,worldRenderer.width, worldRenderer.height), 0, 0);
