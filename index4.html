@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>JavazCrypt demo</title>
+		<link rel="stylesheet" href="style.css" />
+
+		<script type="text/javascript" src="lib/jquery-2.1.4.min.js" ></script>
+
+		<script type="text/javascript" src="./lib/ArgRouter.js" ></script>
+		<script type="text/javascript" src="./js/AABB.js" ></script>
+		<script type="text/javascript" src="./js/Point.js" ></script>
+		<script type="text/javascript" src="./js/Transform.js" ></script>
+		<script type="text/javascript" src="./js/utils.js" ></script>
+		<script type="text/javascript" src="./js/Interval.js" ></script>
+		<script type="text/javascript" src="./js/angle-utils.js" ></script>
+		<script type="text/javascript" src="./js/Rect.js" ></script>
+		<script type="text/javascript" src="./js/canvas-utils.js" ></script>
+		<script type="text/javascript" src="./js/Shadow.js" ></script>
+		<script type="text/javascript" src="./js/Bubble.js" ></script>
+		<script type="text/javascript" src="./js/Bob.js" ></script>
+		<script type="text/javascript" src="./js/Segment.js" ></script>
+		<script type="text/javascript" src="./js/Door.js" ></script>
+		<script type="text/javascript" src="./js/Glass.js" ></script>
+		<script type="text/javascript" src="./js/Light.js" ></script>
+		<script type="text/javascript" src="./js/Path.js" ></script>
+		<script type="text/javascript" src="./js/Stair.js" ></script>
+		<script type="text/javascript" src="./js/keyboard-control.js" ></script>
+		<script type="text/javascript" src="./js/renderScene.js" ></script>
+		<script type="text/javascript" src="./js/PointCloud.js" ></script>
+		<script type="text/javascript" src="./js/random.js" ></script>
+		<script type="text/javascript" src="./js/Slope.js" ></script>
+		<script type="text/javascript" src="./js/Platform.js" ></script>
+		<script type="text/javascript" src="./js/World.js" ></script>
+		<script type="text/javascript" src="./js/View.js" ></script>
+	</head>
+	<body style="background-color:#000">
+
+		<div id="cnt">
+			<h1>JavazCrypt demo</h1>
+			<p id="hud">			</p>
+
+			<canvas id="paper"></canvas>
+
+			<div id="controls">
+				<a id="lights" class="button button-on" href="#">lights ON</a>
+				<a id="sight" class="button button-off" href="#">Sight OFF</a>
+				<a id="relative" class="button button-on" href="#">Relative ON</a>
+				<a id="say" class="button button-cta" href="#">Call someone</span></a>
+			</div>
+			<div id="dbg-info" style="width:200px;float:right"></div>
+		</div>
+		<script type="text/javascript">
+		var paper_width = 650;
+		var paper_height = 400;
+
+
+		var paper = document.getElementById("paper");
+		paper.width = paper_width;
+		paper.height = paper_height;
+
+		var ctx = paper.getContext("2d");
+
+			var segments = [
+				new Segment(200, 150, 400, 151),
+				new Segment(250, 200, 350, 201)
+			];
+
+			var center = {
+				x: 300,
+				y: 170,
+				radius: 130
+			};
+
+function SegmentToPoint(segment, point){
+	var closest = segment.closestPointFrom(point.x, point.y);
+	this.segment = segment;
+	this.closest = closest;
+	this.metric = {
+		a : distanceAndAngle(point.x, point.y, segment.a.x, segment.a.y),
+		b : distanceAndAngle(point.x, point.y, segment.b.x, segment.b.y),
+		closest : distanceAndAngle(point.x, point.y, closest.x, closest.y)
+	};
+	this.length = distanceBetween(segment.b.x, segment.b.y, segment.a.x, segment.a.y);
+	this.angle = clipAngle(this.metric.b.angle - this.metric.a.angle); // cliped
+}
+
+SegmentToPoint.prototype.recompute = function(point){
+	var closest = this.segment.closestPointFrom(point.x, point.y);
+	//this.segment = this.segment;
+	this.closest = closest;
+	this.metric = {
+		a : distanceAndAngle(point.x, point.y, this.segment.a.x, this.segment.a.y),
+		b : distanceAndAngle(point.x, point.y, this.segment.b.x, this.segment.b.y),
+		closest : distanceAndAngle(point.x, point.y, closest.x, closest.y)
+	};
+	this.length = distanceBetween(this.segment.b.x, this.segment.b.y, this.segment.a.x, this.segment.a.y);
+	this.angle = clipAngle(this.metric.b.angle - this.metric.a.angle); // cliped
+	return this;
+}
+
+SegmentToPoint.prototype.swap = function(){
+	var tmp =	this.segment.a;
+	this.segment.a = this.segment.b;
+	this.segment.b = tmp;
+	tmp =	this.metric.a;
+	this.metric.a = this.metric.b;
+	this.metric.b = tmp;
+	this.angle = clipAngle(this.angle - Math.PI);
+	return this;
+};
+SegmentToPoint.prototype.draw = function(ctx, markClosest, color){
+		color = color || randomColor();
+		var segment = this.segment;
+		var angle = angleBetween(segment.a.x, segment.a.y, segment.b.x, segment.b.y);
+		ctx.strokeStyle = color;
+		ctx.fillStyle = ctx.strokeStyle;
+
+		ctx.beginPath();
+		ctx.moveTo(segment.a.x, segment.a.y);
+		ctx.lineTo(segment.b.x, segment.b.y);
+		ctx.stroke();
+
+		ctx.beginPath();
+		ctx.lineTo(
+			segment.b.x + Math.cos(angle+Math.PI*3.2/4) * 10,
+			segment.b.y  + Math.sin(angle+Math.PI*3.2/4) * 10
+		);
+		ctx.lineTo(
+			segment.b.x + Math.cos(angle-Math.PI*3.2/4) * 10,
+			segment.b.y  + Math.sin(angle-Math.PI*3.2/4) * 10
+		);
+		ctx.lineTo(segment.b.x, segment.b.y);
+		ctx.fill();
+
+		if(markClosest){
+			ctx.beginPath();
+			ctx.arc(this.closest.x, this.closest.y, 10, 0, 2*Math.PI);
+			ctx.closePath();
+			ctx.fill();
+		}
+		return this;
+};
+
+
+SegmentToPoint.prototype.clockwise = function(){
+	if(this.angle < 0) this.swap();
+	return this;
+}
+
+
+SegmentToPoint.prototype.counterClockwise = function(){
+	if(this.angle > 0) this.swap();
+	return this;
+}
+
+			var reachableSegments = [];
+
+			for(var i=0; i<segments.length;i++){
+				var segment = segments[i];
+				reachableSegments.push(new SegmentToPoint(segment, center));
+			}
+
+$(paper).on('mousemove', function(evt){
+	center.x = evt.clientX - $(this).offset().left;
+	center.y = evt.clientY - $(this).offset().top;
+});
+
+function cliped(){
+	var res = [];
+	for(var i = 0; i < segments.length; i++){
+		var segment = segments[i];
+		var closest = segment.closestPointFrom(center.x, center.y);
+		if(distanceBetween(center.x, center.y, closest.x, closest.y) < center.radius){
+			var clipedSegment, metric_a, metric_b;
+			var intersections = segment.intersectWithCircle(center.x, center.y, center.radius);
+			if(intersections.length == 2){
+
+				clipedSegment = new Segment(intersections[0].x, intersections[0].y, intersections[1].x, intersections[1].y);
+			}else if(intersections.length  == 1){
+
+				var intersectionPoint = intersections[0];
+				metric_a = distanceAndAngle(center.x, center.y, segment.a.x, segment.a.y);
+				metric_b = distanceAndAngle(center.x, center.y, segment.b.x, segment.b.y);
+
+				if(metric_a.distance > center.radius){
+					clipedSegment = new Segment(intersectionPoint.x, intersectionPoint.y, segment.b.x, segment.b.y);
+				}else {
+					clipedSegment = new Segment(segment.a.x, segment.a.y, intersectionPoint.x, intersectionPoint.y);
+				}
+			}else {
+				clipedSegment = segment;
+			}
+
+			if(closest.x == clipedSegment.a.x && closest.y == clipedSegment.a.y){
+				res.push(new SegmentToPoint(clipedSegment, center));
+			}else if(closest.x == clipedSegment.b.x && closest.y == clipedSegment.b.y){
+				res.push(new SegmentToPoint(clipedSegment, center).swap());
+
+			}else{
+				res.push(new SegmentToPoint(
+					new Segment(closest.x, closest.y, clipedSegment.a.x, clipedSegment.a.y),
+					center
+				));
+				res.push(new SegmentToPoint(
+					new Segment(closest.x, closest.y, clipedSegment.b.x, clipedSegment.b.y),
+					center
+				));
+			}
+		} // if(distanceBetween(this.x, this.y, closest.x, closest.y) < this.sightLength){
+
+	}
+	return res;
+}
+
+function draw(){
+
+	paper.width = paper_width;
+			for(var i=0; i<reachableSegments.length;i++){
+				reachableSegments[i].recompute(center).clockwise().draw(ctx, true, '#0F0');
+			}
+			ctx.strokeStyle = '#0F0'
+			ctx.beginPath();
+			ctx.arc(center.x, center.y, 5, 0, 2*Math.PI);
+			ctx.closePath();
+			ctx.stroke();
+			ctx.beginPath();
+			ctx.arc(center.x, center.y, center.radius, 0, 2*Math.PI);
+			ctx.closePath();
+			ctx.stroke();
+
+			var angle = Math.PI/2;
+			ctx.strokeStyle = '#0F0';
+			ctx.beginPath();
+			ctx.arc(center.x + Math.cos(angle) * center.radius, center.y  + Math.sin(angle) * center.radius, 5, 0, 2*Math.PI);
+			ctx.closePath();
+			ctx.stroke();
+
+			var clipeds = cliped();
+			for(var i=0; i<clipeds.length;i++){
+				clipeds[i].clockwise().draw(ctx, true, '#FFF');
+			}
+
+
+			window.requestAnimationFrame(draw);
+}
+window.requestAnimationFrame(draw);
+
+		</script>
+
+	</body>
+</html>
