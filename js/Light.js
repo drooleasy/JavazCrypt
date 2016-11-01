@@ -321,15 +321,11 @@ Light.prototype.getReachableSegments = function(segments){
 	var lightPoint = new Point(this.x, this.y);
 	if(segments){
 		for(i=0;i<segments.length;i++){
-
 			var segment = segments[i];
 			var s_aabb = segment.AABB();
 			if(!l_aabb.intersects(s_aabb)){
 				continue;
 			}
-
-
-
 
 			var closest = segment.closestPointFrom(this.x, this.y),
 					metric_closest = distanceAndAngle(this.x, this.y, closest.x, closest.y);
@@ -352,7 +348,7 @@ Light.prototype.getReachableSegments = function(segments){
 					if(metric_a.distance > this.sightLength){
 						clipedSegment = new Segment(intersectionPoint.x, intersectionPoint.y, segment.b.x, segment.b.y);
 						metric_a = distanceAndAngle(this.x, this.y, clipedSegment.a.x, clipedSegment.a.y);
-					}else {
+					}else{
 						clipedSegment = new Segment(segment.a.x, segment.a.y, intersectionPoint.x, intersectionPoint.y);
 						metric_b = distanceAndAngle(this.x, this.y, clipedSegment.b.x, clipedSegment.b.y);
 					}
@@ -427,6 +423,7 @@ Light.prototype.getReachableSegments = function(segments){
 		})
 
 
+
 		var filtered = [];
 		while(treated.length){
 			var first = treated.splice(0,1)[0];
@@ -435,6 +432,7 @@ Light.prototype.getReachableSegments = function(segments){
 			var first_length = distanceBetween(first.segment.a.x, first.segment.a.y, first.segment.b.x, first.segment.b.y);
 
 			var toRemove = [];
+			var neos = [];
 			for(var i=0; i<treated.length; i++){
 				var other = treated[i];
 				var other_length = distanceBetween(other.segment.a.x, other.segment.a.y, other.segment.b.x, other.segment.b.y);
@@ -475,6 +473,37 @@ Light.prototype.getReachableSegments = function(segments){
 					if(is_first_bigger){
 						// remove other
 						toRemove.push(i);
+					}else{
+						console.log("todo")
+					}
+				}else if(relative_span_a < bigger_span){
+						if(relative_span_b > Math.PI){
+							if(other.metric_a.distance < first.metric_b.distance){
+								var ray = castRay(
+									this.x, this.y,
+									other.segment.b.x, other.segment.b.y,
+									this.sightLength
+								);
+								var intersect = ray.intersect(first.segment);
+								var neoSegment = new Segment(intersect.x, intersect.y, first.segment.b.x, first.segment.b.y);
+								first.segment = neoSegment;
+								first.metric_a = distanceAndAngle(this.x, this.y, intersect.x, intersect.y);
+								//var neos.push(neoSegment);
+							}else{
+								var ray = castRay(
+									this.x, this.y,
+									other.segment.b.x, other.segment.b.y,
+									this.sightLength
+								);
+								var intersect = ray.intersect(first.segment);
+								var neoSegment = new Segment(first.segment.a.x, first.segment.a.y, intersect.x, intersect.y);
+								first.segment = neoSegment;
+								first.metric_b = distanceAndAngle(this.x, this.y, intersect.x, intersect.y);
+								//var neos.push(neoSegment);
+							}
+						}else{
+
+						}
 					}
 				}
 
@@ -484,14 +513,14 @@ Light.prototype.getReachableSegments = function(segments){
 				for(var i=0; i<toRemove.length; i++){
 					treated.splice(toRemove[i], 1);
 				}
-			}
-
+		}
+}
 			// resort treated
 			treated = treated.sort(function(s1, s2){
 				return  s1.metric_closest.distance -s2.metric_closest.distance;
 			})
 
-		}
+
 
 /*
 		for(var i=0; i<res.length; i++){

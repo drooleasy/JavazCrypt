@@ -216,7 +216,7 @@ Segment.prototype.otherPoint = function(p){
 /**
  * check if this segment intersects with another
  * @param {Segment} other the pther segment
- * @return {boolean} null if the segments dont intersects (or are colinear), the intersection point otherwise
+ * @return {point|null} null if the segments dont intersects (or are colinear), the intersection point otherwise
  */
 Segment.prototype.intersect = function (other){
 
