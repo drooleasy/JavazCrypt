@@ -63,10 +63,45 @@
 
 		var ctx = paper.getContext("2d");
 
+
+		var path = new Path(
+			500, 100,
+			500, 300,
+			400, 300,
+			350, 300,
+			100, 300,
+			100, 200,
+			100, 150,
+			100, 100,
+			250, 200,
+			350, 175,
+			450, 125
+
+		);
+		path.close();
+
+
+		/*
 			var segments = [
 				new Segment(200, 150, 400, 150),
-				new Segment(250, 200, 350, 200)
-			];
+
+				new Segment(180, 150, 220, 200),
+
+				new Segment(250, 200, 350, 200),
+
+				new Segment(350, 200, 400, 150)
+			];*/
+
+			var segments = [
+				new Segment(200, 100, 100, 200),
+
+				new Segment(200, 200, 100, 100),
+
+
+			];/**/
+
+
+//var segments = path.segments;
 
 			var center = {
 				x: 300,
@@ -81,18 +116,39 @@
 				var segment = segments[i];
 				reachableSegments.push(new SegmentToPoint(segment, center));
 			}
-
+/*
 $(paper).on('mousemove', function(evt){
 	center.x = evt.clientX - $(this).offset().left;
 	center.y = evt.clientY - $(this).offset().top;
 });
+*/
+$(document).on("keydown", function(evt){
 
+	switch(evt.which){
+		case 37 : center.x-=1; break;
+		case 39 : center.x+=1; break;
+		case 38 : center.y-=1; break;
+		case 40 : center.y+=1; break;
+
+	}
+})
 
 function draw(){
 
+
+var debug = "";
+for(var i=0; i<reachableSegments.length;i ++){
+	var s = reachableSegments[i];
+	debug += s.metric.a.angle.toFixed(2) + ", " + s.metric.b.angle.toFixed(2) + " (" + s.angle.toFixed(2)+")" + "<br/>";
+}
+$('#hud').html(
+	debug
+)
+
+
 	paper.width = paper_width;
 			for(var i=0; i<reachableSegments.length;i++){
-				reachableSegments[i].recompute(center).clockwise().draw(ctx, true, '#0F0');
+				//reachableSegments[i].recompute(center).clockwise().draw(ctx, true, '#0F0');
 			}
 			ctx.strokeStyle = '#0F0'
 			ctx.beginPath();
@@ -104,27 +160,54 @@ function draw(){
 			ctx.closePath();
 			ctx.stroke();
 
-			var angle = Math.PI/2;
-			ctx.strokeStyle = '#0F0';
-			ctx.beginPath();
-			ctx.arc(center.x + Math.cos(angle) * center.radius, center.y  + Math.sin(angle) * center.radius, 5, 0, 2*Math.PI);
-			ctx.closePath();
-			ctx.stroke();
 
 			var clipeds = cliped(center, segments);
 			var obs = obstruded(center, clipeds);
 
+
+		/*	for(var i=0; i<obs.length; i++){
+				ctx.beginPath()
+				obs[i].draw(ctx, true, "#00F")
+			}
+*/
+
+			if(!obs.length)
+				$('#hud').html($('#hud').html() + "no obs<br/>");
 			if(obs.length){
-				var first = obs.shift();
+				$('#hud').html($('#hud').html() + "obs<br/>");
+
+//for(var j = 0; j<obs.length;j++){
+//obs[j].clockwise();
+//}
+
+
+				obs = obs.sort(function(a, b){
+						if(a.metric.closest.distance == b.metric.closest.distance){
+								return b.angle - a.angle
+							}
+						return a.metric.closest.distance - b.metric.closest.distance
+					});
+
+				for(var i=0; i<obs.length; i++){
+//						ctx.beginPath()
+//						obs[i].draw(ctx, true, "#00F", i+1)
+					}
+					var first = obs.shift();
+
+					ctx.beginPath();
+	        first.draw(ctx, false, "#FF0")
+
+					var dbg_obs = [first];
+
+
+
 				ctx.fillStyle = "rgba(255,255,255,.5)"
 				ctx.beginPath();
 				ctx.moveTo(first.segment.a.x, first.segment.a.y);
 				ctx.lineTo(first.segment.b.x, first.segment.b.y);
 
-				obs.sort(function(a,b){
-					return clipAnglePositive(a.metric.a.angle - first.metric.b) - clipAnglePositive(b.metric.a.angle - first.metric.b)
-	 			})
 				var last = first;
+
 
 				function join(ctx, last, next, dontDrawNext){
 					if(Math.abs(next.metric.a.angle - last.metric.b.angle) < 0.001){
@@ -136,8 +219,13 @@ function draw(){
 						rayon1 = new SegmentToPoint(rayon1, center);
 						rayon1.closeToFar();
 						ctx.lineTo(rayon1.segment.b.x, rayon1.segment.b.y);
-
-						ctx.arc(center.x, center.y, center.radius, rayon1.metric.b.angle, next.metric.a.angle);
+					  var angleDiff = clipAnglePositive(next.metric.a.angle - rayon1.metric.b.angle);
+						//var angleDiff = angleBetween(rayon1.segment.b.x, rayon1.segment.b.y, next.segment.a.x, next.segment.a.y) ;
+						var ccw =	angleDiff > Math.PI;
+						//if(dontDrawNext) ccw = !ccw;
+						//if(angleDiff > Math.PI) ccw = !ccw;
+						//if(angleDiff > Math.PI) console.log('kaput');
+						ctx.arc(center.x, center.y, center.radius, clipAnglePositive(rayon1.metric.b.angle), clipAnglePositive(next.metric.a.angle));
 
 						/*
 						var rayon2 = castRay(center.x, center.y, next.segment.a.x, last.segment.a.y, center.radius);
@@ -150,17 +238,35 @@ function draw(){
 					if(!dontDrawNext) ctx.lineTo(next.segment.b.x, next.segment.b.y);
 				}
 
-				for(var i=0; i<obs.length;i++){
-					var next = obs[i];
+				while(obs.length){
+					obs.sort(function(a,b){
+							a.clockwise();
+							b.clockwise();
+						return clipAnglePositive(a.metric.a.angle.toFixed(3) - last.metric.b.angle.toFixed(3)) < clipAnglePositive(b.metric.a.angle.toFixed(3) - last.metric.b.angle.toFixed(3)) ? -1 : 1;
+
+
+					});
+
+
+					var next = obs.shift();
 					join(ctx, last, next);
 					last = next;
+					dbg_obs.push(last);
 					// obs[i].clockwise().draw(ctx, i==0, '#F00');
 
 				}
 
 				join(ctx, last, first, true);
 
+				ctx.strokeStyle = "rgba(255,255,255,.5)";
+				ctx.closePath();
 				ctx.fill();
+				ctx.stroke();
+
+
+for(var i=0; i< dbg_obs.length; i++){
+	dbg_obs[i].draw(ctx, false, "#F00", i+1 /*+ "\n" + dbg_obs[i].metric.a.angle.toFixed(3) + "°\n" + dbg_obs[i].metric.b.angle.toFixed(3) + "°"*/)
+}
 
 			}// if obs.length
 

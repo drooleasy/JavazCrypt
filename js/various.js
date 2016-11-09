@@ -57,131 +57,125 @@ function obstruded(center, segmentFromPoints){
 	var res = [];
 
 	var data = segmentFromPoints.sort(function(a, b){
-		return a.metric.closest.distance - b.metric.closest.distance
+    if(a.metric.closest.distance == b.metric.closest.distance){
+        return b.angle - a.angle
+      }
+    return a.metric.closest.distance - b.metric.closest.distance
 	});
 	while(data.length){
 		var first = data.shift().clockwise();
-		for(var i=0; i<data.length; i++){
-			var other = data[i].clockwise();
-			if(false && other.isSinglePoint()){
-				data.splice(i, 1);
-				continue;
-			}
-			if(first.metric.a.angle < other.metric.a.angle){ // [first.a, other.a]
-				if(first.metric.b.angle > other.metric.a.angle){ // [first.a, other.a] [other.a first.b]
-					if(first.metric.b.angle > other.metric.b.angle){ // [first.a, other.a] [other.a first.b] [other.b, first.b]
-						data.splice(i, 1);
-					}else{ // first.metric.b.angle < othermetric..b.angle // [first.a, other.a] [other.a first.b] [first.b other.b]
-						//neo project first.b over other, other.b
-						var prj = project(center, first.segment.b, other);
-						var neo = null;
-						if(prj){
-							var neo = new SegmentToPoint(
-								new Segment(
-									prj.x,
-									prj.y,
-									other.segment.b.x,
-									other.segment.b.y
-								),
-								center
-							);
-							if(neo.isSinglePoint()){
-								neo = null;
-							}
-						}
-						if(neo){
-							data.splice(i, 1, neo);
-							data.sort(function(a, b){
-									return a.metric.closest.distance - b.metric.closest.distance
-								});
-						}else{
-							data.splice(i, 1);
-						}
-					}
-				}else{ // first.metric.a.angle < other.metric.a.angle && first.metric.b.angle < other.metric.a.angle
-						// [first.a, other.a] [first.b other.a]
-					// visible, do nada
-				}
-			}else{ // first.metric.a.angle > other.metric.a.angle // [other.a, first.a]
-				if(first.metric.a.angle < other.metric.b.angle){ // [other.a, first.a] [first.a other.b]
-					if(first.metric.b.angle > other.metric.b.angle){ // [other.a, first.a] [first.a other.b] [other.b first.a]
-
-						var prj = project(center, first.segment.a, other);
-						var neo = null;
-						if(prj){
-							neo = new SegmentToPoint(
-								new Segment(
-									other.segment.a.x,
-									other.segment.a.y,
-									prj.x,
-									prj.y
-								),
-								center
-							);
-							if(neo.isSinglePoint()){
-								neo = null;
-							}
-						}
-						if(neo){
-							data.splice(i, 1, neo);
-							data.sort(function(a, b){
-								return a.metric.closest.distance - b.metric.closest.distance
-							});
-						}else{
-							data.splice(i, 1);
-						}
-					}else{ // first.metric.b.angle < other.metric.b.angle // [other.a, first.a] [first.a other.b] [first.b, other.b]
-						var prj1 = project(center, first.segment.a, other);
-						var prj2 = project(center, first.segment.b, other);
-						var neo1 = null;;
-						var neo2 = null;;
-						if(prj1){
-							var neo1 = new SegmentToPoint(
-								new Segment(
-									other.segment.a.x,
-									other.segment.a.y,
-									prj1.x,
-									prj1.y
-								),
-								center
-							);
-							if(neo1.isSinglePoint()){
-								neo1 = null;
-							}
-						}
-						if(prj2){
-							var neo2 = new SegmentToPoint(
-								new Segment(
-									prj2.x,
-									prj2.y,
-									other.segment.b.x,
-									other.segment.b.y
-								),
-								center
-							);
-							if(neo2.isSinglePoint()){
-								neo2 = null;
-							}
-						}
-						if(neo1 && neo2) data.splice(i, 1, neo1, neo2);
-						else if(neo1) data.splice(i, 1, neo1);
-						else if(neo2) data.splice(i, 1, neo2);
-						else data.splice(i, 1);
-						if(neo1 || neo2) data.sort(function(a, b){
-							return a.metric.closest.distance - b.metric.closest.distance
-						});
-					}
-				}else{ // first.metric.a.angle > other.metric.a.angle && first.metric.a.angle > other.metric.b.angle
-						// // [other.a, first.a] [other.b, first.a]
-					// visible, do nada
-				}
-			}
-		}
-
-
 		res.push(first);
-	}
+    var rest = [];
+    for(var i=0; i<data.length; i++){
+			var other = data[i].clockwise();
 
+
+      var a = clipAnglePositive(other.metric.a.angle - first.metric.a.angle);
+      var b = clipAnglePositive(other.metric.b.angle - first.metric.a.angle);
+      var w = clipAnglePositive(first.metric.b.angle - first.metric.a.angle);
+//debugger;
+      if(a > Math.PI && b > w && b < Math.PI){
+        var prj1 = project(center, first.segment.a, other);
+        var prj2 = project(center, first.segment.b, other);
+        var neo1 = null;;
+        var neo2 = null;;
+        if(prj1){
+          var neo1 = new SegmentToPoint(
+            new Segment(
+              other.segment.a.x,
+              other.segment.a.y,
+              prj1.x,
+              prj1.y
+            ),
+            center
+          );
+          if(neo1.isSinglePoint()){
+            neo1 = null;
+          }
+        }
+        if(prj2){
+          var neo2 = new SegmentToPoint(
+            new Segment(
+              prj2.x,
+              prj2.y,
+              other.segment.b.x,
+              other.segment.b.y
+            ),
+            center
+          );
+          if(neo2.isSinglePoint()){
+            neo2 = null;
+          }
+        }
+       if(neo1){
+         rest.push(neo1);
+         //console.log("neo1")
+       }
+       if(neo2){
+         rest.push(neo2);
+        // console.log("neo2")
+       }
+
+     }else if( a <= w && b > w){
+        var prj = project(center, first.segment.b, other);
+        var neo = null;
+        if(prj){
+          var neo = new SegmentToPoint(
+            new Segment(
+              prj.x,
+              prj.y,
+              other.segment.b.x,
+              other.segment.b.y
+            ),
+            center
+          );
+          if(neo.isSinglePoint()){
+            neo = null;
+          }
+        }
+        if(neo){
+          rest.push(neo);
+        }
+
+      }else if( a <= w && b <= w){
+        // skip
+      }else if(a  > Math.PI && b <= w){
+        var prj = project(center, first.segment.a, other);
+        var neo = null;
+        if(prj){
+          var neo = new SegmentToPoint(
+            new Segment(
+              other.segment.a.x,
+              other.segment.a.y,
+              prj.x,
+              prj.y
+            ),
+            center
+          );
+          if(neo.isSinglePoint()){
+            neo = null;
+          }
+        }
+        if(neo){
+          rest.push(neo);
+        }
+
+
+
+      }else{
+        rest.push(other);
+      }
+
+
+
+
+    }//enfor
+
+    data = rest.sort(function(a, b){
+      return a.metric.closest.distance - b.metric.closest.distance
+    });;
+
+  }// end while
 
 	return res;
 }

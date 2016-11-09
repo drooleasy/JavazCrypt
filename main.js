@@ -57,7 +57,7 @@ var world = new World();
 	boulder.close();
 
 	world.boulders.push(boulder);
-
+/*
 	var delta = 50;
   for(var i=0; i<3; i++){
 		for(var j=0; j<3; j++){
@@ -73,8 +73,8 @@ var world = new World();
 
 		}
 	}
-
-	var door = new Door(250,250+1, 250,200-1);
+*/
+	var door = new Door(250,250, 250,200);
 	var seg = new Segment(270,260, 270,300);
 
 	world.segments.push(door);
@@ -85,8 +85,8 @@ var world = new World();
 	//var licht3 = new Light(253, 230, 100, 2*Math.PI, Math.PI);
 
 
-//	world.lights.push(other.light);
-//	world.lights.push(player.light);
+	world.lights.push(other.light);
+	world.lights.push(player.light);
 	world.lights.push(licht);
 	world.lights.push(licht2);
 	//lights.push(licht3);

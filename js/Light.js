@@ -84,189 +84,163 @@ Light.prototype.draw = function(paper, segments, bobs){
 
 
 	var ctx = paper.getContext('2d');
-
-
+	ctx.fillStyle="#777";
 
   var reachableSegments = this.getReachableSegments(segments);
 
 
-/*
-	for(var i=0; i<reachableSegments.length; i++){
-		var seg = reachableSegments[i].segment;
-		ctx.beginPath();
+	if(reachableSegments.length){
 
-		ctx.moveTo(seg.a.x, seg.a.y);
-		ctx.lineTo(seg.b.x, seg.b.y);
-		ctx.stroke();
 
-	}
+
+
+
+
+
+
+
+
+
+
+		var center = {
+			x: this._x,
+			y: this._y,
+			radius: this.sightLength
+		}
+
+
+		var segs = [];
+
+		for(var i=0; i<reachableSegments.length;i++){
+			var segment = reachableSegments[i];
+			segs.push(segment);
+		}
+
+
+
+		var clipeds = cliped(center, segments);
+		var obs = obstruded(center, clipeds);
+
+
+	/*	for(var i=0; i<obs.length; i++){
+			ctx.beginPath()
+			obs[i].draw(ctx, true, "#00F")
+		}
 */
 
-var cliping = [];
+		if(!obs.length)
+			$('#hud').html($('#hud').html() + "no obs<br/>");
+		if(obs.length){
+			$('#hud').html($('#hud').html() + "obs<br/>");
+
+//for(var j = 0; j<obs.length;j++){
+//obs[j].clockwise();
+//}
 
 
-if(reachableSegments.length){
+obs = obs.sort(function(a, b){
+		if(a.metric.closest.distance == b.metric.closest.distance){
+				return b.angle - a.angle
+			}
+		return a.metric.closest.distance - b.metric.closest.distance
+	});
 
-	for(var i=0; i< reachableSegments.length; i++){
+for(var i=0; i<obs.length; i++){
+//						ctx.beginPath()
+//						obs[i].draw(ctx, true, "#00F", i+1)
+	}
+	var first = obs.shift();
+
+	ctx.beginPath();
+	first.draw(ctx, false, "#FF0")
+
+	var dbg_obs = [first];
+
+	var grd=ctx.createRadialGradient(this._x,this._y,0,this._x,this._y,this.sightLength);
+	grd.addColorStop(0,"rgba(255,255,255,.5)");
+	grd.addColorStop(1,"rgba(255,255,255,.0)");
+
+//ctx.fillStyle = "rgba(255,255,255,.5)"
+ctx.fillStyle = grd;
+ctx.beginPath();
+ctx.moveTo(first.segment.a.x, first.segment.a.y);
+ctx.lineTo(first.segment.b.x, first.segment.b.y);
+
+var last = first;
 
 
-		var reachableSegment = reachableSegments[i],
-				segment = reachableSegment.segment,
-				metric_a = reachableSegment.metric_a,
-				metric_b = reachableSegment.metric_b;
+function join(ctx, last, next, dontDrawNext){
+	if(Math.abs(next.metric.a.angle - last.metric.b.angle) < 0.001){
+		ctx.lineTo(next.segment.a.x, next.segment.a.y);
 
+	}else{
 
+		var rayon1 = castRay(center.x, center.y, last.segment.b.x, last.segment.b.y, center.radius);
+		rayon1 = new SegmentToPoint(rayon1, center);
+		rayon1.closeToFar();
+		ctx.lineTo(rayon1.segment.b.x, rayon1.segment.b.y);
+		var angleDiff = clipAnglePositive(next.metric.a.angle - rayon1.metric.b.angle);
+		//var angleDiff = angleBetween(rayon1.segment.b.x, rayon1.segment.b.y, next.segment.a.x, next.segment.a.y) ;
+		var ccw =	angleDiff > Math.PI;
+		//if(dontDrawNext) ccw = !ccw;
+		//if(angleDiff > Math.PI) ccw = !ccw;
+		//if(angleDiff > Math.PI) console.log('kaput');
+		ctx.arc(center.x, center.y, center.radius, clipAnglePositive(rayon1.metric.b.angle), clipAnglePositive(next.metric.a.angle));
 
 		/*
-		$('#hud').html(
-			'a : ' + clipAnglePositive(metric_a.angle).toFixed(2)
-			+'<br/>b : ' + clipAnglePositive(metric_b.angle).toFixed(2)
-			+'<br/>diff : ' + clipAnglePositive(metric_b.angle - metric_a.angle).toFixed(2)
-		)
+		var rayon2 = castRay(center.x, center.y, next.segment.a.x, last.segment.a.y, center.radius);
+		rayon2 = new SegmentToPoint(rayon2, center);
+		rayon2.farToClose();
+		ctx.lineTo(rayon2.segment.b.x, rayon2.segment.b.y);
 		*/
-		// dot the start point
-		/*ctx.fillStyle = '#0F0'
-		ctx.beginPath();
-		ctx.arc(reachableSegments[0].segment.a.x, reachableSegments[0].segment.a.y, 10, 0, 2*Math.PI);
-		ctx.closePath();
-		ctx.fill();
-		*/
+		ctx.lineTo(next.segment.a.x, next.segment.a.y);
+	}
+	if(!dontDrawNext) ctx.lineTo(next.segment.b.x, next.segment.b.y);
+}
 
-		cliping.push({
-			type:"segment",
-			x1: segment.a.x,
-			y1: segment.a.y,
-			x2: segment.b.x,
-			y2: segment.b.y
-
-		});
+while(obs.length){
+	obs.sort(function(a,b){
+			a.clockwise();
+			b.clockwise();
+		return clipAnglePositive(a.metric.a.angle.toFixed(3) - last.metric.b.angle.toFixed(3)) < clipAnglePositive(b.metric.a.angle.toFixed(3) - last.metric.b.angle.toFixed(3)) ? -1 : 1;
 
 
+	});
 
 
-		if(i+1<reachableSegments.length){ // next segment
-			var nextReachable = reachableSegments[i+1],
-					nextSegment = nextReachable.segment,
-					next_metric_a = nextReachable.metric_a,
-					next_metric_b = nextReachable.metric_b;
+	var next = obs.shift();
+	join(ctx, last, next);
+	last = next;
+	dbg_obs.push(last);
+	// obs[i].clockwise().draw(ctx, i==0, '#F00');
 
-			if(nextSegment.a.x == segment.b.x && nextSegment.a.y == segment.a.y){
+}
 
-			}
+join(ctx, last, first, true);
+
+			//ctx.clip();
+		 			ctx.closePath();
+		 			ctx.fill();
+		 			ctx.strokeStyle="#FFF";
+		 			ctx.stroke();
 
 
-		}else{
-
-
-			var first = {
-				x: cliping[0].x1,
-				y: cliping[0].y1,
-				angle: angleBetween(this.x, this.y, cliping[0].x1, cliping[0].y1)
-			};
-
-			if( segment.b.x != first.x || segment.b.y != first.y){
+		}// if obs.length
 
 
 
-				// path to perimeter
-				var ray = castRay(
-					this.x, this.y,
-					segment.b.x, segment.b.y,
-					this.sightLength
-				).inversed();
 
-				cliping.push({
-					type:"segment",
-					x1: ray.a.x,
-					y1: ray.a.y,
-					x2: ray.b.x,
-					y2: ray.b.y
-
-				});
-
-
-				// perimeter
-
-				cliping.push({
-					type:"arc",
-					from: metric_b.angle,
-					to: first.angle,
-				})
-
-				// closing
-				// path from perimeter
-				ray = castRay(
-					this.x, this.y,
-					first.x, first.y,
-					this.sightLength
-				);
-
-				cliping.push({
-					type:"segment",
-					x1: ray.b.x,
-					y1: ray.b.y,
-					x2: ray.a.x,
-					y2: ray.a.y
-
-				});
-
-			}
-
-			/*
-
-			a.x == -1.b.x && a.y == -1.b.y
-				seg
-
-			else a.angle < -1.b.angle
-				a.distance < -1.b.distance
-						intersect
-						seg
-						seg
-				else
-						intersect
-						seg
-						seg
-
-			else
-					inter circle
-					seg
-					arc
-					seg
-					seg
-			 */
-
-
-
-			//cliping.push({type:"arc", from:reachableSegments[0].metric_b.angle, to:2*Math.PI});
-			}
-		}// end for
 	}else{
-		cliping.push({type:"arc", from:0, to:2*Math.PI});
-	}
+	//		console.log("berk")
+			ctx.beginPath();
+			ctx.arc(this.x, this.y, this.sightLength, 0, 2*Math.PI);
+			ctx.fill();
 
-	// draw
-	ctx.strokeStyle='#FF0';
-	ctx.beginPath();
-	for(var i=0; i<cliping.length;i++){
-		var path = cliping[i];
-		if(path.type == "arc"){
-				ctx.arc(this.x, this.y, this.sightLength, path.from, path.to);
-		}else if(path.type == "segment"){
-				ctx.moveTo(path.x1, path.y1);
-				ctx.lineTo(path.x2, path.y2);
-		}
-
-	}
-	ctx.stroke();
-	if(reachableSegments.length){
-			for(var i=0; i< reachableSegments.length; i++){
+}
 
 
-				var reachableSegment = reachableSegments[i];
 
-				drawReachableSegment(ctx, reachableSegment, i==0);
-			}
-		}
+
 }
 
 
@@ -280,45 +254,12 @@ function randomColor(){
 	return res;
 }
 
-function drawReachableSegment(ctx, reachableSegment, markClosest){
-
-	var segment = reachableSegment.segment;
-	var angle = angleBetween(segment.a.x, segment.a.y, segment.b.x, segment.b.y);
-	ctx.strokeStyle = randomColor();
-	ctx.fillStyle = ctx.strokeStyle;
-
-	ctx.beginPath();
-	ctx.moveTo(segment.a.x, segment.a.y);
-	ctx.lineTo(segment.b.x, segment.b.y);
-	ctx.stroke();
-
-	ctx.beginPath();
-	ctx.lineTo(
-		segment.b.x + Math.cos(angle+Math.PI*3.2/4) * 10,
-		segment.b.y  + Math.sin(angle+Math.PI*3.2/4) * 10
-	);
-	ctx.lineTo(
-		segment.b.x + Math.cos(angle-Math.PI*3.2/4) * 10,
-		segment.b.y  + Math.sin(angle-Math.PI*3.2/4) * 10
-	);
-	ctx.lineTo(segment.b.x, segment.b.y);
-	ctx.fill();
-
-	if(markClosest){
-		ctx.beginPath();
-		ctx.arc(reachableSegment.closest.x, reachableSegment.closest.y, 10, 0, 2*Math.PI);
-		ctx.closePath();
-		ctx.fill();
-	}
-}
 
 
 Light.prototype.getReachableSegments = function(segments){
   var res = [];
 			treated = []
   var l_aabb = this.AABB();
-	// WORLD SHADOWS
-	var lightPoint = new Point(this.x, this.y);
 	if(segments){
 		for(i=0;i<segments.length;i++){
 
@@ -327,206 +268,9 @@ Light.prototype.getReachableSegments = function(segments){
 			if(!l_aabb.intersects(s_aabb)){
 				continue;
 			}
-
-
-
-
-			var closest = segment.closestPointFrom(this.x, this.y),
-					metric_closest = distanceAndAngle(this.x, this.y, closest.x, closest.y);
-
-			if(distanceBetween(this.x, this.y, closest.x, closest.y) < this.sightLength){
-				var clipedSegment, metric_a, metric_b;
-				var intersections = segment.intersectWithCircle(this.x, this.y, this.sightLength);
-				if(intersections.length == 2){
-
-					clipedSegment = new Segment(intersections[0].x, intersections[0].y, intersections[1].x, intersections[1].y);
-					metric_a = distanceAndAngle(this.x, this.y, clipedSegment.a.x, clipedSegment.a.y);
-					metric_b = distanceAndAngle(this.x, this.y, clipedSegment.b.x, clipedSegment.b.y);
-
-				}else if(intersections.length  == 1){
-
-					var intersectionPoint = intersections[0];
-					metric_a = distanceAndAngle(this.x, this.y, segment.a.x, segment.a.y);
-					metric_b = distanceAndAngle(this.x, this.y, segment.b.x, segment.b.y);
-
-					if(metric_a.distance > this.sightLength){
-						clipedSegment = new Segment(intersectionPoint.x, intersectionPoint.y, segment.b.x, segment.b.y);
-						metric_a = distanceAndAngle(this.x, this.y, clipedSegment.a.x, clipedSegment.a.y);
-					}else {
-						clipedSegment = new Segment(segment.a.x, segment.a.y, intersectionPoint.x, intersectionPoint.y);
-						metric_b = distanceAndAngle(this.x, this.y, clipedSegment.b.x, clipedSegment.b.y);
-					}
-
-				}else {
-
-					clipedSegment = segment;
-					metric_a = distanceAndAngle(this.x, this.y, segment.a.x, segment.a.y);
-					metric_b = distanceAndAngle(this.x, this.y, segment.b.x, segment.b.y);
-
-				}
-
-/*
-				var orientedSegment;
-
-				var angular_difference = clipAnglePositive(metric_b.angle) - clipAnglePositive(metric_a.angle);
-
-				if(
-						clipAnglePositive(angular_difference) > Math.PI
-				){
-					orientedSegment = clipedSegment.inversed();
-					var tmp = metric_a;
-					metric_a = metric_b;
-					metric_b = tmp;
-				}else {
-					orientedSegment = clipedSegment.clone();
-				}
-*/
-
-
-				if(closest.x == clipedSegment.a.x && closest.y == clipedSegment.a.y){
-					treated.push({
-						segment:clipedSegment,
-						metric_a: metric_a,
-						metric_b: metric_b,
-						closest:closest,
-						metric_closest: metric_closest
-					});
-				}else if(closest.x == clipedSegment.b.x && closest.y == clipedSegment.b.y){
-					treated.push({
-						segment:clipedSegment.inversed(),
-						metric_a: metric_b,
-						metric_b: metric_a,
-						closest:closest,
-						metric_closest: metric_closest
-					});
-
-				}else{
-					treated.push({
-						segment: new Segment(closest.x, closest.y, clipedSegment.a.x, clipedSegment.a.y),
-						metric_a: metric_closest,
-						metric_b: metric_a,
-						closest:closest,
-						metric_closest: metric_closest
-					});
-					treated.push({
-						segment: new Segment(closest.x, closest.y, clipedSegment.b.x, clipedSegment.b.y),
-						metric_a: metric_closest,
-						metric_b: metric_b,
-						closest:closest,
-						metric_closest: metric_closest
-					});
-				}
-			} // if(distanceBetween(this.x, this.y, closest.x, closest.y) < this.sightLength){
-		}// for segments
-
-	treated = treated.sort(function(s1, s2){
-		return  s1.metric_closest.distance -s2.metric_closest.distance;
-	})
-
-
-	var filtered = [];
-	while(treated.length){
-		var first = treated.splice(0,1)[0];
-		filtered.push(first);
-		// looks for intersepted segments
-		var first_length = distanceBetween(first.segment.a.x, first.segment.a.y, first.segment.b.x, first.segment.b.y);
-
-		var toRemove = [];
-		var neos = [];
-		for(var i=0; i<treated.length; i++){
-			var other = treated[i];
-			var other_length = distanceBetween(other.segment.a.x, other.segment.a.y, other.segment.b.x, other.segment.b.y);
-			var bigger, smaller, is_frist_bigger
-			if(first_length > other_length){
-				bigger = first;
-				smaller = other;
-				is_first_bigger = true;
-			}else{
-				bigger = other;
-				smaller = first;
-				is_first_bigger = false;
-			}
-
-			var tmp;
-			var bigger_span = clipAnglePositive(bigger.metric_b.angle - bigger.metric_a.angle);
-			if(bigger_span > Math.PI) {
-				bigger.segment = bigger.segment.inversed();
-				tmp = bigger.metric_a;
-				bigger.metric_a = bigger.metric_b;
-				bigger.metric_b = tmp;
-				bigger_span -= Math.PI;
-			}
-
-			var smaller_span = clipAnglePositive(smaller.metric_b.angle - smaller.metric_a.angle);
-			if(smaller_span > Math.PI) {
-				smaller.segment = smaller.segment.inversed();
-				tmp = smaller.metric_a;
-				smaller.metric_a = smaller.metric_b;
-				smaller.metric_b = tmp;
-				smaller_span -= Math.PI;
-			}
-
-			var relative_span_a = clipAnglePositive(smaller.metric_a.angle - bigger.metric_a.angle);
-			var relative_span_b = clipAnglePositive(smaller.metric_b.angle - bigger.metric_a.angle);
-
-			if(relative_span_a < bigger_span && relative_span_b < bigger_span){
-				if(is_first_bigger){
-					// remove other
-					toRemove.push(i);
-				}else{
-					console.log("todo")
-				}
-			}else if(relative_span_a < bigger_span){
-					if(relative_span_b > Math.PI){
-						if(other.metric_a.distance < first.metric_b.distance){
-							var ray = castRay(
-								this.x, this.y,
-								other.segment.b.x, other.segment.b.y,
-								this.sightLength
-							);
-							var intersect = ray.intersect(first.segment);
-							var neoSegment = new Segment(intersect.x, intersect.y, first.segment.b.x, first.segment.b.y);
-							first.segment = neoSegment;
-							first.metric_a = distance;
-//							neos.push(neoSegment);
-						}else{
-							var ray = castRay(
-								this.x, this.y,
-								first.segment.b.x, first.segment.b.y,
-								this.sightLength
-							);
-							var intersect = ray.intersect(other.segment);
-							var neoSegment = new Segment(intersect.x, intersect.y, other.segment.b.x, other.segment.b.y);
-							first.segment = neoSegment;
-							first.metric_a = distance;
-//							neos.push(neoSegment);
-						}
-					}else {
-						console.log('todo 2')
-					}
-				}
-			}
-
-		if(toRemove.length){
-			for(var i=0; i<toRemove.length; i++){
-				treated.splice(toRemove[i], 1);
-			}
+			res.push(segment);
 		}
-
-		// resort treated
-		treated = treated.sort(function(s1, s2){
-			return  s1.metric_closest.distance -s2.metric_closest.distance;
-		})
-
 	}
-}
-/*
-		for(var i=0; i<res.length; i++){
-			console.log(clipAnglePositive(res[i].metric_a.angle));
-		}
-		debugger;
-	*/
-	res = filtered;
   return res;
 }
 

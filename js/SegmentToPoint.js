@@ -1,5 +1,6 @@
 
 function SegmentToPoint(segment, point){
+//console.log(segment)
 	var closest = segment.closestPointFrom(point.x, point.y);
 	this.segment = segment;
 	this.closest = closest;
@@ -8,6 +9,13 @@ function SegmentToPoint(segment, point){
 		b : distanceAndAngle(point.x, point.y, segment.b.x, segment.b.y),
 		closest : distanceAndAngle(point.x, point.y, closest.x, closest.y)
 	};
+	if(this.metric.a.distance > this.metric.b.distance){
+		this.farest = this.segment.a;
+		this.metric.farest = this.metric.a;
+	}else{
+		this.farest = this.segment.b;
+		this.metric.farest = this.metric.b;
+	}
 	this.length = distanceBetween(segment.b.x, segment.b.y, segment.a.x, segment.a.y);
 	this.angle = clipAngle(this.metric.b.angle - this.metric.a.angle); // cliped
 }
@@ -21,6 +29,13 @@ SegmentToPoint.prototype.recompute = function(point){
 		b : distanceAndAngle(point.x, point.y, this.segment.b.x, this.segment.b.y),
 		closest : distanceAndAngle(point.x, point.y, closest.x, closest.y)
 	};
+	if(this.metric.a.distance > this.metric.b.distance){
+		this.farest = this.segment.a;
+		this.metric.farest = this.metric.a;
+	}else{
+		this.farest = this.segment.b;
+		this.metric.farest = this.metric.b;
+	}
 	this.length = distanceBetween(this.segment.b.x, this.segment.b.y, this.segment.a.x, this.segment.a.y);
 	this.angle = clipAngle(this.metric.b.angle - this.metric.a.angle); // cliped
 	return this;
@@ -38,12 +53,37 @@ SegmentToPoint.prototype.swap = function(){
 };
 
 
-SegmentToPoint.prototype.draw = function(ctx, markClosest, color){
+SegmentToPoint.prototype.draw = function(ctx, markClosest, color, label){
 		color = color || randomColor();
 		var segment = this.segment;
 		var angle = angleBetween(segment.a.x, segment.a.y, segment.b.x, segment.b.y);
 		ctx.strokeStyle = color;
 		ctx.fillStyle = ctx.strokeStyle;
+
+
+		ctx.beginPath();
+
+		ctx.moveTo(
+			segment.a.x + Math.cos(angle+Math.PI/2) * 10,
+			segment.a.y  + Math.sin(angle+Math.PI/2) * 10
+		);
+
+
+		ctx.lineTo(
+			segment.a.x - Math.cos(angle+Math.PI/2) * 10,
+			segment.a.y - Math.sin(angle+Math.PI/2) * 10
+		);
+		ctx.stroke();
+
+
+if(label){
+	ctx.strokeText(
+		label,
+		segment.a.x + Math.cos(angle+Math.PI/4) * 10,
+		segment.a.y  + Math.sin(angle+Math.PI/4) * 10
+	)
+}
+
 
 		ctx.beginPath();
 		ctx.moveTo(segment.a.x, segment.a.y);
@@ -96,6 +136,6 @@ SegmentToPoint.prototype.farToClose = function(){
 }
 
 SegmentToPoint.prototype.isSinglePoint = function(){
-	return Math.abs(this.angle) < 0.001;
+	return Math.abs(this.length) < 0.001;
 
 }

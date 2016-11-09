@@ -146,6 +146,8 @@ View.prototype.renderScene = function renderScene(paper, world){
 		var ctx = slowBuffer.getContext("2d");
 
 		// erase
+		ctx.globalCompositeOperation = "source-over";
+
 		ctx.fillStyle="#000";
 		ctx.fillRect(0,0,slowBuffer.width,slowBuffer.height);
 
@@ -199,11 +201,12 @@ View.prototype.renderScene = function renderScene(paper, world){
 
 			if(that.lights_on){
 
-				wctx.globalCompositeOperation = "luminosity";
+				wctx.globalCompositeOperation = "multiply";
+				//wctx.globalCompositeOperation = "source-over";
 				wctx.drawImage(slowBuffer,0,0);
 
 				// re draw wall
-				wctx.globalCompositeOperation = "source-over";
+				// wctx.globalCompositeOperation = "source-over";
 				//drawScene(wctx, true);
 
 			}
@@ -230,7 +233,8 @@ View.prototype.renderScene = function renderScene(paper, world){
 			}
 		},0);
 
-
+		//console.log(slowBuffer.getContext('2d').globalCompositeOperation);
+slowBuffer.getContext('2d').globalCompositeOperation = "screen";
 		//draw lights
 		for(i=0;i<l;i++){
 			setTimeout( // dont freeze ui
