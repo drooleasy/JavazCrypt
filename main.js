@@ -14,7 +14,7 @@ var world = new World();
 
 (function initWorld(){
 
-	var player = new Bob(225, 200, 10, 0);
+	var player = new Bob(225, 150, 10, 0);
 	player.sightWidth=deg2rad(120);
 
 	var other = new Bob(375, 220, 10, -90);
@@ -74,7 +74,7 @@ var world = new World();
 		}
 	}
 */
-	var door = new Door(250,250, 250,200);
+	var door = new Door(250,249, 250,201);
 	var seg = new Segment(270,260, 270,300);
 
 	world.segments.push(door);

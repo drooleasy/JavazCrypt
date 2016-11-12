@@ -17,7 +17,7 @@ function View(width, height, world, paper){
 	this.lights_on = false;
 	this.relative = false;
 	this.relative_angle = false;
-	this.draw_sight = false;
+	this.draw_sight =true;
 
 
 	this.lastValidBuffer = document.createElement("canvas");
@@ -206,8 +206,8 @@ View.prototype.renderScene = function renderScene(paper, world){
 				wctx.drawImage(slowBuffer,0,0);
 
 				// re draw wall
-				// wctx.globalCompositeOperation = "source-over";
-				//drawScene(wctx, true);
+				wctx.globalCompositeOperation = "source-over";
+				drawScene(wctx, true);
 
 			}
 			that.lastValidBuffer.getContext("2d").putImageData(wctx.getImageData(0,0,worldRenderer.width, worldRenderer.height), 0, 0);

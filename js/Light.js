@@ -113,12 +113,20 @@ Light.prototype.draw = function(paper, segments, bobs){
 
 		for(var i=0; i<reachableSegments.length;i++){
 			var segment = reachableSegments[i];
-			segs.push(segment);
+			if(segment instanceof Glass){
+				// dont push
+			}else if( segment instanceof Door){
+				var subs = segment.subSegments();
+				segs.push(subs[0]);
+				segs.push(subs[1]);
+			}else{
+				segs.push(segment);
+			}
 		}
 
 
 
-		var clipeds = cliped(center, segments);
+		var clipeds = cliped(center, segs);
 		var obs = obstruded(center, clipeds);
 
 
@@ -157,8 +165,8 @@ for(var i=0; i<obs.length; i++){
 	var dbg_obs = [first];
 
 	var grd=ctx.createRadialGradient(this._x,this._y,0,this._x,this._y,this.sightLength);
-	grd.addColorStop(0,"rgba(255,255,255,.5)");
-	grd.addColorStop(1,"rgba(255,255,255,.0)");
+	grd.addColorStop(0,"rgba(255,255,255, 1)");
+	grd.addColorStop(1,"rgba(0,0,0, .01)");
 
 //ctx.fillStyle = "rgba(255,255,255,.5)"
 ctx.fillStyle = grd;
@@ -221,8 +229,8 @@ join(ctx, last, first, true);
 			//ctx.clip();
 		 			ctx.closePath();
 		 			ctx.fill();
-		 			ctx.strokeStyle="#FFF";
-		 			ctx.stroke();
+		 			//ctx.strokeStyle="#FFF";
+		 			//ctx.stroke();
 
 
 		}// if obs.length

@@ -10,37 +10,37 @@
  */
 
 function Bob(x,y, width, angle, fov_angle, fov_distance){
-	
-	
+
+
 	Transform.mixin(this);
-	
-	
+
+
 	this.x = x || Bob.defaults.x;
 	this.y = y || Bob.defaults.y;
 	this.angle = clipAngle(deg2rad(angle)) || clipAngle(Bob.defaults.angle);
 	this.scale = 1;
-	
+
 	this.width = width || Bob.defaults.width; // radius !!!
-	
+
 	this.sightLength = fov_distance || Bob.defaults.sightLength;
 	this.sightWidth = fov_angle && deg2rad(fov_angle) || Bob.defaults.sightWidth;
 	this.sightColor= "#FFFFFF";
-	
+
 	this.consciousness = Bob.defaults.consciousness;
-	
-	
-	
+
+
+
 	this.speedForward = Bob.defaults.speedForward;
 	this.speedBackward = Bob.defaults.speedBackward;
-	this.speedTurn = Bob.defaults.speedTurn; 
-	
-	
+	this.speedTurn = Bob.defaults.speedTurn;
+
+
 	this.bubbleStyle = {
 		"fill":"#FFF",
 		"stroke":"#FFF",
 		"stroke-width":3
 	};
-	
+
 	this.body = {
 		style : {
 			"fill":Bob.defaults.body.style["fill"],
@@ -59,7 +59,7 @@ function Bob(x,y, width, angle, fov_angle, fov_distance){
 			angle: Bob.defaults.eyes.left.angle,
 			radius: Bob.defaults.eyes.left.radius
 		},
-		
+
 		right:{
 			style : {
 				"fill":Bob.defaults.eyes.right.style["fill"]
@@ -69,7 +69,7 @@ function Bob(x,y, width, angle, fov_angle, fov_distance){
 			radius: Bob.defaults.eyes.right.radius
 		}
 	};
-	
+
 	this.nose = {
 		style : {
 			"fill": Bob.defaults.nose.style["fill"]
@@ -78,18 +78,18 @@ function Bob(x,y, width, angle, fov_angle, fov_distance){
 		angle:Bob.defaults.nose.angle,
 		radius:Bob.defaults.nose.radius
 	};
-	
+
 
 	this.textStyle = {
 		stroke: "#000"
 	};
 
 	this.light = new Light(
-		this.x, this.y, 
-		this.sightLength*1.1, // overshoot due to slow rate of light refreshing (when moving forward)   
+		this.x, this.y,
+		this.sightLength*0.6,   
 		PIPI, this.angle
 	);
-		
+
 	this.shadow = new Shadow();
 	this.tints = new Shadow();
 	this.tints.style.fill="rgba(0,0,32,0.66)";
@@ -102,30 +102,30 @@ function Bob(x,y, width, angle, fov_angle, fov_distance){
  * Bob's defaults
  */
 Bob.defaults = {
-	
+
 	x : 0,
 	y : 0,
 	angle : 0,
-	
-	
+
+
 	width : 10, // radius !!!
-	
+
 	sightLength : 200,
 	sightWidth : deg2rad(120),
 	sightColor: "#FFFFFF",
-	
+
 	consciousness : 2.5,
-	
-	
+
+
 	speedForward : 2,
 	speedBackward : 1,
-	speedTurn : deg2rad(5), 
-	
+	speedTurn : deg2rad(5),
+
 	body : {
 		style : {
 			"fill":"#17A9C6",
 			"stroke":"#000000",
-			"stroke-width":2		
+			"stroke-width":2
 		},
 		x:0,
 		y:0
@@ -139,7 +139,7 @@ Bob.defaults = {
 			angle: deg2rad(-60),
 			radius:2
 		},
-		
+
 		right:{
 			style : {
 			 "fill":"#fff"
@@ -150,7 +150,7 @@ Bob.defaults = {
 
 		}
 	},
-	
+
 	nose : {
 		style : {
 			"fill":"#C33"
@@ -159,7 +159,7 @@ Bob.defaults = {
 		angle: 0,
 		radius: 2
 	},
-	
+
 
 	textStyle : {
 		stroke: "#000"
@@ -173,7 +173,7 @@ Bob.defaults = {
 Bob.prototype.replaceLight = function replaceLight(){
 	if(this.light){
 		this.light.moveTo(this);
-	//	this.light.angle = this.angle; // bug at -PI/+PI  
+	//	this.light.angle = this.angle; // bug at -PI/+PI
 	}
 }
 
@@ -222,8 +222,8 @@ Bob.prototype.turnRight =  function turnRight(){
  * @param {object} other a 'thing' with x and y attributes
  * @return {boolean} true if other is in the consciuous zone
  */
-Bob.prototype.feels =  function inSight(other){ 
-	var d = distanceBetween(this.x, this.y, other.x, other.y); 
+Bob.prototype.feels =  function inSight(other){
+	var d = distanceBetween(this.x, this.y, other.x, other.y);
 	if((d - other.width) < this.width*this.consciousness) return true;
 	return false;
 }
@@ -233,15 +233,15 @@ Bob.prototype.feels =  function inSight(other){
  * @return {boolean} true if other is in field of view
  */
 
-Bob.prototype.sees =  function inSight(other, segments){ 
+Bob.prototype.sees =  function inSight(other, segments){
 	var metrics = distanceAndAngle(this.x, this.y, other.x, other.y),
 		distance = metrics.distance,
-		angle = metrics.angle,	
+		angle = metrics.angle,
 		relativeAngle =  clipAngle(angle - this.angle),
 		width = other.width,
 		deltaAngle = Math.asin(width / distance)
-	if( relativeAngle + deltaAngle >= (-this.sightWidth/2) 
-		&& relativeAngle - deltaAngle <= this.sightWidth/2  
+	if( relativeAngle + deltaAngle >= (-this.sightWidth/2)
+		&& relativeAngle - deltaAngle <= this.sightWidth/2
 		&& distance - width <= this.sightLength){
 			var line = new Segment(this.x,this.y,other.x,other.y);
 			if(segments)
@@ -251,7 +251,7 @@ Bob.prototype.sees =  function inSight(other, segments){
 					return false;
 				}
 			}
-			
+
 			return true;
 	}
 	return false;
@@ -265,14 +265,14 @@ Bob.prototype.sees =  function inSight(other, segments){
  * @param {object} ctx the drawing context of a canvas
  */
 Bob.prototype.drawFOV = function(ctx){
-	
+
 	var angle_1 = clipAnglePositive(this.angle - this.sightWidth/2),
 		angle_2 = clipAnglePositive(this.angle + this.sightWidth/2);
-	
-	
+
+
 	var ox = this.x+Math.random()*2-1;
 	var oy = this.y+Math.random()*2-1;
-	
+
 	var x = ox + Math.cos(angle_2) * this.width*this.consciousness,
 		y = oy + Math.sin(angle_2) * this.width*this.consciousness;
 	var x0 = ox + Math.cos(angle_1) * this.width*this.consciousness,
@@ -280,15 +280,15 @@ Bob.prototype.drawFOV = function(ctx){
 	var x1 = ox + Math.cos(angle_1) * this.sightLength,
 		y1 = oy + Math.sin(angle_1) * this.sightLength;
 
-	ctx.beginPath();			
+	ctx.beginPath();
 	ctx.moveTo(x,y);
-	
+
 	ctx.arc(ox, oy, this.width*this.consciousness, angle_2,  angle_1);
 	ctx.lineTo(x1, y1);
 	ctx.arc(ox, oy, this.sightLength, angle_1, angle_2);
 	ctx.lineTo(x,y);
 	ctx.closePath();
-}		
+}
 
 
 
@@ -297,18 +297,18 @@ Bob.prototype.drawFOV = function(ctx){
  * @param {object} paper the canvas dom element on witch to draw
  * @param {object} world world's data, see World.js
  */
- 
-Bob.prototype.drawSight = function(paper, world){		
+
+Bob.prototype.drawSight = function(paper, world){
 	var ctx = paper.getContext('2d');
 
 	var segments = world.allSegments();
-	
+
 
 	var oldCompositeOpration = ctx.globalCompositeOperation;
 
 	var seenSegments = [];
 	for(var i =0; i<segments.length; i++){
-		if(segments[i] instanceof Glass) segments[i].castTint(this) 
+		if(segments[i] instanceof Glass) segments[i].castTint(this)
 
 		seenSegments = seenSegments.concat(segments[i].seenSegment(this, segments));
 	}
@@ -317,10 +317,10 @@ Bob.prototype.drawSight = function(paper, world){
 	for(i=0;i<seenSegments.length;i++){
 		seenSegments[i].castShadow(this);
 	}
-	
+
 	for(var i=0; i<world.bobs.length;i++){
 		var bob = world.bobs[i];
-		if(bob !== this){ 
+		if(bob !== this){
 			// OTHERS SHADOWS
 			var sees_bob = bob && this.sees(bob, world.allSegments());
 			if(sees_bob){
@@ -346,10 +346,10 @@ Bob.prototype.drawSight = function(paper, world){
 	ctx.fill();
 
 	ctx.globalCompositeOperation = "source-over";
-	
+
 	ctx.strokeStyle = "#000";
 	ctx.lineWidth = 3;
-			
+
 	ctx.beginPath();
 	this.drawFOV(ctx);
 	ctx.closePath();
@@ -360,10 +360,10 @@ Bob.prototype.drawSight = function(paper, world){
 	ctx.globalCompositeOperation = "source-over";
 	this.shadow.draw(paper, function() {	ctx.globalCompositeOperation = oldCompositeOpration;});
 
-	
 
-	
-	
+
+
+
 }
 
 
@@ -376,23 +376,23 @@ Bob.prototype.drawSight = function(paper, world){
  * Draws Bob on a canvas
  * @param {object} paper the canvas dom node
  */
-Bob.prototype.draw = function(paper){	
+Bob.prototype.draw = function(paper){
 	var ctx = paper.getContext('2d');
-	
+
 	// sets style
 	ctx.fillStyle = this.body.style["fill"];
 	ctx.strokeStyle = this.body.style["stroke"];
 	ctx.lineWidth = this.body.style["stroke-width"];
-	
+
 	/*
 	ctx.translate(this.x, this.y);
 	ctx.rotate(this.angle);
 	ctx.scale(this.scale, this.scale);
 	*/
-	
+
 	// transform to local coordinates
 	this.transform.toLocal(ctx);
-	
+
 	// draws body
 	ctx.beginPath();
 	ctx.arc(0,0 , this.width, 0, PIPI);
@@ -400,54 +400,54 @@ Bob.prototype.draw = function(paper){
 	ctx.fill();
 
 
-	//draws nose	
+	//draws nose
 	ctx.fillStyle=this.nose.style["fill"];
-	
+
 	var nose = {
 		x: Math.cos(this.nose.angle) * (this.nose.offset),
 		y: Math.sin(this.nose.angle) * (this.nose.offset),
 		r: this.nose.radius
 	}
-	
-	
-	
+
+
+
 	ctx.beginPath();
 	ctx.arc(nose.x, nose.y, nose.r, 0, 2*PIPI);
 	ctx.stroke();
 	ctx.fill();
-	
+
 	ctx.fillStyle = this.eyes.left.style["fill"];
-	
+
 
 	// draws eyes
 	var eye_offset = 0;
 
-	// draws left eye	
+	// draws left eye
 	var eye_left = {
 		x: Math.cos(this.eyes.left.angle) * (this.eyes.left.offset),
 		y: Math.sin(this.eyes.left.angle) * (this.eyes.left.offset),
 		r: this.eyes.left.radius
 	}
-	
+
 	ctx.beginPath();
 	ctx.arc(eye_left.x, eye_left.y, eye_left.r, 0, PIPI);
 	ctx.stroke();
 	ctx.fill();
 
 	ctx.fillStyle = this.eyes.right.style["fill"];
-	
+
 	// draws right eye
 	var eye_right = {
 		x: Math.cos(this.eyes.right.angle) * (this.eyes.right.offset),
 		y: Math.sin(this.eyes.right.angle) * (this.eyes.right.offset),
 		r: this.eyes.right.radius
 	}
-	
+
 	ctx.beginPath();
 	ctx.arc(eye_right.x, eye_right.y, eye_right.r, 0, PIPI);
 	ctx.stroke();
 	ctx.fill();
-	
+
 	/*
 	ctx.scale(1/this.scale,1/this.scale);
 	ctx.rotate(-this.angle);
@@ -467,22 +467,22 @@ Bob.prototype.speak = function(paper, player, relative_angle){
 	if(this.saying){
 			// TRANSFORMS
 //		if(relative){
-//			ctx.translate(paper.width/2,paper.height/2);	
-//			
+//			ctx.translate(paper.width/2,paper.height/2);
+//
 			ctx.translate(this.x,this.y);
-			if(relative_angle) ctx.rotate(player.angle+Math.PI/2);	
-//		}	
+			if(relative_angle) ctx.rotate(player.angle+Math.PI/2);
+//		}
 
 		var msg = this.saying;
 		Bubble.draw(paper, msg, deg2rad(-45), this.width+6);
-		
-//		if(relative){	
-			if(relative_angle) ctx.rotate(-player.angle-Math.PI/2);
-			
-			ctx.translate(-this.x,-this.y);
-//			ctx.translate(paper.width/2,paper.height/2);	
 
-//		}	
+//		if(relative){
+			if(relative_angle) ctx.rotate(-player.angle-Math.PI/2);
+
+			ctx.translate(-this.x,-this.y);
+//			ctx.translate(paper.width/2,paper.height/2);
+
+//		}
 
 	}
 }
@@ -495,8 +495,8 @@ Bob.prototype.collidesWithBob = function(bob){
 	var metrics = distanceAndAngle(this.x, this.y, bob.x, bob.y),
 		distance_min = this.width + this.body.style["stroke-width"] + bob.width + bob.body.style["stroke-width"];
 	if(metrics.distance < distance_min ){ // collides
-			this.x = bob.x - Math.cos(metrics.angle) * distance_min; 
-			this.y = bob.y - Math.sin(metrics.angle) * distance_min; 
+			this.x = bob.x - Math.cos(metrics.angle) * distance_min;
+			this.y = bob.y - Math.sin(metrics.angle) * distance_min;
 	}
 }
 
@@ -506,7 +506,7 @@ Bob.prototype.collidesWithBob = function(bob){
  * @param {object} segement the segement to test
  */
 Bob.prototype.collidesWithSegment = function(segment){
-	
+
 	// for door we test two segments
 	if(segment instanceof Door){
 		var segs = segment.subSegments();
@@ -514,39 +514,39 @@ Bob.prototype.collidesWithSegment = function(segment){
 			this.collidesWithSegment(segs[i]);
 		}
 	}else{
-		
+
 		function checkCircle(that, x,y,r, segment){
 			var thickness = segment.style["stroke-width"];
 			var closest = segment.closestPointFrom(that.x, that.y);
 			var metrics = distanceAndAngle(that.x, that.y, closest.x, closest.y);
 			var min = r + thickness;
 			if(metrics.distance  < min ){// collides
-				that.x = closest.x - Math.cos(metrics.angle) * min; 
-				that.y = closest.y - Math.sin(metrics.angle) * min; 
+				that.x = closest.x - Math.cos(metrics.angle) * min;
+				that.y = closest.y - Math.sin(metrics.angle) * min;
 			}
 		}
-		
+
 		checkCircle(this, 0,0,this.width + this.body.style["stroke-width"], segment);
-/*		checkCircle(this, 
+/*		checkCircle(this,
 			Math.cos(this.angle+this.nose.angle) * this.nose.offset,
 			Math.sin(this.angle+this.nose.angle) * this.nose.offset,
-			this.nose.radius, 
+			this.nose.radius,
 			segment
 		);
-		checkCircle(this, 
+		checkCircle(this,
 			Math.cos(this.angle+this.eyes.left.angle) * this.eyes.left.offset,
 			Math.sin(this.angle+this.eyes.left.angle) * this.eyes.left.offset,
-			this.eyes.left.radius, 
+			this.eyes.left.radius,
 			segment
 		);
-		checkCircle(this, 
+		checkCircle(this,
 			Math.cos(this.angle+this.eyes.right.angle) * this.eyes.right.offset,
 			Math.sin(this.angle+this.eyes.right.angle) * this.eyes.right.offset,
-			this.eyes.right.radius, 
+			this.eyes.right.radius,
 			segment
 		);
-*/		
-		
+*/
+
 	}
 }
 
@@ -556,9 +556,9 @@ Bob.prototype.collidesWithSegment = function(segment){
  * @return {object} the left and right segments
  */
 Bob.prototype.fovSegments = function(){
-		
+
 		var semiSight = this.sightWidth/2;
-		
+
 		return {
 				left: new Segment(
 					this.x,
@@ -571,7 +571,7 @@ Bob.prototype.fovSegments = function(){
 					this.y,
 					this.x + Math.cos(this.angle + semiSight) * this.sightLength,
 					this.y + Math.sin(this.angle + semiSight) * this.sightLength
-				), 	
+				),
 		}
 }
 
@@ -582,7 +582,7 @@ Bob.prototype.fovSegments = function(){
  */
 Bob.prototype.drawShadow = function draw_bob_shadow(paper, player){
 		if(this.shadow.paths.length>0) this.shadow.draw(paper);
-}	
+}
 
 
 /**
@@ -593,14 +593,14 @@ Bob.prototype.drawShadow = function draw_bob_shadow(paper, player){
 
 Bob.prototype.drawTints = function draw_bob_tints(paper, player){
 		if(this.tints.paths.length>0) this.tints.draw(paper);
-}	
+}
 
 
 /**
  * adds shadows to bob according to a light
  * @param {object} light the light to calculate shadows for
  */
-Bob.prototype.castShadow = function cast_bob_shadow(light){	
+Bob.prototype.castShadow = function cast_bob_shadow(light){
 
 	var secants = [];
 	var factor = 120/100;
@@ -609,51 +609,51 @@ Bob.prototype.castShadow = function cast_bob_shadow(light){
 	var sol = solveP2(
 		(v_perp.x*v_perp.x + v_perp.y*v_perp.y),
 		(0),
-		(-(this.width*factor)*(this.width*factor)) 
-	
+		(-(this.width*factor)*(this.width*factor))
+
 	);
-	
+
 	function addInner(k, v_perp, that, light, secants){
-		var side = {	
+		var side = {
 			x: (that.x + v_perp.x * k),
 			y: (that.y + v_perp.y * k)
 		}
 		var ray = castRay(light.x, light.y, side.x, side.y, light.sightLength);
-		
+
 		var angle = angleBetween(light.x, light.y, side.x, side.y) - light.angle;
 		angle = clipAngle(angle);
-		
+
 		secants.push({angle:angle, ray:ray});
 	}
-	
+
 	if(sol.length != 0){
 		addInner(sol[0], v_perp, this, light, secants)
 		addInner(sol[1], v_perp, this, light, secants)
 	}
-	
-	
-	
+
+
+
 	secants = secants.sort(function(a,b){return a.angle - b.angle});
-	
+
 	if(secants.length){
-		
+
 		var left = secants[0];
 		var right = secants[secants.length-1];
 		var i = 1;
-		
+
 		if(secants.length==3){
 			if(intersect_1){
 				left = secants[1];
 			}
-			
+
 			if(intersect_2){
 				right = secants[1];
 			}
 		}
-	
-		
+
+
 	var bob_angle = angleBetween(light.x, light.y, this.x, this.y);
-	
+
 
 	if(Math.abs(left.angle-right.angle)>Math.PI){
 		var tmp =left;
@@ -669,9 +669,9 @@ Bob.prototype.castShadow = function cast_bob_shadow(light){
 			angle_1 : light.angle+left.angle,
 			angle_2 : light.angle+right.angle,
 			radius :light.sightLength,
-			
-		
-			
+
+
+
 			bob:{
 				width:this.width,
 				x1 : this.x - Math.cos(bob_angle) * this.width*2.5,
@@ -682,7 +682,7 @@ Bob.prototype.castShadow = function cast_bob_shadow(light){
 			}
 		}
 
-		
+
 		//player.shadow.paths.push(path);
 		light.shadow.paths.push(coneData);
 	}
@@ -709,7 +709,7 @@ Bob.prototype.castOverShadow = function(light){
  * @param {object} paper the context to draw on
  * @param {string} msg what bob has to say
  */
-Bob.prototype.say = function (paper, msg){	
+Bob.prototype.say = function (paper, msg){
 	this.saying = msg;
 	var that = this;
 	setTimeout(function shutUp(){ that.saying=false}, 3*1000)
@@ -727,10 +727,10 @@ Bob.prototype.AABB = function bobAABB(tolerance){
 	}
 	var w = this.width*2;
 	var h = this.width*2;
-	
+
 	var w2 = w*tolerance;
 	var h2 = h*tolerance;
-	
+
 	topLeft.x += (w-w2)/2;
 	topLeft.y += (h-h2)/2;
 
@@ -740,5 +740,5 @@ Bob.prototype.AABB = function bobAABB(tolerance){
 		w2,
 		h2
 	);
-	
+
 }
