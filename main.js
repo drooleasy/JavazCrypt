@@ -105,8 +105,8 @@ keyboardControl(world);
 
 
 view.lights_on = true;
-view.relative = true;
-view.relative_angle = true;
+view.relative = false;
+view.relative_angle = false;
 
 $('#lights').on("click", function(evt){
 	//global

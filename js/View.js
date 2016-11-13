@@ -17,7 +17,7 @@ function View(width, height, world, paper){
 	this.lights_on = false;
 	this.relative = false;
 	this.relative_angle = false;
-	this.draw_sight =true;
+	this.draw_sight = false;
 
 
 	this.lastValidBuffer = document.createElement("canvas");
