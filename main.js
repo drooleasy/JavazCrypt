@@ -31,6 +31,7 @@ var world = new World();
 		500, 300,
 		400, 300,
 		350, 300,
+		270, 300,
 		100, 300,
 		100, 200,
 		100, 150,
@@ -44,7 +45,7 @@ var world = new World();
 
 	path.makeDoor(path.segments.length-2);
 	path.makeGlass(2);
-	path.makeGlass(5);
+	path.makeGlass(6);
 
 
 	world.paths.push(path);

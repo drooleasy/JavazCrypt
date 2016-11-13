@@ -86,7 +86,7 @@ function Bob(x,y, width, angle, fov_angle, fov_distance){
 
 	this.light = new Light(
 		this.x, this.y,
-		this.sightLength*0.6,   
+		this.sightLength*0.5,
 		PIPI, this.angle
 	);
 

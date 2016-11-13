@@ -179,7 +179,7 @@ for(var i=0; i<obs.length; i++){
 	var first = obs.shift();
 
 	ctx.beginPath();
-	first.draw(ctx, false, "#FF0")
+	//first.draw(ctx, false, "#FF0")
 
 	var dbg_obs = [first];
 
