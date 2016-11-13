@@ -9,6 +9,7 @@ function cliped(center, segments){
 			if(intersections.length == 2){
 
 				clipedSegment = new Segment(intersections[0].x, intersections[0].y, intersections[1].x, intersections[1].y);
+				if(segment.isBob) clipedSegment.isBob = true;
 			}else if(intersections.length  == 1){
 
 				var intersectionPoint = intersections[0];
@@ -20,6 +21,7 @@ function cliped(center, segments){
 				}else {
 					clipedSegment = new Segment(segment.a.x, segment.a.y, intersectionPoint.x, intersectionPoint.y);
 				}
+				if(segment.isBob) clipedSegment.isBob = true;
 			}else {
 				clipedSegment = segment;
 			}
@@ -85,7 +87,8 @@ function obstruded(center, segmentFromPoints){
               other.segment.a.x,
               other.segment.a.y,
               prj1.x,
-              prj1.y
+              prj1.y,
+							isBob = !!other.isBob
             ),
             center
           );
@@ -99,7 +102,8 @@ function obstruded(center, segmentFromPoints){
               prj2.x,
               prj2.y,
               other.segment.b.x,
-              other.segment.b.y
+              other.segment.b.y,
+							isBob = !!other.isBob
             ),
             center
           );
@@ -125,7 +129,8 @@ function obstruded(center, segmentFromPoints){
               prj.x,
               prj.y,
               other.segment.b.x,
-              other.segment.b.y
+              other.segment.b.y,
+							isBob = !!other.isBob
             ),
             center
           );

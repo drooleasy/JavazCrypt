@@ -85,7 +85,7 @@ var world = new World();
 	//var licht3 = new Light(253, 230, 100, 2*Math.PI, Math.PI);
 
 
-	world.lights.push(other.light);
+//	world.lights.push(other.light);
 	world.lights.push(player.light);
 	world.lights.push(licht);
 	world.lights.push(licht2);

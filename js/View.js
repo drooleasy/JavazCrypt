@@ -201,7 +201,8 @@ View.prototype.renderScene = function renderScene(paper, world){
 
 			if(that.lights_on){
 
-				wctx.globalCompositeOperation = "multiply";
+				wctx.globalCompositeOperation = "overlay";
+				//wctx.globalCompositeOperation = "multiply";
 				//wctx.globalCompositeOperation = "source-over";
 				wctx.drawImage(slowBuffer,0,0);
 

@@ -111,6 +111,25 @@ Light.prototype.draw = function(paper, segments, bobs){
 
 		var segs = [];
 
+
+		for(var i=0; i<bobs.length; i++){
+			var bob = bobs[i];
+			if(bob.light === this) continue;
+			var metric = distanceAndAngle(this.x, this.y, bob.x, bob.y);
+			if(metric.distance < this.sightLength){
+				var tangent1 = {};
+				tangent1.x = bob.x + Math.cos(metric.angle + Math.PI/2) * bob.width;
+				tangent1.y = bob.y + Math.sin(metric.angle + Math.PI/2) * bob.width;
+				var tangent2 = {};
+				tangent2.x = bob.x + Math.cos(metric.angle - Math.PI/2) * bob.width;
+				tangent2.y = bob.y + Math.sin(metric.angle - Math.PI/2) * bob.width;
+				var bobSegment = new Segment(tangent1.x, tangent1.y, tangent2.x, tangent2.y);
+				bobSegment.isBob = true;
+				reachableSegments.push(bobSegment);
+			}
+		}
+
+
 		for(var i=0; i<reachableSegments.length;i++){
 			var segment = reachableSegments[i];
 			if(segment instanceof Glass){
