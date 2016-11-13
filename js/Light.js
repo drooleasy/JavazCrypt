@@ -17,6 +17,7 @@ function Light (x, y, sightLength, sightWidth, angle){
 
 
 	this.sightLength = sightLength || Light.defaults.sightLength;
+	this._sightLength = sightLength || Light.defaults.sightLength;
 	this.sightWidth = sightWidth || Light.defaults.sightWidth;
 
 
@@ -33,11 +34,23 @@ function Light (x, y, sightLength, sightWidth, angle){
 
 	this.belongsTo = null;
 
-	this.renderer = document.createElement("canvas");
-	this.renderer.width = this.sightLength *2;
-	this.renderer.height = this.sightLength *2;
+	//this.renderer = document.createElement("canvas");
+	//this.renderer.width = this.sightLength *2;
+	//this.renderer.height = this.sightLength *2;
+	var that = this;
 
+//	window.requestAnimationFrame(this.randomize);
 }
+
+
+Light.prototype.randomize = function(){
+	this.x = this._x + Math.random()*6 - 3;
+	this.y = this._y + Math.random()*6 - 3;
+	this.sightLength = (1 - Math.pow(Math.random()/3,2)) * this._sightLength;
+	var that = this;
+	window.requestAnimationFrame(this.randomize);
+};
+
 /**
  * default light settings
  */
@@ -103,9 +116,9 @@ Light.prototype.draw = function(paper, segments, bobs){
 
 
 		var center = {
-			x: this._x,
-			y: this._y,
-			radius: this.sightLength
+			x: this._x + Math.random()*4-2,
+			y: this._y + Math.random()*4-2,
+			radius: this.sightLength * (1-Math.pow(Math.random()/3, 2))
 		}
 
 
@@ -115,8 +128,8 @@ Light.prototype.draw = function(paper, segments, bobs){
 		for(var i=0; i<bobs.length; i++){
 			var bob = bobs[i];
 			if(bob.light === this) continue;
-			var metric = distanceAndAngle(this.x, this.y, bob.x, bob.y);
-			if(metric.distance < this.sightLength){
+			var metric = distanceAndAngle(center.x, center.y, bob.x, bob.y);
+			if(metric.distance < center.radius){
 				var tangent1 = {};
 				tangent1.x = bob.x + Math.cos(metric.angle + Math.PI/2) * bob.width;
 				tangent1.y = bob.y + Math.sin(metric.angle + Math.PI/2) * bob.width;
@@ -183,7 +196,7 @@ for(var i=0; i<obs.length; i++){
 
 	var dbg_obs = [first];
 
-	var grd=ctx.createRadialGradient(this._x,this._y,0,this._x,this._y,this.sightLength);
+	var grd=ctx.createRadialGradient(center.x,center.y,0,center.x,center.y,center.radius);
 	grd.addColorStop(0,"rgba(255,255,255, 1)");
 	grd.addColorStop(1,"rgba(0,0,0, .01)");
 
