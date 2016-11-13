@@ -120,7 +120,7 @@ Light.prototype.draw = function(paper, segments, bobs){
 			y: this._y + Math.random()*4-2,
 			radius: this.sightLength * (1-Math.pow(Math.random()/3, 2))
 		}
-
+ 		if(Math.random()<.07) return;
 
 		var segs = [];
 

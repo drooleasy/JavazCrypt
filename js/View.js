@@ -136,7 +136,7 @@ View.prototype.renderScene = function renderScene(paper, world){
 	worldRenderer.height = paper.height;
 
 
-	var slowTempoDelay = 1000/12;
+	var slowTempoDelay = 1000/16;
 
 	var that = this;
 
@@ -167,7 +167,10 @@ View.prototype.renderScene = function renderScene(paper, world){
 			// paths
 			for(var i=0;i<that.world.paths.length;i++){
 				ctx.beginPath();
+
+				//if(i==0) ctx.fillStyle = "#393";
 				that.world.paths[i].draw(worldRenderer, false);
+
 				if(!nofill) ctx.fill();
 				ctx.stroke();
 			}

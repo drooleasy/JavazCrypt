@@ -26,6 +26,14 @@ var world = new World();
 
 
 
+	var pathBorder = new Path(
+		0,0,
+		0,400,
+		650, 400,
+		650,0
+	);
+	pathBorder.close();
+
 	var path = new Path(
 		500, 100,
 		500, 300,
@@ -48,8 +56,9 @@ var world = new World();
 	path.makeGlass(6);
 
 
-	world.paths.push(path);
+	world.paths.push(pathBorder);
 
+	world.paths.push(path);
 	var boulder = new Path(
 		250, 250,
 		240, 265,
