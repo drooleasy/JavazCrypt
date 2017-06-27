@@ -22,8 +22,20 @@ var Segment = function Segment(ax, ay, bx, by){
 		"stroke-width":2,
 		"stroke-linecap":"round"
 	};
+	this._texture = null;
 };
 
+
+
+
+Segment.prototype.texture = function(tex){
+	if(tex){
+
+		this._texture = tex;
+		return this;
+	}
+	return this._texture;
+}
 /**
  * build a new segment with this one's saped ends
  * @return {Segement} the swaped version of this segment
@@ -196,10 +208,26 @@ Segment.prototype.seenSegment = function(bob, segments){
  */
 Segment.prototype.draw = function(paper, dontStroke){
 	var ctx = paper.getContext("2d");
-	if(!dontStroke) ctx.beginPath();
-	if(!dontStroke) ctx.moveTo(this.a.x, this.a.y);
+
+	if(this.texture()){
+		ctx.strokeStyle = this.texture();
+	}
+
+	ctx.beginPath();
+	ctx.moveTo(this.a.x, this.a.y);
 	ctx.lineTo(this.b.x, this.b.y);
-	if(!dontStroke) ctx.stroke();
+
+
+		var dx = this.b.x - this.a.x;
+		var dy = this.b.y - this.a.y;
+		var angle = Math.atan2(dy, dx) + Math.PI/2;
+
+		ctx.translate(this.a.x, this.a.y);
+		ctx.rotate(angle);
+		ctx.stroke();
+		ctx.rotate(-angle);
+		ctx.translate(-this.a.x, -this.a.y);
+
 }
 
 /**

@@ -7,12 +7,12 @@
  * @param {number} by second extremity y cordinate
  */
 var Door = function Door(ax, ay, bx, by){
-	
+
 	this.a = {
 		x:ax,
 		y:ay
 	};
-	
+
 	this.b = {
 		x:bx,
 		y:by
@@ -25,7 +25,7 @@ var Door = function Door(ax, ay, bx, by){
 		"stroke-linecap":"round"
 	};
 	this.openess = 0;
-	
+
 	this.center = 0; // -1...1
 	this.yawness = .5;
 	this.detectionDistance = 15;
@@ -60,7 +60,7 @@ Door.speed = 1/66;
  * launches animation for opening the door
  */
 Door.prototype.open = function(){
-	if(this.openess<1){ 
+	if(this.openess<1){
 		this.openess += Door.speed;
 		this.openess = Math.min(this.openess, 1);
 		var that = this;
@@ -73,9 +73,9 @@ Door.prototype.open = function(){
 
 /**
  * launches animation for closing the door
- */ 
+ */
 Door.prototype.close = function(){
-	if(this.openess>0){ 
+	if(this.openess>0){
 		this.openess -= Door.speed;
 		this.openess = Math.max(this.openess, 0);
 		var that = this;
@@ -90,9 +90,9 @@ Door.prototype.close = function(){
  * @param {number} x the point x coordinate
  * @param {number} y the point y coordinate
  * @return {object} the x and y position on the door
- */  
+ */
 Door.prototype.closestPointFrom = function(x,y){
-	
+
 	function closest_point_on_seg(seg, circ_pos){
 		var seg_v = {x:(seg.b.x - seg.a.x), y:(seg.b.y - seg.a.y)},
 			pt_v = {x:(circ_pos.x - seg.a.x), y:(circ_pos.y - seg.a.y)},
@@ -152,10 +152,10 @@ Door.prototype.subSegments = function(){
 		cos2 = Math.cos(Math.PI + metrics.angle),
 		sin2 = Math.sin(Math.PI + metrics.angle),
 		d= metrics.distance;
-		
+
 	var left = d*(1-this.openess)/2 - this.yawness;
 	var right = d*(1-this.openess)/2 -this.yawness;
-	
+
 	right *= 1 - this.center;
 	left  *= 1 + this.center;
 	var middle = {
@@ -164,11 +164,20 @@ Door.prototype.subSegments = function(){
 		x2:this.b.x  + cos2 * right,
 		y2: this.b.y + sin2 * right
 	}
+	var a = new Segment(this.a.x, this.a.y, middle.x, middle.y);
+	a.texture(this.texture());
+	var b = new Segment(middle.x2, middle.y2, this.b.x, this.b.y);
+	b.texture(this.texture());
+	return [ a, b ];
+}
 
-	return [
-		new Segment(this.a.x, this.a.y, middle.x, middle.y),
-		new Segment(middle.x2, middle.y2, this.b.x, this.b.y)
-	]
+Door.prototype.texture = function(tex){
+	if(tex){
+
+		this._texture = tex;
+		return this;
+	}
+	return this._texture;
 }
 
 /**
@@ -177,11 +186,11 @@ Door.prototype.subSegments = function(){
  */
 Door.prototype.draw = function(paper){
 	var ctx = paper.getContext("2d");
-	
+
 	var segs = this.subSegments();
-	
+
 	ctx.beginPath();
-	
+
 	segs[0].draw(paper);
 	segs[1].draw(paper);
 }
@@ -189,11 +198,11 @@ Door.prototype.draw = function(paper){
 /**
  * casts door's two segment shadows
  * @param {object} the Bob or the Light to cast shadow from
- */ 
+ */
 Door.prototype.castShadow = function castDoorShadow(bob_or_light){
 	var segs = this.subSegments();
 	for(var i=0;i<segs.length;i++){
-	
+
 		segs[i].castShadow(bob_or_light);
 	}
 }

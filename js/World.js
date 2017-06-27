@@ -1,7 +1,7 @@
 /**
  * an aggregate for the elements of the game (bobs, paths, segments, boulder, lights, player)
  * @constructor
- */ 
+ */
 
 var World = function World(){
 	this.bobs = [];
@@ -10,6 +10,8 @@ var World = function World(){
 	this.boulders = [];
 	this.lights = [];
 	this.player = null;
+	this.floors = [];
+	this.textures = {};
 }
 
 /**
@@ -22,4 +24,3 @@ World.prototype.allSegments = function allSegments(){
 		for(var i=0;i<this.boulders.length;i++) res = res.concat(this.boulders[i].segments);
 		return res;
 }
- 

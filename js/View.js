@@ -160,18 +160,12 @@ View.prototype.renderScene = function renderScene(paper, world){
 		// draw fully illuminated scene
 		function drawScene(ctx, nofill){
 			// DRAWS SCENE
-			ctx.fillStyle = "#333";
-			ctx.strokeStyle = "#cfc";
-			if(nofill) ctx.fillStyle = "rgba(0,0,0,0)";
-			ctx.lineWidth = 4;
+			ctx.lineWidth = 8;
 			// paths
 			for(var i=0;i<that.world.paths.length;i++){
 				ctx.beginPath();
-
 				//if(i==0) ctx.fillStyle = "#393";
 				that.world.paths[i].draw(worldRenderer, false);
-
-				if(!nofill) ctx.fill();
 				ctx.stroke();
 			}
 			ctx.fillStyle = "#000";
@@ -179,18 +173,33 @@ View.prototype.renderScene = function renderScene(paper, world){
 			for(var i=0;i<that.world.boulders.length;i++){
 				ctx.beginPath();
 				that.world.boulders[i].draw(worldRenderer, true);
-				if(!nofill) ctx.fill();
 				ctx.stroke();
 			}
 			// segment (door, glass)
 			for(var i=0; i< that.world.segments.length;i++){
-				ctx.strokeStyle = "#cfc";
-				if(world.segments[i] instanceof Glass) ctx.strokeStyle="rgba(255,255,255, 0.3)"
-				if(world.segments[i] instanceof Door) ctx.strokeStyle="#cc6"
+
 				ctx.beginPath();
 				that.world.segments[i].draw(worldRenderer);
 				ctx.stroke();
 			}
+		}// en draw scene
+
+		// draw fully illuminated scene
+		function drawSceneTextures(ctx){
+			// DRAWS SCENE
+			ctx.strokeStyle = "transparent";
+			ctx.lineWidth = 0;
+			// paths
+			for(var i=0;i<that.world.floors.length;i++){
+				var path = that.world.floors[i];
+				//if(i==0) ctx.fillStyle = "#393";
+
+				path.draw(worldRenderer);
+
+			}
+
+			// boulders
+
 		}// en draw scene
 
 		function conclude(){
@@ -204,16 +213,16 @@ View.prototype.renderScene = function renderScene(paper, world){
 
 			if(that.lights_on){
 
-				wctx.globalCompositeOperation = "luminosity";
-				//wctx.globalCompositeOperation = "multiply";
+				//wctx.globalCompositeOperation = "luminosity";
+				wctx.globalCompositeOperation = "multiply";
 				//wctx.globalCompositeOperation = "source-over";
 				wctx.drawImage(slowBuffer,0,0);
 
-				// re draw wall
-				wctx.globalCompositeOperation = "source-over";
-				drawScene(wctx, true);
 
 			}
+			// re draw wall
+			wctx.globalCompositeOperation = "source-over";
+			drawScene(wctx);
 			that.lastValidBuffer.getContext("2d").putImageData(wctx.getImageData(0,0,worldRenderer.width, worldRenderer.height), 0, 0);
 			setTimeout(slowTempo, slowTempoDelay);
 		}
@@ -224,11 +233,15 @@ View.prototype.renderScene = function renderScene(paper, world){
 			ctx.globalCompositeOperation = "source-over";
 
 			// erase fully illuminated
-			ctx.fillStyle="#393";
-			ctx.fillRect(0,0,worldRenderer.width,worldRenderer.height);
+			//ctx.fillStyle="#393";
+
+			//ctx.fillRect(0,0,worldRenderer.width,worldRenderer.height);
+
+
+
 
 			// redraws it
-			drawScene(ctx);
+			drawSceneTextures(ctx);
 
 			// virtual light task
 			n--;
