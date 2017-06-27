@@ -11,11 +11,11 @@ var ctx = paper.getContext("2d");
 var world = new World();
 
 var textures = {
-	grass: "../img/grass.png",
-	brick: "../img/brick.png",
-	wood: "../img/wood.png",
-	glass: "../img/glass.png",
-	wall: "../img/wall.png"
+	grass: "./img/grass.png",
+	brick: "./img/brick.png",
+	wood: "./img/wood.png",
+	glass: "./img/glass.png",
+	wall: "./img/wall.png"
 }
 
 for(var texture in textures ){
