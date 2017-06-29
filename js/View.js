@@ -136,7 +136,7 @@ View.prototype.renderScene = function renderScene(paper, world){
 	worldRenderer.height = paper.height;
 
 
-	var slowTempoDelay = 1000/16;
+	var slowTempoDelay = 1000/30;
 
 	var that = this;
 
@@ -200,7 +200,7 @@ View.prototype.renderScene = function renderScene(paper, world){
 
 			// boulders
 
-		}// en draw scene
+		}// en draw scene textures
 
 		function conclude(){
 
@@ -251,7 +251,7 @@ View.prototype.renderScene = function renderScene(paper, world){
 		},0);
 
 		//console.log(slowBuffer.getContext('2d').globalCompositeOperation);
-slowBuffer.getContext('2d').globalCompositeOperation = "screen";
+		slowBuffer.getContext('2d').globalCompositeOperation = "screen";
 		//draw lights
 		for(i=0;i<l;i++){
 			setTimeout( // dont freeze ui
